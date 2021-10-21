@@ -13,19 +13,45 @@ green = (0, 255, 0)
 
 wall_color = black
 
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 700
 
 MAZE_WIDTH = 700
 MAZE_HEIGHT = 700
 
-MAZE_COLS = 20
-MAZE_ROWS = 20
+MAZE_COLS = 10
+MAZE_ROWS = 10
 
 CELL_WIDTH = math.floor(MAZE_WIDTH/MAZE_COLS)
 CELL_HEIGHT = math.floor(MAZE_HEIGHT/MAZE_ROWS)
 
 WALL_THICKNESS = round(CELL_WIDTH/10)
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self, x, y, color):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
+        self.image.fill(white)
+        self.image.set_colorkey(white)
+        
+        if CELL_WIDTH > CELL_HEIGHT:
+            pygame.draw.circle(self.image, color, ((CELL_WIDTH-WALL_THICKNESS)/2, (CELL_HEIGHT-WALL_THICKNESS)/2), (CELL_HEIGHT - WALL_THICKNESS)/2)
+        else:
+            pygame.draw.circle(self.image, color, ((CELL_WIDTH-WALL_THICKNESS)/2, (CELL_HEIGHT-WALL_THICKNESS)/2), (CELL_WIDTH - WALL_THICKNESS)/2)
+        
+        self.rect = self.image.get_rect()
+        self.rect.top = y
+        self.rect.left = x
+        
+    def update(self, x_direction, y_direction, wall_list):
+        self.rect.top += 5*y_direction
+        self.rect.left += 5*x_direction
+        if pygame.sprite.spritecollideany(self, wall_list) == None:
+            self.rect = self.rect.move(x_direction * CELL_WIDTH - 5*x_direction, y_direction * CELL_HEIGHT - 5*y_direction)
+        else:
+            self.rect.top -= 5*y_direction
+            self.rect.left -= 5*x_direction
+            
 
 class Cell(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
@@ -37,6 +63,7 @@ class Cell(pygame.sprite.Sprite):
         self.rect.top = y
         self.rect.left = x
 
+
 class Wall(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self)
@@ -46,6 +73,7 @@ class Wall(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.top = y
         self.rect.left = x
+
 
 pygame.init()
 
@@ -147,6 +175,7 @@ def start():
     maze = create_maze(MAZE_ROWS, MAZE_COLS)
     
     all_sprites = pygame.sprite.Group()
+    wall_list = pygame.sprite.Group()
 
     x_pos = 0
     y_pos = 0
@@ -155,11 +184,13 @@ def start():
             if (i % 2 == 0 and j % 2 == 1): #horizontal
                 if (maze[i][j] == 'w'):
                     wall = Wall(x_pos, y_pos, CELL_WIDTH, WALL_THICKNESS)
+                    wall_list.add(wall)
                     all_sprites.add(wall)
                 x_pos += CELL_WIDTH
             elif (i % 2 == 1 and j % 2 == 0): #vertical
                 if (maze[i][j] == 'w'):
                     wall = Wall(x_pos, y_pos, WALL_THICKNESS, CELL_HEIGHT)
+                    wall_list.add(wall)
                     all_sprites.add(wall)
                 x_pos += CELL_WIDTH
         if (i % 2 == 1):
@@ -167,30 +198,42 @@ def start():
         x_pos = 0
             
     print("\nendpoint: ", endpoint)
-    
-    start_cell = Cell(CELL_WIDTH * (random.randrange(0, MAZE_ROWS)) + WALL_THICKNESS, CELL_HEIGHT * (random.randrange(0, MAZE_COLS)) + WALL_THICKNESS, green)
-    all_sprites.add(start_cell)
+
+    startpoint = (random.randrange(0, MAZE_ROWS), random.randrange(0, MAZE_COLS))
+    while (startpoint == endpoint):
+        startpoint = (random.randrange(0, MAZE_ROWS), random.randrange(0, MAZE_COLS))
+    print("\nstartpoint: ", startpoint)
     
     end_cell = Cell(CELL_WIDTH * ((endpoint[1] - 1)/2) + WALL_THICKNESS, CELL_HEIGHT * ((endpoint[0] - 1)/2) + WALL_THICKNESS, red)
     all_sprites.add(end_cell)
+    
+    player = Player(CELL_WIDTH * startpoint[1] + WALL_THICKNESS, CELL_HEIGHT * startpoint[0] + WALL_THICKNESS, blue)
+    all_sprites.add(player)
     
     done = False
     
     while not done:
         
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or event.type == pygame.K_ESCAPE:
                 done = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    player.update(0, -1, wall_list)
+                if event.key == pygame.K_DOWN:
+                    player.update(0, 1, wall_list)
+                if event.key == pygame.K_LEFT:
+                    player.update(-1, 0, wall_list)
+                if event.key == pygame.K_RIGHT:
+                    player.update(1, 0, wall_list)
+                if pygame.sprite.collide_rect(player, end_cell):
+                    done = True
+            
         screen.fill(white)
         all_sprites.draw(screen)
-        """
-        image = pygame.Surface([100, 100])
-        image.fill((255, 0, 0))
-        rect = image.get_rect()
-        rect.center = (0, 0)
-        screen.blit(image, [25, 25])
-        """
         pygame.display.flip()
+        
+        clock.tick(10)
                 
                 
 start()
