@@ -16,7 +16,7 @@ tan = (234, 203, 187)
 wall_color = black
 
 SCREEN_WIDTH = 700
-SCREEN_HEIGHT = 700
+SCREEN_HEIGHT = 750
 
 MAZE_WIDTH = 700
 MAZE_HEIGHT = 700
@@ -35,7 +35,7 @@ WALL_THICKNESS = round(CELL_WIDTH/10)
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
+        self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS*2, CELL_HEIGHT-WALL_THICKNESS*2])
         self.image.fill(white)
         self.image.set_colorkey(white)
         
@@ -228,9 +228,6 @@ def home_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -240,11 +237,23 @@ def home_screen():
 def pick_size_screen():
     screen.fill(tan)
     
+    font_size = 18
+    font = pygame.font.Font(font_file, font_size)
+    exit_text = font.render("press ESCAPE to exit", True, white)
+    exit_text_rect = exit_text.get_rect()
+    exit_text_rect.bottom = SCREEN_HEIGHT - 10
+    exit_text_rect.right = SCREEN_WIDTH - 10
+    screen.blit(exit_text, exit_text_rect)
+    
     num_buttons = 4
     space_between = SCREEN_HEIGHT/20
     button_height = (SCREEN_HEIGHT - space_between*(num_buttons+1))/num_buttons
     
-    font_size = 24
+    easy_dim = (10, 10)
+    medium_dim = (20, 20)
+    hard_dim = (30, 30)
+    
+    font_size = math.floor(button_height/4)
     font = pygame.font.Font(font_file, font_size)
     
     #easy button
@@ -290,6 +299,24 @@ def pick_size_screen():
     custom_text_rect = custom_text.get_rect(center=custom_button_rect.center)
     screen.blit(custom_button, custom_button_rect)
     screen.blit(custom_text, custom_text_rect)
+    
+    font_size = math.floor(font_size/2)
+    font = pygame.font.Font(font_file, font_size)
+    
+    easy_dim_text = font.render(("(" + str(easy_dim[0]) + " x " + str(easy_dim[1]) + ")"), True, black)
+    easy_dim_text_rect = easy_dim_text.get_rect(center=easy_text_rect.center)
+    easy_dim_text_rect.top = easy_text_rect.bottom
+    screen.blit(easy_dim_text, easy_dim_text_rect)
+
+    medium_dim_text = font.render(("(" + str(medium_dim[0]) + " x " + str(medium_dim[1]) + ")"), True, black)
+    medium_dim_text_rect = medium_dim_text.get_rect(center=medium_text_rect.center)
+    medium_dim_text_rect.top = medium_text_rect.bottom
+    screen.blit(medium_dim_text, medium_dim_text_rect)
+
+    hard_dim_text = font.render(("(" + str(hard_dim[0]) + " x " + str(hard_dim[1]) + ")"), True, black)
+    hard_dim_text_rect = hard_dim_text.get_rect(center=hard_text_rect.center)
+    hard_dim_text_rect.top = hard_text_rect.bottom
+    screen.blit(hard_dim_text, hard_dim_text_rect)
 
     pygame.display.flip()
     
@@ -304,23 +331,26 @@ def pick_size_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    home_screen()
             if event.type == pygame.MOUSEBUTTONDOWN:
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         m_pos = pygame.mouse.get_pos()
                         if (is_pressed(easy_button_rect, m_pos[0], m_pos[1])):
                             print("\nyou chose easy")
-                            maze_rows = 5
-                            maze_cols = 5
+                            maze_rows = easy_dim[0]
+                            maze_cols = easy_dim[1]
                             ready = True
                         if (is_pressed(medium_button_rect, m_pos[0], m_pos[1])):
                             print("\nyou chose medium")
-                            maze_rows = 15
-                            maze_cols = 15
+                            maze_rows = medium_dim[0]
+                            maze_cols = medium_dim[1]
                             ready = True
                         if (is_pressed(hard_button_rect, m_pos[0], m_pos[1])):
                             print("\nyou chose hard")
-                            maze_rows = 50
-                            maze_cols = 50
+                            maze_rows = hard_dim[0]
+                            maze_cols = hard_dim[1]
                             ready = True
                         if (is_pressed(custom_button_rect, m_pos[0], m_pos[1])):
                             print("\nyou chose custom")
@@ -338,6 +368,14 @@ def custom_size_screen():
     
     rows = 10
     cols = 10
+    
+    font_size = 18
+    font = pygame.font.Font(font_file, font_size)
+    exit_text = font.render("press ESCAPE to exit", True, white)
+    exit_text_rect = exit_text.get_rect()
+    exit_text_rect.bottom = SCREEN_HEIGHT - 10
+    exit_text_rect.right = SCREEN_WIDTH - 10
+    screen.blit(exit_text, exit_text_rect)
     
     #select dimensions text
     font_size = 36
@@ -399,13 +437,21 @@ def custom_size_screen():
     col_down_arrow_rect = col_down_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery + 125))
     screen.blit(col_down_arrow_image, col_down_arrow_rect)
     
+    font_size = 16
+    font = pygame.font.Font(font_file, font_size)
+    bounds_message = font.render("dimensions must stay within bounds", True, red)
+    bounds_message_rect = bounds_message.get_rect(center=(SCREEN_WIDTH/2, 0))
+    bounds_message_rect.top = select_text_rect.bottom
+    bounds_message.set_alpha(0)
+    screen.blit(bounds_message, bounds_message_rect)
     
     pygame.display.flip()
     
+    
     row_min = 5
-    row_max = 30
+    row_max = 50
     col_min = 5
-    col_max = 30
+    col_max = 50
     
     global maze_cols
     global maze_rows
@@ -413,15 +459,19 @@ def custom_size_screen():
     global CELL_HEIGHT
     global WALL_THICKNESS
     
+    display_bounds_message = False
     ready = False
     while not ready:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    home_screen()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
-                    if (is_pressed(play_text_rect, m_pos[0], m_pos[1])):
+                    if (is_pressed(play_button_rect, m_pos[0], m_pos[1])):
                         maze_rows = rows
                         maze_cols = cols
                         CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
@@ -431,75 +481,46 @@ def custom_size_screen():
                         ready = True
                     if (is_pressed(row_up_arrow_rect, m_pos[0], m_pos[1]) and rows < row_max):
                         rows += 1
+                        if (rows - cols > 10):
+                            cols += 1
+                            display_bounds_message = True
                     if (is_pressed(row_down_arrow_rect, m_pos[0], m_pos[1]) and rows > row_min):
                         rows -= 1
+                        if (cols - rows > 10):
+                            cols -= 1
+                            display_bounds_message = True
                     if (is_pressed(col_up_arrow_rect, m_pos[0], m_pos[1]) and cols < col_max):
                         cols += 1
+                        if (cols - rows > 10):
+                            rows += 1
+                            display_bounds_message = True
                     if (is_pressed(col_down_arrow_rect, m_pos[0], m_pos[1]) and cols > col_min):
                         cols -= 1
-                    #select dimensions text
-                    screen.fill(tan)
-                    font_size = 36
-                    font = pygame.font.Font(font_file, font_size)
-                    select_text = font.render("Select Your Dimensions", True, white)
-                    select_text_rect = select_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/5))
-                    screen.blit(select_text, select_text_rect)
+                        if (rows - cols > 10):
+                            rows -= 1
+                            display_bounds_message = True
+                    if display_bounds_message:
+                        bounds_message.set_alpha(255)
                     
-                    #text
-                    font_size = 24
-                    font = pygame.font.Font(font_file, font_size)
-                    x_text = font.render("x", True, white)
-                    x_text_rect = x_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-                    screen.blit(x_text, x_text_rect)
+                    screen.fill(tan)
                     
                     font_size = 125
                     font = pygame.font.Font(font_file, font_size)
                     row_text = font.render(str(rows), True, white)
                     row_text_rect = row_text.get_rect(center=(SCREEN_WIDTH/6*2, SCREEN_HEIGHT/2))
-                    screen.blit(row_text, row_text_rect)
+                    pygame.display.update(screen.blit(row_text, row_text_rect))
 
                     col_text = font.render(str(cols), True, white)
                     col_text_rect = col_text.get_rect(center=(SCREEN_WIDTH/6*4, SCREEN_HEIGHT/2))
-                    screen.blit(col_text, col_text_rect)
-                    
-                    font_size = 24
-                    font = pygame.font.Font(font_file, font_size)
-                    play_button = pygame.Surface([SCREEN_WIDTH/2, font_size*2])
-                    play_button.fill(white)
-                    play_button_rect = play_button.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/5*4))
-                    
-                    play_text = font.render("play", True, black)
-                    play_text_rect = play_text.get_rect(center=play_button_rect.center)
-                    screen.blit(play_button, play_button_rect)
-                    screen.blit(play_text, play_text_rect)
-                    
-                    #arrows
-                    row_up_arrow_image = pygame.image.load("arrow.png").convert_alpha()
-                    row_up_arrow_image = pygame.transform.scale(row_up_arrow_image, (25, 40))
-                    row_up_arrow_image = pygame.transform.rotate(row_up_arrow_image, 90)
-                    row_up_arrow_rect = row_up_arrow_image.get_rect(center=(row_text_rect.centerx, row_text_rect.centery - 125))
-                    screen.blit(row_up_arrow_image, row_up_arrow_rect)
-                    
-                    row_down_arrow_image = pygame.image.load("arrow.png").convert_alpha()
-                    row_down_arrow_image = pygame.transform.scale(row_down_arrow_image, (25, 40))
-                    row_down_arrow_image = pygame.transform.rotate(row_down_arrow_image, 270)
-                    row_down_arrow_rect = row_down_arrow_image.get_rect(center=(row_text_rect.centerx, row_text_rect.centery + 125))
-                    screen.blit(row_down_arrow_image, row_down_arrow_rect)
-                    
-                    col_up_arrow_image = pygame.image.load("arrow.png").convert_alpha()
-                    col_up_arrow_image = pygame.transform.scale(col_up_arrow_image, (25, 40))
-                    col_up_arrow_image = pygame.transform.rotate(col_up_arrow_image, 90)
-                    col_up_arrow_rect = col_up_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery - 125))
-                    screen.blit(col_up_arrow_image, col_up_arrow_rect)
-                    
-                    col_down_arrow_image = pygame.image.load("arrow.png").convert_alpha()
-                    col_down_arrow_image = pygame.transform.scale(col_down_arrow_image, (25, 40))
-                    col_down_arrow_image = pygame.transform.rotate(col_down_arrow_image, 270)
-                    col_down_arrow_rect = col_down_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery + 125))
-                    screen.blit(col_down_arrow_image, col_down_arrow_rect)
-                    
-                    
-                    pygame.display.flip()    
+                    pygame.display.update(screen.blit(col_text, col_text_rect))
+   
+        if display_bounds_message:
+            screen.fill(tan)
+            bounds_message.set_alpha(bounds_message.get_alpha()-5)
+            if bounds_message.get_alpha() <= 50:
+                display_bounds_message = False
+                bounds_message.set_alpha(0)
+            pygame.display.update(screen.blit(bounds_message, bounds_message_rect))
         clock.tick(10)
 
 def start():
@@ -547,6 +568,13 @@ def start():
     player = Player(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2, CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2, blue)
     all_sprites.add(player)
     
+    font_size = 18
+    font = pygame.font.Font(font_file, font_size)
+    exit_text = font.render("press ESCAPE to exit", True, white)
+    exit_text_rect = exit_text.get_rect()
+    exit_text_rect.bottom = SCREEN_HEIGHT - 10
+    exit_text_rect.right = SCREEN_WIDTH - 10
+        
     done = False
     
     while not done:
@@ -556,7 +584,7 @@ def start():
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    message = "PAUSED"
+                    home_screen()
                     done = True
                 if event.key == pygame.K_UP:
                     player.update(0, -1, wall_list)
@@ -572,6 +600,10 @@ def start():
             
         screen.fill(tan)
         all_sprites.draw(screen)
+
+        screen.blit(exit_text, exit_text_rect)
+        
+        
         pygame.display.flip()
         
         clock.tick(10)
@@ -595,7 +627,7 @@ def start():
     text_rect = replay_text.get_rect(center=(MAZE_WIDTH/2, MAZE_HEIGHT/2))
     screen.blit(replay_text, text_rect)
     
-    exit_text = font.render("press ESCAPE to return to home", True, white)
+    exit_text = font.render("press ESCAPE to exit", True, white)
     text_rect = exit_text.get_rect(center=(MAZE_WIDTH/2, MAZE_HEIGHT/2 + font_size*2))
     screen.blit(exit_text, text_rect)
 
