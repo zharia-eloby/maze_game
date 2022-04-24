@@ -179,6 +179,38 @@ def create_maze(num_rows, num_cols):
 
     return maze
 
+def check_paths(maze, prev_cell, curr_cell):
+    available_paths = []
+    if (maze[curr_cell[0]+1][curr_cell[1]] != 'w' and prev_cell != (curr_cell[0]+2, curr_cell[1])):
+        available_paths += [(curr_cell[0]+2, curr_cell[1])]
+    if (maze[curr_cell[0]-1][curr_cell[1]] != 'w' and prev_cell != (curr_cell[0]-2, curr_cell[1])):
+        available_paths += [(curr_cell[0]-2, curr_cell[1])]
+    if (maze[curr_cell[0]][curr_cell[1]+1] != 'w' and prev_cell != (curr_cell[0], curr_cell[1]+2)):
+        available_paths += [(curr_cell[0], curr_cell[1]+2)]
+    if (maze[curr_cell[0]][curr_cell[1]-1] != 'w' and prev_cell != (curr_cell[0], curr_cell[1]-2)):
+        available_paths += [(curr_cell[0], curr_cell[1]-2)]
+    return available_paths
+
+"""
+takes the indices of the startpoint, endpoint, and the curr_cell
+recursively call this method on all available neighbors until the endpoint is reached
+"""
+def solve_maze(maze, start, end, curr_cell, stack):
+    #print("start: ", start, "\n")
+    #print("end: ", end, "\n")
+    #print("curr_cell: ", curr_cell, "\n")
+    if (curr_cell == end):
+        print("SOLUTION PATH: ", stack, "\n")
+        return stack
+        
+    available_paths = check_paths(maze, stack[len(stack)-2], curr_cell)
+    #print("available_paths: ", available_paths, "\n")
+    
+    if available_paths:
+        for n in available_paths:
+            solve_maze(maze, start, end, n, stack + [n])
+    
+
 #checks if a button is pressed
 def is_pressed(rect, mouse_pos_x, mouse_pos_y):
     if (mouse_pos_x >= rect.left and mouse_pos_x <= rect.right):
@@ -597,6 +629,10 @@ def start():
                 if pygame.sprite.collide_rect(player, end_cell):
                     message = "YOU DID IT!"
                     done = True
+                if event.key == pygame.K_s:
+                    print("solving...\n")
+                    print("starting maze:     -------------------------------\n", maze)
+                    solve_maze(maze, (startpoint[0]*2+1, startpoint[1]*2+1), (endpoint[0]*2+1, endpoint[1]*2+1), (startpoint[0]*2+1, startpoint[1]*2+1), [(startpoint[0]*2+1, startpoint[1]*2+1)])
             
         screen.fill(tan)
         all_sprites.draw(screen)
