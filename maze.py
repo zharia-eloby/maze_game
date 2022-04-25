@@ -179,38 +179,37 @@ def create_maze(num_rows, num_cols):
 
     return maze
 
-def check_paths(maze, prev_cell, curr_cell):
+def check_paths(maze, curr_cell):
     available_paths = []
-    if (maze[curr_cell[0]+1][curr_cell[1]] != 'w' and prev_cell != (curr_cell[0]+2, curr_cell[1])):
+    if (maze[curr_cell[0]+1][curr_cell[1]] != 'w' and maze[curr_cell[0]+2][curr_cell[1]] != 'x'):
         available_paths += [(curr_cell[0]+2, curr_cell[1])]
-    if (maze[curr_cell[0]-1][curr_cell[1]] != 'w' and prev_cell != (curr_cell[0]-2, curr_cell[1])):
+    if (maze[curr_cell[0]-1][curr_cell[1]] != 'w' and maze[curr_cell[0]-2][curr_cell[1]] != 'x'):
         available_paths += [(curr_cell[0]-2, curr_cell[1])]
-    if (maze[curr_cell[0]][curr_cell[1]+1] != 'w' and prev_cell != (curr_cell[0], curr_cell[1]+2)):
+    if (maze[curr_cell[0]][curr_cell[1]+1] != 'w' and maze[curr_cell[0]][curr_cell[1]+2] != 'x'):
         available_paths += [(curr_cell[0], curr_cell[1]+2)]
-    if (maze[curr_cell[0]][curr_cell[1]-1] != 'w' and prev_cell != (curr_cell[0], curr_cell[1]-2)):
+    if (maze[curr_cell[0]][curr_cell[1]-1] != 'w' and maze[curr_cell[0]][curr_cell[1]-2] != 'x'):
         available_paths += [(curr_cell[0], curr_cell[1]-2)]
     return available_paths
 
-"""
-takes the indices of the startpoint, endpoint, and the curr_cell
-recursively call this method on all available neighbors until the endpoint is reached
-"""
-def solve_maze(maze, start, end, curr_cell, stack):
-    #print("start: ", start, "\n")
-    #print("end: ", end, "\n")
-    #print("curr_cell: ", curr_cell, "\n")
-    if (curr_cell == end):
-        print("SOLUTION PATH: ", stack, "\n")
-        return stack
-        
-    available_paths = check_paths(maze, stack[len(stack)-2], curr_cell)
-    #print("available_paths: ", available_paths, "\n")
+def solve_maze(maze, start, end):
+    print("start: ", start)
+    print("end: ", end)
+    solution_path = [start]
+    curr_cell = start
+    maze[curr_cell[0]][curr_cell[1]] = 'x'
+    available_paths = []
+    while (curr_cell != end):
+        available_paths = check_paths(maze, curr_cell)
+        print("ap: ", available_paths)
+        while not available_paths:
+            solution_path.pop()
+            curr_cell = solution_path[len(solution_path)-1]
+            available_paths = check_paths(maze, curr_cell)
+        curr_cell = random.choice(available_paths)
+        solution_path += [curr_cell]
+        maze[curr_cell[0]][curr_cell[1]] = 'x'
+    return solution_path
     
-    if available_paths:
-        for n in available_paths:
-            solve_maze(maze, start, end, n, stack + [n])
-    
-
 #checks if a button is pressed
 def is_pressed(rect, mouse_pos_x, mouse_pos_y):
     if (mouse_pos_x >= rect.left and mouse_pos_x <= rect.right):
@@ -608,6 +607,8 @@ def start():
     exit_text_rect.right = SCREEN_WIDTH - 10
         
     done = False
+    solving = False
+    solution_stack = []
     
     while not done:
         
@@ -629,10 +630,18 @@ def start():
                 if pygame.sprite.collide_rect(player, end_cell):
                     message = "YOU DID IT!"
                     done = True
-                if event.key == pygame.K_s:
-                    print("solving...\n")
-                    print("starting maze:     -------------------------------\n", maze)
-                    solve_maze(maze, (startpoint[0]*2+1, startpoint[1]*2+1), (endpoint[0]*2+1, endpoint[1]*2+1), (startpoint[0]*2+1, startpoint[1]*2+1), [(startpoint[0]*2+1, startpoint[1]*2+1)])
+                if (not solving) and event.key == pygame.K_s:
+                    start = (startpoint[0]*2+1, startpoint[1]*2+1)
+                    end = (endpoint[0]*2+1, endpoint[1]*2+1)
+                    solution_stack = solve_maze(maze, start, end)
+                    solution_stack.pop()
+                    print("s: ", solution_stack)
+                    solving = True
+
+        if (solving and len(solution_stack) > 1):
+            curr_cell = solution_stack.pop()
+            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2, white)
+            all_sprites.add(new_cell)
             
         screen.fill(tan)
         all_sprites.draw(screen)
