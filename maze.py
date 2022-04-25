@@ -14,6 +14,7 @@ green = (56, 220, 156)
 tan = (234, 203, 187)
 
 wall_color = black
+background_color = tan
 
 SCREEN_WIDTH = 700
 SCREEN_HEIGHT = 750
@@ -200,7 +201,7 @@ def solve_maze(maze, start, end):
     available_paths = []
     while (curr_cell != end):
         available_paths = check_paths(maze, curr_cell)
-        print("ap: ", available_paths)
+        #print("ap: ", available_paths)
         while not available_paths:
             solution_path.pop()
             curr_cell = solution_path[len(solution_path)-1]
@@ -468,6 +469,17 @@ def custom_size_screen():
     col_down_arrow_rect = col_down_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery + 125))
     screen.blit(col_down_arrow_image, col_down_arrow_rect)
     
+    #ratio lock
+    lock_image = pygame.image.load("ratio-lock.png").convert_alpha()
+    lock_image = pygame.transform.scale(lock_image, (30, 30))
+    lock_image_rect = lock_image.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2+125))
+    lock_background = pygame.Surface([lock_image_rect.width+10, lock_image_rect.height+10])
+    lock_background.fill(gray)
+    lock_background_rect = lock_background.get_rect(center=lock_image_rect.center)
+    screen.blit(lock_background, lock_background_rect)
+    screen.blit(lock_image, lock_image_rect)
+    
+    #dimension error text
     font_size = 16
     font = pygame.font.Font(font_file, font_size)
     bounds_message = font.render("dimensions must stay within bounds", True, red)
@@ -492,6 +504,7 @@ def custom_size_screen():
     
     display_bounds_message = False
     ready = False
+    locked = True
     while not ready:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -502,6 +515,15 @@ def custom_size_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
+                    if (lock_background_rect.collidepoint(m_pos)):
+                        if locked:
+                            locked = False
+                            lock_background.fill(background_color)
+                        else:
+                            lock_background.fill(gray)
+                            locked = True
+                        pygame.display.update(screen.blit(lock_background, lock_background_rect))
+                        pygame.display.update(screen.blit(lock_image, lock_image_rect))
                     if (is_pressed(play_button_rect, m_pos[0], m_pos[1])):
                         maze_rows = rows
                         maze_cols = cols
@@ -512,22 +534,30 @@ def custom_size_screen():
                         ready = True
                     if (is_pressed(row_up_arrow_rect, m_pos[0], m_pos[1]) and rows < row_max):
                         rows += 1
-                        if (rows - cols > 10):
+                        if locked: 
+                            cols += 1
+                        elif (rows - cols > 10):
                             cols += 1
                             display_bounds_message = True
                     if (is_pressed(row_down_arrow_rect, m_pos[0], m_pos[1]) and rows > row_min):
                         rows -= 1
-                        if (cols - rows > 10):
+                        if locked:
+                            cols -= 1
+                        elif (cols - rows > 10):
                             cols -= 1
                             display_bounds_message = True
                     if (is_pressed(col_up_arrow_rect, m_pos[0], m_pos[1]) and cols < col_max):
                         cols += 1
-                        if (cols - rows > 10):
+                        if locked:
+                            rows += 1
+                        elif (cols - rows > 10):
                             rows += 1
                             display_bounds_message = True
                     if (is_pressed(col_down_arrow_rect, m_pos[0], m_pos[1]) and cols > col_min):
                         cols -= 1
-                        if (rows - cols > 10):
+                        if locked:
+                            rows -= 1
+                        elif (rows - cols > 10):
                             rows -= 1
                             display_bounds_message = True
                     if display_bounds_message:
@@ -552,7 +582,7 @@ def custom_size_screen():
                 display_bounds_message = False
                 bounds_message.set_alpha(0)
             pygame.display.update(screen.blit(bounds_message, bounds_message_rect))
-        clock.tick(10)
+        clock.tick(60)
 
 def start():
     font_size = 24
