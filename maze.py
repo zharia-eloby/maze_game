@@ -16,16 +16,19 @@ tan = (234, 203, 187)
 wall_color = black
 background_color = tan
 
-SCREEN_WIDTH = 700
+SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 750
 
-MAZE_WIDTH = 700
-MAZE_HEIGHT = 700
+MAZE_WIDTH = 600
+MAZE_HEIGHT = 600
 
 font_file = "Roboto-Regular.ttf"
 
 maze_cols = 10
 maze_rows = 10
+
+#the coordinates for where the maze should start being drawn. top left corner = (0, 0)
+maze_startpoint = (0, 75)
 
 CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
 CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
@@ -393,7 +396,7 @@ def pick_size_screen():
     CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
 
     WALL_THICKNESS = round(CELL_WIDTH/10)
-    start()
+    play()
 
 def custom_size_screen():
     screen.fill(tan)
@@ -530,7 +533,7 @@ def custom_size_screen():
                         CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
                         CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
                         WALL_THICKNESS = round(CELL_WIDTH/10)
-                        start()
+                        play()
                         ready = True
                     if (is_pressed(row_up_arrow_rect, m_pos[0], m_pos[1]) and rows < row_max):
                         rows += 1
@@ -584,7 +587,108 @@ def custom_size_screen():
             pygame.display.update(screen.blit(bounds_message, bounds_message_rect))
         clock.tick(60)
 
-def start():
+def pause_menu():
+    margin = 20
+    line_spacing = 10
+    
+    #background rectangle
+    background = pygame.Surface([SCREEN_WIDTH/2, SCREEN_HEIGHT/2])
+    background.fill(gray)
+    background_rect = background.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+    screen.blit(background, background_rect)
+    
+    #paused bar
+    paused_bar = pygame.Surface([background_rect.width, 30])
+    paused_bar.fill(white)
+    paused_bar_rect = paused_bar.get_rect(topleft=background_rect.topleft)
+    screen.blit(paused_bar, paused_bar_rect)
+    
+    #paused bar text
+    font_size = 16
+    font = pygame.font.Font(font_file, font_size)
+    paused_text = font.render("paused", True, black)
+    paused_text_rect = paused_text.get_rect(center=paused_bar_rect.center)
+    screen.blit(paused_text, paused_text_rect)
+    
+    #close button
+    close_button_image = pygame.image.load("close-button.png").convert_alpha()
+    close_button_image = pygame.transform.scale(close_button_image, (25, 25))
+    close_button_rect = close_button_image.get_rect(midright=(paused_bar_rect.right-line_spacing, paused_bar_rect.centery))
+    screen.blit(close_button_image, close_button_rect)
+    
+    #arrow keys for nav info
+    arrow_keys_image = pygame.image.load("arrow-keys.png").convert_alpha()
+    arrow_keys_image = pygame.transform.scale(arrow_keys_image, (50, 50))
+    arrow_keys_rect = arrow_keys_image.get_rect(topleft=(paused_bar_rect.left+margin, paused_bar_rect.bottom+line_spacing))
+    screen.blit(arrow_keys_image, arrow_keys_rect)
+    
+    #navigation info
+    font_size = 16
+    font = pygame.font.Font(font_file, font_size)
+    nav_text = font.render("to navigate through the maze", True, black)
+    nav_text_rect = nav_text.get_rect(midleft=(arrow_keys_rect.right+line_spacing, arrow_keys_rect.centery))
+    screen.blit(nav_text, nav_text_rect)
+    
+    #s key image
+    s_key_image = pygame.image.load("s-key.png").convert_alpha()
+    s_key_image = pygame.transform.scale(s_key_image, (50, 50))
+    s_key_rect = s_key_image.get_rect(topleft=(arrow_keys_rect.left, arrow_keys_rect.bottom+line_spacing))
+    screen.blit(s_key_image, s_key_rect)
+    
+    #press S to solve text
+    font_size = 16
+    font = pygame.font.Font(font_file, font_size)
+    press_S_text = font.render("to see the maze solution", True, black)
+    press_S_rect = press_S_text.get_rect(midleft=(s_key_rect.right+line_spacing, s_key_rect.centery))
+    screen.blit(press_S_text, press_S_rect)
+    
+    #mouse right click image
+    mouse_image = pygame.image.load("mouse-right-click.png").convert_alpha()
+    mouse_image = pygame.transform.scale(mouse_image, (50, 50))
+    mouse_rect = mouse_image.get_rect(topleft=(s_key_rect.left, s_key_rect.bottom+line_spacing))
+    screen.blit(mouse_image, mouse_rect)
+    
+    #mouse right click text
+    font_size = 16
+    font = pygame.font.Font(font_file, font_size)
+    right_click_text = font.render("to place marker", True, black)
+    right_click_text_rect = right_click_text.get_rect(midleft=(mouse_rect.right+line_spacing, mouse_rect.centery))
+    screen.blit(right_click_text, right_click_text_rect)
+    
+    #exit button
+    exit_button = pygame.Surface([background_rect.width-margin*2, 50])
+    exit_button.fill(white)
+    exit_button_rect = exit_button.get_rect(midbottom=(background_rect.centerx, background_rect.bottom-margin))
+    screen.blit(exit_button, exit_button_rect)
+    
+    #exit text for exit button
+    font_size = 16
+    font = pygame.font.Font(font_file, font_size)
+    exit_text = font.render("exit to home screen", True, black)
+    exit_text_rect = exit_text.get_rect(center=exit_button_rect.center)
+    screen.blit(exit_text, exit_text_rect)
+    
+    pygame.display.update()
+    
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed() == (1, 0, 0):
+                    m_pos = pygame.mouse.get_pos()
+                    if exit_button_rect.collidepoint(m_pos):
+                        home_screen()
+                        paused = False
+                    if close_button_rect.collidepoint(m_pos):
+                        background.set_alpha(0)
+                        paused = False
+                    
+                
+        clock.tick(60)
+
+def play():
     font_size = 24
     font = pygame.font.Font(font_file, font_size)
 
@@ -594,8 +698,8 @@ def start():
     wall_list = pygame.sprite.Group()
 
     #draw the maze
-    x_pos = 0
-    y_pos = 0
+    x_pos = maze_startpoint[0]
+    y_pos = maze_startpoint[1]
     for i in range(0, maze_rows*2+1):
         for j in range(0, maze_cols*2+1):
             if (i % 2 == 0 and j % 2 == 1): #horizontal
@@ -620,15 +724,22 @@ def start():
     while (startpoint == endpoint):
         startpoint = (random.randrange(0, maze_rows), random.randrange(0, maze_cols))
     print("\nstartpoint: ", startpoint)
-    start_cell = Cell(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2, CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2, gray)
+    start_cell = Cell(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], gray)
     all_sprites.add(start_cell)
     
-    end_cell = Cell(CELL_WIDTH * endpoint[1] + CELL_WIDTH/2, CELL_HEIGHT * endpoint[0] + CELL_HEIGHT/2, green)
+    end_cell = Cell(CELL_WIDTH * endpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * endpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], green)
     all_sprites.add(end_cell)
     
-    player = Player(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2, CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2, blue)
+    player = Player(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], blue)
     all_sprites.add(player)
     
+    #pause button
+    pause_button_image = pygame.image.load("pause-button.png").convert_alpha()
+    pause_button_image = pygame.transform.scale(pause_button_image, (30, 30))
+    pause_button_rect = pause_button_image.get_rect(topright=(SCREEN_WIDTH - 10, 10))
+    screen.blit(pause_button_image, pause_button_rect)
+    
+    #"press ESC to exit" text
     font_size = 18
     font = pygame.font.Font(font_file, font_size)
     exit_text = font.render("press ESCAPE to exit", True, white)
@@ -640,11 +751,18 @@ def start():
     solving = False
     solution_stack = []
     
+    paused = False
     while not done:
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed() == (1, 0, 0):
+                    m_pos = pygame.mouse.get_pos()
+                    if (pause_button_rect.collidepoint(m_pos)):
+                        pause_menu()
+                        paused = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
@@ -660,24 +778,25 @@ def start():
                 if pygame.sprite.collide_rect(player, end_cell):
                     message = "YOU DID IT!"
                     done = True
-                if (not solving) and event.key == pygame.K_s:
+                if event.key == pygame.K_s:
                     start = (startpoint[0]*2+1, startpoint[1]*2+1)
                     end = (endpoint[0]*2+1, endpoint[1]*2+1)
                     solution_stack = solve_maze(maze, start, end)
                     solution_stack.pop()
                     print("s: ", solution_stack)
-                    solving = True
+                    for i in range(len(solution_stack) - 1):
+                        curr_cell = solution_stack[i+1]
+                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2 + maze_startpoint[1], white)
+                        all_sprites.add(new_cell)
+                        all_sprites.draw(screen)
+                        pygame.display.flip()
+                        clock.tick(10)
 
-        if (solving and len(solution_stack) > 1):
-            curr_cell = solution_stack.pop()
-            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2, white)
-            all_sprites.add(new_cell)
-            
         screen.fill(tan)
         all_sprites.draw(screen)
 
         screen.blit(exit_text, exit_text_rect)
-        
+        screen.blit(pause_button_image, pause_button_rect)
         
         pygame.display.flip()
         
@@ -724,7 +843,7 @@ def start():
         
     del all_sprites
     if restart:
-        start()
+        play()
         
 home_screen()
 
