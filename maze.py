@@ -793,6 +793,12 @@ def play():
     pause_button_image = pygame.transform.scale(pause_button_image, (30, 30))
     pause_button_rect = pause_button_image.get_rect(topright=(SCREEN_WIDTH - 10, 10))
     screen.blit(pause_button_image, pause_button_rect)
+    
+    #'press Enter to skip animation'
+    font_size = 24
+    font = pygame.font.Font(font_file, font_size)
+    skip_text = font.render("press ENTER to skip animation", True, text_color)
+    skip_text_rect = skip_text.get_rect(topleft=(10, 10))
                     
     done = False
     solving = False
@@ -848,6 +854,16 @@ def play():
                             solution_stack = solve_maze(maze, start, end)
                             print("s: ", solution_stack)
                         solving = True
+                if event.key == pygame.K_RETURN and solving:
+                    while (curr_index < len(solution_stack)-1):
+                        curr_cell = solution_stack[curr_index]
+                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2 + maze_startpoint[1], solution_color)
+                        all_sprites.add(new_cell)
+                        curr_index += 1
+                    solving = False
+                    solved = True
+                    all_sprites.remove(player)
+                    all_sprites.add(player)
         if solving and curr_index < len(solution_stack):
             curr_cell = solution_stack[curr_index]
             new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2 + maze_startpoint[1], solution_color)
@@ -863,6 +879,8 @@ def play():
         all_sprites.draw(screen)
         
         screen.blit(pause_button_image, pause_button_rect)
+        if solving:
+            screen.blit(skip_text, skip_text_rect)
         
         pygame.display.flip()
         
