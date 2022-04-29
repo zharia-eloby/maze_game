@@ -780,7 +780,9 @@ def play():
     done = False
     solving = False
     solution_stack = []
-    
+    solved = False
+    solving = False
+    curr_index = 1
     paused = False
     while not done:
         
@@ -796,30 +798,39 @@ def play():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_menu()
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_UP and not solving:
                     player.update(0, -1, wall_list)
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_DOWN and not solving:
                     player.update(0, 1, wall_list)
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT and not solving:
                     player.update(-1, 0, wall_list)
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_RIGHT and not solving:
                     player.update(1, 0, wall_list)
                 if pygame.sprite.collide_rect(player, end_cell):
                     message = "YOU DID IT!"
                     done = True
-                if event.key == pygame.K_s:
-                    start = (startpoint[0]*2+1, startpoint[1]*2+1)
-                    end = (endpoint[0]*2+1, endpoint[1]*2+1)
-                    solution_stack = solve_maze(maze, start, end)
-                    solution_stack.pop()
-                    print("s: ", solution_stack)
-                    for i in range(len(solution_stack) - 1):
-                        curr_cell = solution_stack[i+1]
-                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2 + maze_startpoint[1], solution_color)
-                        all_sprites.add(new_cell)
-                        all_sprites.draw(screen)
-                        pygame.display.flip()
-                        clock.tick(10)
+                if event.key == pygame.K_s and not solved:
+                    if solving:
+                        solving = False
+                        all_sprites.remove(player)
+                        all_sprites.add(player)
+                    else:
+                        if not solution_stack:
+                            start = (startpoint[0]*2+1, startpoint[1]*2+1)
+                            end = (endpoint[0]*2+1, endpoint[1]*2+1)
+                            solution_stack = solve_maze(maze, start, end)
+                            print("s: ", solution_stack)
+                        solving = True
+        if solving and curr_index < len(solution_stack):
+            curr_cell = solution_stack[curr_index]
+            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2 + maze_startpoint[1], solution_color)
+            all_sprites.add(new_cell)
+            curr_index += 1
+            if curr_index == len(solution_stack)-1:
+                solving = False
+                solved = True
+                all_sprites.remove(player)
+                all_sprites.add(player)
 
         screen.fill(background_color)
         all_sprites.draw(screen)
@@ -828,7 +839,7 @@ def play():
         
         pygame.display.flip()
         
-        clock.tick(30)
+        clock.tick(10)
                 
     end_card = pygame.Surface([MAZE_WIDTH/3*2, MAZE_HEIGHT/3])
     end_card.fill(black)
