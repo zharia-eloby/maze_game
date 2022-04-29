@@ -114,6 +114,16 @@ class Wall(pygame.sprite.Sprite):
         else:
             self.rect = self.image.get_rect(midleft=(x, y))
 
+class Flag(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("red-flag.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (math.floor(CELL_WIDTH * 0.75), math.floor(CELL_HEIGHT * 0.75)))
+        self.rect = self.image.get_rect(center=(x, y))
+    
+    def is_clicked(self, m_pos):
+        return self.rect.collidepoint(m_pos)
+
 pygame.init()
 pygame.font.init()
 
@@ -729,6 +739,12 @@ def pause_menu():
                 
         clock.tick(60)
 
+def check_for_flag(flag_list, m_pos):
+    for flag in flag_list:
+        if flag.is_clicked(m_pos):
+            return flag
+    return None
+
 def play():
     font_size = 24
     font = pygame.font.Font(font_file, font_size)
@@ -737,6 +753,7 @@ def play():
     
     all_sprites = pygame.sprite.Group()
     wall_list = pygame.sprite.Group()
+    flag_list = pygame.sprite.Group()
 
     #draw the maze
     x_pos = maze_startpoint[0]
@@ -776,7 +793,7 @@ def play():
     pause_button_image = pygame.transform.scale(pause_button_image, (30, 30))
     pause_button_rect = pause_button_image.get_rect(topright=(SCREEN_WIDTH - 10, 10))
     screen.blit(pause_button_image, pause_button_rect)
-    
+                    
     done = False
     solving = False
     solution_stack = []
@@ -795,6 +812,16 @@ def play():
                     if (pause_button_rect.collidepoint(m_pos)):
                         pause_menu()
                         paused = True
+                if pygame.mouse.get_pressed() == (0, 0, 1):
+                    m_pos = pygame.mouse.get_pos()
+                    flag = check_for_flag(flag_list, m_pos)
+                    if not flag:
+                        new_flag = Flag(m_pos[0], m_pos[1])
+                        flag_list.add(new_flag)
+                        all_sprites.add(new_flag)
+                    else:
+                        flag_list.remove(flag)
+                        all_sprites.remove(flag)
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_menu()
