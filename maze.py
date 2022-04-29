@@ -43,10 +43,10 @@ maze_rows = 10
 
 maze_startpoint = (0, 75)
 
-CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
-CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
+CELL_WIDTH = 0
+CELL_HEIGHT = 0
 
-WALL_THICKNESS = round(CELL_WIDTH/10)
+WALL_THICKNESS = 0
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
@@ -54,41 +54,36 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS*2, CELL_HEIGHT-WALL_THICKNESS*2])
         self.image.fill(white)
         self.image.set_colorkey(white)
+        self.rect = self.image.get_rect(center=(x, y))
         
         #cell width may differ from cell height -> make the diameter of the player object that of the lesser value between 
         #   CELL_HEIGHT and CELL_WIDTH so the player image doesn't overlap the walls of the maze
         if CELL_WIDTH > CELL_HEIGHT:
-            pygame.draw.circle(self.image, color, ((CELL_WIDTH-WALL_THICKNESS)/2, (CELL_HEIGHT-WALL_THICKNESS)/2), (CELL_HEIGHT - WALL_THICKNESS)/3)
+            pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), (CELL_HEIGHT - WALL_THICKNESS)/3)
         else:
-            pygame.draw.circle(self.image, color, ((CELL_WIDTH-WALL_THICKNESS)/2, (CELL_HEIGHT-WALL_THICKNESS)/2), (CELL_WIDTH - WALL_THICKNESS)/3)
-        
-        self.rect = self.image.get_rect(center=(x, y))
-        
+            pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), (CELL_WIDTH - WALL_THICKNESS)/3)
+
     """
     update() called to move the player
     x_direction and y_direction will always be -1, 0, or 1 with one of the values being 0 and the other being either 1 or -1
     Returns True if the player successfully moved to the desired cell, False otherwise
     """
     def update(self, x_direction, y_direction, wall_list):
+        #moves the player in the desired direction halfway to it's destination
         if (x_direction != 0):
             move_factor = CELL_WIDTH/2
+            self.rect.centerx += move_factor*x_direction
         else:
             move_factor = CELL_HEIGHT/2
-        
-        #moves the player in the desired direction halfway to it's destination
-        self.rect.top += move_factor*y_direction
-        self.rect.left += move_factor*x_direction
+            self.rect.centery += move_factor*y_direction
         
         #is it on a wall?
-        if pygame.sprite.spritecollideany(self, wall_list) == None:     #if yes, move the player back to where they were
-            self.rect = self.rect.move(x_direction * CELL_WIDTH - move_factor*x_direction, y_direction * CELL_HEIGHT - move_factor*y_direction)
+        if pygame.sprite.spritecollideany(self, wall_list) == None: #if no, move the player completely to the desired cell
+            self.rect = self.rect.move(move_factor*x_direction, move_factor*y_direction)
             return True
-            
-        #if no, move the player completely to the desired cell
-        self.rect.top -= move_factor*y_direction
-        self.rect.left -= move_factor*x_direction
-        return False
-            
+        else:   #if yes, move the player back to where they were
+            self.rect = self.rect.move(move_factor*x_direction*-1, move_factor*y_direction*-1)
+            return False
 """
 used to represent the starting spot, ending spot, and cells in the solution path of the maze
 """
@@ -98,7 +93,7 @@ class Cell(pygame.sprite.Sprite):
         self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
         self.image.fill(color)
         
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect(topleft=(x, y))
 
 """
 type - either 'v' (vertical wall) or 'h' (horizontal wall)
@@ -421,9 +416,14 @@ def pick_size_screen():
                             custom_size_screen()
                             
     CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
+    CELL_WIDTH -= CELL_WIDTH%2
     CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
+    CELL_HEIGHT -= CELL_HEIGHT%2
 
     WALL_THICKNESS = round(CELL_WIDTH/10)
+    WALL_THICKNESS -= WALL_THICKNESS%2
+    if (WALL_THICKNESS < 2):
+        WALL_THICKNESS = 2
     play()
 
 def custom_size_screen():
@@ -573,8 +573,13 @@ def custom_size_screen():
                         maze_rows = rows
                         maze_cols = cols
                         CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
+                        CELL_WIDTH -= CELL_WIDTH % 2
                         CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
+                        CELL_HEIGHT -= CELL_HEIGHT % 2
                         WALL_THICKNESS = round(CELL_WIDTH/10)
+                        WALL_THICKNESS -= WALL_THICKNESS%2
+                        if (WALL_THICKNESS < 2):
+                            WALL_THICKNESS = 2
                         play()
                         ready = True
                         break
@@ -779,10 +784,10 @@ def play():
     startpoint = (random.randrange(0, maze_rows), random.randrange(0, maze_cols))
     while (startpoint == endpoint):
         startpoint = (random.randrange(0, maze_rows), random.randrange(0, maze_cols))
-    start_cell = Cell(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], startpoint_color)
+    start_cell = Cell(CELL_WIDTH * startpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * startpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, startpoint_color)
     all_sprites.add(start_cell)
     
-    end_cell = Cell(CELL_WIDTH * endpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * endpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], endpoint_color)
+    end_cell = Cell(CELL_WIDTH * endpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * endpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, endpoint_color)
     all_sprites.add(end_cell)
     
     player = Player(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], player_color)
@@ -852,12 +857,11 @@ def play():
                             start = (startpoint[0]*2+1, startpoint[1]*2+1)
                             end = (endpoint[0]*2+1, endpoint[1]*2+1)
                             solution_stack = solve_maze(maze, start, end)
-                            print("s: ", solution_stack)
                         solving = True
                 if event.key == pygame.K_RETURN and solving:
                     while (curr_index < len(solution_stack)-1):
                         curr_cell = solution_stack[curr_index]
-                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2 + maze_startpoint[1], solution_color)
+                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color)
                         all_sprites.add(new_cell)
                         curr_index += 1
                     solving = False
@@ -866,7 +870,7 @@ def play():
                     all_sprites.add(player)
         if solving and curr_index < len(solution_stack):
             curr_cell = solution_stack[curr_index]
-            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + CELL_HEIGHT/2 + maze_startpoint[1], solution_color)
+            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color)
             all_sprites.add(new_cell)
             curr_index += 1
             if curr_index == len(solution_stack)-1:
