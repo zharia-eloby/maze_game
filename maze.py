@@ -27,6 +27,10 @@ pause_menu_background_color = gray
 pause_menu_text_color = black
 pause_menu_button_color = white
 pause_menu_button_text_color = black
+finished_menu_background_color = black
+finished_menu_text_color = white
+finished_menu_button_color = white
+finished_menu_button_text_color = black
 error_color = red
 solution_color = white
 
@@ -283,6 +287,7 @@ def home_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -296,13 +301,11 @@ preset sizes are easy, medium, and hard, or they can customize the size
 def pick_size_screen():
     screen.fill(background_color)
     
-    font_size = 18
-    font = pygame.font.Font(font_file, font_size)
-    exit_text = font.render("press ESCAPE to exit", True, text_color)
-    exit_text_rect = exit_text.get_rect()
-    exit_text_rect.bottom = SCREEN_HEIGHT - 10
-    exit_text_rect.right = SCREEN_WIDTH - 10
-    screen.blit(exit_text, exit_text_rect)
+    back_button = pygame.image.load("arrow.png").convert_alpha()
+    back_button = pygame.transform.scale(back_button, (20, 32))
+    back_button = pygame.transform.rotate(back_button, 180)
+    back_button_rect = back_button.get_rect(topleft=(25, 25))
+    screen.blit(back_button, back_button_rect)
     
     num_buttons = 4
     space_between_buttons = SCREEN_HEIGHT/20
@@ -394,12 +397,15 @@ def pick_size_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
             if event.type == pygame.MOUSEBUTTONDOWN:
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         m_pos = pygame.mouse.get_pos()
+                        if (back_button_rect.collidepoint(m_pos)):
+                            home_screen()
                         if (easy_button_rect.collidepoint(m_pos)):
                             maze_rows = easy_dim[0]
                             maze_cols = easy_dim[1]
@@ -432,13 +438,11 @@ def custom_size_screen():
     rows = 15
     cols = 15
     
-    font_size = 18
-    font = pygame.font.Font(font_file, font_size)
-    exit_text = font.render("press ESCAPE to exit", True, text_color)
-    exit_text_rect = exit_text.get_rect()
-    exit_text_rect.bottom = SCREEN_HEIGHT - 10
-    exit_text_rect.right = SCREEN_WIDTH - 10
-    screen.blit(exit_text, exit_text_rect)
+    back_button = pygame.image.load("arrow.png").convert_alpha()
+    back_button = pygame.transform.scale(back_button, (20, 32))
+    back_button = pygame.transform.rotate(back_button, 180)
+    back_button_rect = back_button.get_rect(topleft=(25, 25))
+    screen.blit(back_button, back_button_rect)
     
     #select dimensions text
     font_size = 36
@@ -554,12 +558,15 @@ def custom_size_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
+                    if (back_button_rect.collidepoint(m_pos)):
+                        pick_size_screen()
                     if (lock_background_rect.collidepoint(m_pos)):
                         if locked:
                             locked = False
@@ -727,6 +734,7 @@ def pause_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     background.set_alpha(0)
@@ -743,6 +751,68 @@ def pause_menu():
                     
                 
         clock.tick(60)
+        
+def finished_menu(message):
+    margin = 35
+    line_spacing = 5
+    
+    #background surface
+    background = pygame.Surface([2*SCREEN_WIDTH/3, SCREEN_HEIGHT/3])
+    background.fill(finished_menu_background_color)
+    background.set_alpha(200)
+    background_rect = background.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+    screen.blit(background, background_rect)
+    
+    #congrats message
+    font_size = 24
+    font = pygame.font.Font(font_file, font_size)
+    message_text = font.render(message, True, finished_menu_text_color)
+    message_text_rect = message_text.get_rect(center=(background_rect.centerx, background_rect.top+margin))
+    screen.blit(message_text, message_text_rect)
+    
+    button_height = 40
+    button_width = background_rect.width-margin*2
+    
+    #play again button
+    play_again_button = pygame.Surface([button_width, button_height])
+    play_again_button.fill(finished_menu_button_color)
+    play_again_button_rect = play_again_button.get_rect(bottomleft=(background_rect.left+margin, background_rect.bottom-margin-line_spacing-button_height))
+    screen.blit(play_again_button, play_again_button_rect)
+    
+    #text for play again button
+    font_size = 16
+    font = pygame.font.Font(font_file, font_size)
+    play_again_text = font.render("play again", True, finished_menu_button_text_color)
+    play_again_text_rect = play_again_text.get_rect(center=play_again_button_rect.center)
+    screen.blit(play_again_text, play_again_text_rect)
+    
+    #exit to home screen button
+    exit_button = pygame.Surface([button_width, button_height])
+    exit_button.fill(finished_menu_button_color)
+    exit_button_rect = exit_button.get_rect(bottomleft=(background_rect.left+margin, background_rect.bottom-margin))
+    screen.blit(exit_button, exit_button_rect)
+    
+    #text for exit button
+    exit_button_text = font.render("exit to home screen", True, finished_menu_button_text_color)
+    exit_button_text_rect = exit_button_text.get_rect(center=exit_button_rect.center)
+    screen.blit(exit_button_text, exit_button_text_rect)
+    
+    pygame.display.update()
+    
+    done = False
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed() == (1, 0, 0):
+                    m_pos = pygame.mouse.get_pos()
+                    if play_again_button_rect.collidepoint(m_pos):    
+                        return True
+                    if exit_button_rect.collidepoint(m_pos):
+                        return False
+        clock.tick(30)
 
 def check_for_flag(flag_list, m_pos):
     for flag in flag_list:
@@ -817,6 +887,7 @@ def play():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+                return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -889,48 +960,14 @@ def play():
         pygame.display.flip()
         
         clock.tick(10)
-                
-    end_card = pygame.Surface([MAZE_WIDTH/3*2, MAZE_HEIGHT/3])
-    end_card.fill(black)
-    end_card_rect = end_card.get_rect(center=[MAZE_WIDTH/2, MAZE_HEIGHT/2])
-    
-    done = False
-    restart = False
-    
-    all_sprites.draw(screen)
-                
-    screen.blit(end_card, end_card_rect)
-    
-    message_text = font.render(message, True, white)
-    text_rect = message_text.get_rect(center=(MAZE_WIDTH/2, MAZE_HEIGHT/2 - font_size*2))
-    screen.blit(message_text, text_rect)
-    
-    replay_text = font.render("press ENTER to play again", True, white)
-    text_rect = replay_text.get_rect(center=(MAZE_WIDTH/2, MAZE_HEIGHT/2))
-    screen.blit(replay_text, text_rect)
-    
-    exit_text = font.render("press ESCAPE to exit", True, white)
-    text_rect = exit_text.get_rect(center=(MAZE_WIDTH/2, MAZE_HEIGHT/2 + font_size*2))
-    screen.blit(exit_text, text_rect)
-
-    pygame.display.flip()
         
-    while not done:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    home_screen()
-                    done = True
-                if event.key == pygame.K_RETURN:
-                    done = True
-                    restart = True
-        
+    restart = finished_menu(message)
     del all_sprites
     if restart:
         play()
-        
+    else:
+        home_screen()
+    
 home_screen()
 
 pygame.quit()
