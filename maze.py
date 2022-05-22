@@ -6,6 +6,7 @@ Maze Game with Pygame
 import pygame
 import random
 import math
+import sys
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -332,7 +333,7 @@ def home_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -442,7 +443,7 @@ def pick_size_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit() 
+                sys.exit() 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
@@ -603,7 +604,7 @@ def custom_size_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
@@ -785,7 +786,7 @@ def pause_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     background.set_alpha(0)
@@ -855,7 +856,7 @@ def finished_menu(message):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                quit()
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -940,7 +941,7 @@ def play():
             if event.type == pygame.QUIT:
                 done = True
                 pygame.quit()
-                quit()
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -1028,5 +1029,5 @@ def play():
 home_screen()
 
 pygame.quit()
-quit()
+sys.exit()
     
