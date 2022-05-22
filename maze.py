@@ -332,7 +332,7 @@ def home_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return
+                quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -442,7 +442,7 @@ def pick_size_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return 
+                quit() 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
@@ -603,7 +603,7 @@ def custom_size_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return
+                quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
@@ -785,7 +785,7 @@ def pause_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return
+                quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     background.set_alpha(0)
@@ -855,7 +855,7 @@ def finished_menu(message):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                return
+                quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -940,6 +940,7 @@ def play():
             if event.type == pygame.QUIT:
                 done = True
                 pygame.quit()
+                quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -987,8 +988,6 @@ def play():
                         new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
                         if solution_image == "line":
                             new_cell.draw_lines(solution_stack[curr_index-1], curr_cell, solution_stack[curr_index+1])
-                        #if solution_image != "circle" and solution_image != "rectangle":
-                            #new_cell.rotate(curr_cell, solution_stack[curr_index+1])
                         all_sprites.add(new_cell)
                         curr_index += 1
                     solving = False
@@ -998,8 +997,6 @@ def play():
         if solving and curr_index < len(solution_stack):
             curr_cell = solution_stack[curr_index]
             new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
-            #if solution_image != "circle" and solution_image != "rectangle":
-                #new_cell.rotate(curr_cell, solution_stack[curr_index+1])
             if solution_image == "line":
                 new_cell.draw_lines(solution_stack[curr_index-1], curr_cell, solution_stack[curr_index+1])
             all_sprites.add(new_cell)
@@ -1031,4 +1028,5 @@ def play():
 home_screen()
 
 pygame.quit()
+quit()
     
