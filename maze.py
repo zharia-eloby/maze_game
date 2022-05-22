@@ -34,6 +34,9 @@ finished_menu_button_text_color = black
 error_color = red
 solution_color = white
 
+#value may be 'rectangle' 'line' or 'circle'
+solution_image = "line"
+
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 750
 
@@ -90,14 +93,56 @@ class Player(pygame.sprite.Sprite):
             return False
 """
 used to represent the starting spot, ending spot, and cells in the solution path of the maze
+type - file path string, 'rectangle', or 'circle'
 """
 class Cell(pygame.sprite.Sprite):
-    def __init__(self, x, y, color):
+    def __init__(self, x, y, color, type):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
-        self.image.fill(color)
+        if type == "rectangle":
+            self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
+            self.image.fill(color)
+            self.rect = self.image.get_rect(topleft=(x, y))
+        elif type == "circle":
+            self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
+            self.image.fill(background_color)
+            self.image.set_colorkey(background_color)
+            self.rect = self.image.get_rect(topleft=(x, y))
+            if (CELL_WIDTH > CELL_HEIGHT):
+                radius = math.ceil(CELL_HEIGHT/8)
+            else:
+                radius = math.ceil(CELL_WIDTH/8)
+            pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), radius)
+        elif type == "line":
+            self.image = pygame.Surface([CELL_WIDTH, CELL_HEIGHT])
+            self.image.fill(background_color)
+            self.image.set_colorkey(background_color)
+            self.rect = self.image.get_rect(topleft=(x - WALL_THICKNESS, y - WALL_THICKNESS))
+            self.color = color
+
+    def draw_lines(self, prev_cell, curr_cell, next_cell):
+        points = []
+        if prev_cell[0] < curr_cell[0]:     #prev_cell is above curr_cell
+            points += [(self.rect.width/2, 0)]
+        elif prev_cell[0] > curr_cell[0]:   #prev_cell is below curr_cell
+            points += [(self.rect.width/2, self.rect.height)]
+        elif prev_cell[1] < curr_cell[1]:   #prev_cell is to the left of curr_cell
+            points += [(0, self.rect.height/2)]
+        else:                               #prev_cell is to the right of curr_cell
+            points += [(self.rect.width, self.rect.height/2)]
+            
+        points += [(self.rect.width/2, self.rect.height/2)]
         
-        self.rect = self.image.get_rect(topleft=(x, y))
+        if next_cell[0] < curr_cell[0]:     #next_cell is above curr_cell
+            points += [(self.rect.width/2, 0)]
+        elif next_cell[0] > curr_cell[0]:   #next_cell is below curr_cell
+            points += [(self.rect.width/2, self.rect.height)]
+        elif next_cell[1] < curr_cell[1]:   #next_cell is to the left of curr_cell
+            points += [(0, self.rect.height/2)]
+        else:                               #next_cell is to the right of curr_cell
+            points += [(self.rect.width, self.rect.height/2)]
+            
+        pygame.draw.lines(self.image, self.color, False, points, 2)
+
 
 """
 type - either 'v' (vertical wall) or 'h' (horizontal wall)
@@ -710,9 +755,14 @@ def pause_menu():
     #mouse right click text
     font_size = 16
     font = pygame.font.Font(font_file, font_size)
-    right_click_text = font.render("to place marker", True, pause_menu_text_color)
+    right_click_text = font.render("to place/remove a marker", True, pause_menu_text_color)
     right_click_text_rect = right_click_text.get_rect(midleft=(mouse_rect.right+line_spacing, mouse_rect.centery))
     screen.blit(right_click_text, right_click_text_rect)
+    
+    flag_image = pygame.image.load("red-flag.png").convert_alpha()
+    flag_image = pygame.transform.scale(flag_image, (30, 30))
+    flag_rect = flag_image.get_rect(bottomleft=right_click_text_rect.bottomright)
+    screen.blit(flag_image, flag_rect)
     
     #exit button
     exit_button = pygame.Surface([background_rect.width-margin*2, 50])
@@ -854,10 +904,10 @@ def play():
     startpoint = (random.randrange(0, maze_rows), random.randrange(0, maze_cols))
     while (startpoint == endpoint):
         startpoint = (random.randrange(0, maze_rows), random.randrange(0, maze_cols))
-    start_cell = Cell(CELL_WIDTH * startpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * startpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, startpoint_color)
+    start_cell = Cell(CELL_WIDTH * startpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * startpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, startpoint_color, "rectangle")
     all_sprites.add(start_cell)
     
-    end_cell = Cell(CELL_WIDTH * endpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * endpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, endpoint_color)
+    end_cell = Cell(CELL_WIDTH * endpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * endpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, endpoint_color, "rectangle")
     all_sprites.add(end_cell)
     
     player = Player(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], player_color)
@@ -882,12 +932,13 @@ def play():
     solving = False
     curr_index = 1
     paused = False
+
     while not done:
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                done = True
                 pygame.quit()
-                return
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
@@ -932,7 +983,11 @@ def play():
                 if event.key == pygame.K_RETURN and solving:
                     while (curr_index < len(solution_stack)-1):
                         curr_cell = solution_stack[curr_index]
-                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color)
+                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
+                        if solution_image == "line":
+                            new_cell.draw_lines(solution_stack[curr_index-1], curr_cell, solution_stack[curr_index+1])
+                        #if solution_image != "circle" and solution_image != "rectangle":
+                            #new_cell.rotate(curr_cell, solution_stack[curr_index+1])
                         all_sprites.add(new_cell)
                         curr_index += 1
                     solving = False
@@ -941,10 +996,14 @@ def play():
                     all_sprites.add(player)
         if solving and curr_index < len(solution_stack):
             curr_cell = solution_stack[curr_index]
-            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color)
+            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
+            #if solution_image != "circle" and solution_image != "rectangle":
+                #new_cell.rotate(curr_cell, solution_stack[curr_index+1])
+            if solution_image == "line":
+                new_cell.draw_lines(solution_stack[curr_index-1], curr_cell, solution_stack[curr_index+1])
             all_sprites.add(new_cell)
             curr_index += 1
-            if curr_index == len(solution_stack)-1:
+            if curr_index >= len(solution_stack)-1:
                 solving = False
                 solved = True
                 all_sprites.remove(player)
@@ -959,7 +1018,7 @@ def play():
         
         pygame.display.flip()
         
-        clock.tick(10)
+        clock.tick(30)
         
     restart = finished_menu(message)
     del all_sprites
