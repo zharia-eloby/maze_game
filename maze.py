@@ -759,6 +759,7 @@ def pause_menu():
     right_click_text_rect = right_click_text.get_rect(midleft=(mouse_rect.right+line_spacing, mouse_rect.centery))
     screen.blit(right_click_text, right_click_text_rect)
     
+    #flag image
     flag_image = pygame.image.load("red-flag.png").convert_alpha()
     flag_image = pygame.transform.scale(flag_image, (30, 30))
     flag_rect = flag_image.get_rect(bottomleft=right_click_text_rect.bottomright)
