@@ -45,6 +45,17 @@ MAZE_WIDTH = 600
 MAZE_HEIGHT = 600
 
 font_file = "Roboto-Regular.ttf"
+flag_file = "red-flag.png"
+back_button_file = "arrow.png"
+arrow_file = "arrow-2.png"
+ratio_locked_file = "ratio-locked.png"
+ratio_unlocked_file = "ratio-unlocked.png"
+arrow_keys_file = "arrow-keys.png"
+s_key_file = "s-key.png"
+mouse_right_click_file = "mouse-right-click.png"
+close_button_file = "close-button.png"
+pause_button_file = "pause-button.png"
+
 
 maze_cols = 10
 maze_rows = 10
@@ -162,7 +173,7 @@ class Wall(pygame.sprite.Sprite):
 class Flag(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("red-flag.png").convert_alpha()
+        self.image = pygame.image.load(flag_file).convert_alpha()
         self.image = pygame.transform.scale(self.image, (math.floor(CELL_WIDTH * 0.75), math.floor(CELL_HEIGHT * 0.75)))
         self.rect = self.image.get_rect(center=(x, y))
     
@@ -347,9 +358,8 @@ preset sizes are easy, medium, and hard, or they can customize the size
 def pick_size_screen():
     screen.fill(background_color)
     
-    back_button = pygame.image.load("arrow.png").convert_alpha()
-    back_button = pygame.transform.scale(back_button, (20, 32))
-    back_button = pygame.transform.rotate(back_button, 180)
+    back_button = pygame.image.load(back_button_file).convert_alpha()
+    back_button = pygame.transform.scale(back_button, (36, 49))
     back_button_rect = back_button.get_rect(topleft=(25, 25))
     screen.blit(back_button, back_button_rect)
     
@@ -484,9 +494,8 @@ def custom_size_screen():
     rows = 15
     cols = 15
     
-    back_button = pygame.image.load("arrow.png").convert_alpha()
-    back_button = pygame.transform.scale(back_button, (20, 32))
-    back_button = pygame.transform.rotate(back_button, 180)
+    back_button = pygame.image.load(back_button_file).convert_alpha()
+    back_button = pygame.transform.scale(back_button, (36, 49))
     back_button_rect = back_button.get_rect(topleft=(25, 25))
     screen.blit(back_button, back_button_rect)
     
@@ -529,36 +538,36 @@ def custom_size_screen():
     screen.blit(play_text, play_text_rect)
     
     #arrows
-    arrow_width = 100
-    arrow_height = 100
+    arrow_width = 49
+    arrow_height = 36
     
     arrow_padding = 125
     
-    row_up_arrow_image = pygame.image.load("arrow-2.png").convert_alpha()
+    row_up_arrow_image = pygame.image.load(arrow_file).convert_alpha()
     row_up_arrow_image = pygame.transform.scale(row_up_arrow_image, (arrow_width, arrow_height))
     row_up_arrow_rect = row_up_arrow_image.get_rect(center=(row_text_rect.centerx, row_text_rect.centery - arrow_padding))
     screen.blit(row_up_arrow_image, row_up_arrow_rect)
     
-    row_down_arrow_image = pygame.image.load("arrow-2.png").convert_alpha()
+    row_down_arrow_image = pygame.image.load(arrow_file).convert_alpha()
     row_down_arrow_image = pygame.transform.scale(row_down_arrow_image, (arrow_width, arrow_height))
     row_down_arrow_image = pygame.transform.rotate(row_down_arrow_image, 180)
     row_down_arrow_rect = row_down_arrow_image.get_rect(center=(row_text_rect.centerx, row_text_rect.centery + arrow_padding))
     screen.blit(row_down_arrow_image, row_down_arrow_rect)
     
-    col_up_arrow_image = pygame.image.load("arrow-2.png").convert_alpha()
+    col_up_arrow_image = pygame.image.load(arrow_file).convert_alpha()
     col_up_arrow_image = pygame.transform.scale(col_up_arrow_image, (arrow_width, arrow_height))
     col_up_arrow_rect = col_up_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery - arrow_padding))
     screen.blit(col_up_arrow_image, col_up_arrow_rect)
     
-    col_down_arrow_image = pygame.image.load("arrow-2.png").convert_alpha()
+    col_down_arrow_image = pygame.image.load(arrow_file).convert_alpha()
     col_down_arrow_image = pygame.transform.scale(col_down_arrow_image, (arrow_width, arrow_height))
     col_down_arrow_image = pygame.transform.rotate(col_down_arrow_image, 180)
     col_down_arrow_rect = col_down_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery + arrow_padding))
     screen.blit(col_down_arrow_image, col_down_arrow_rect)
     
     #ratio lock
-    lock_image = pygame.image.load("ratio-lock.png").convert_alpha()
-    lock_image = pygame.transform.scale(lock_image, (30, 30))
+    lock_image = pygame.image.load(ratio_locked_file).convert_alpha()
+    lock_image = pygame.transform.scale(lock_image, (40, 73))
     lock_image_rect = lock_image.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2+125))
     lock_background = pygame.Surface([lock_image_rect.width+10, lock_image_rect.height+10])
     lock_background.fill(button_color)
@@ -616,10 +625,14 @@ def custom_size_screen():
                     if (lock_background_rect.collidepoint(m_pos)):
                         if locked:
                             locked = False
+                            lock_image = pygame.image.load(ratio_unlocked_file).convert_alpha()
                             lock_background.fill(background_color)
                         else:
+                            lock_image = pygame.image.load(ratio_locked_file).convert_alpha()
                             lock_background.fill(button_color)
                             locked = True
+                        lock_image = pygame.transform.scale(lock_image, (40, 73))
+                        lock_image_rect = lock_image.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2+125))
                         pygame.display.update(screen.blit(lock_background, lock_background_rect))
                         pygame.display.update(screen.blit(lock_image, lock_image_rect))
                     if (play_button_rect.collidepoint(m_pos)):
@@ -716,26 +729,26 @@ def pause_menu():
     screen.blit(paused_text, paused_text_rect)
     
     #close button
-    close_button_image = pygame.image.load("close-button.png").convert_alpha()
+    close_button_image = pygame.image.load(close_button_file).convert_alpha()
     close_button_image = pygame.transform.scale(close_button_image, (25, 25))
     close_button_rect = close_button_image.get_rect(midright=(paused_bar_rect.right-line_spacing, paused_bar_rect.centery))
     screen.blit(close_button_image, close_button_rect)
     
     #arrow keys for nav info
-    arrow_keys_image = pygame.image.load("arrow-keys.png").convert_alpha()
-    arrow_keys_image = pygame.transform.scale(arrow_keys_image, (50, 50))
+    arrow_keys_image = pygame.image.load(arrow_keys_file).convert_alpha()
+    arrow_keys_image = pygame.transform.scale(arrow_keys_image, (70, math.floor((206/298)*70)))
     arrow_keys_rect = arrow_keys_image.get_rect(topleft=(paused_bar_rect.left+margin, paused_bar_rect.bottom+line_spacing))
     screen.blit(arrow_keys_image, arrow_keys_rect)
     
     #navigation info
     font_size = 16
     font = pygame.font.Font(font_file, font_size)
-    nav_text = font.render("to navigate through the maze", True, pause_menu_text_color)
+    nav_text = font.render("- move through the maze", True, pause_menu_text_color)
     nav_text_rect = nav_text.get_rect(midleft=(arrow_keys_rect.right+line_spacing, arrow_keys_rect.centery))
     screen.blit(nav_text, nav_text_rect)
     
     #s key image
-    s_key_image = pygame.image.load("s-key.png").convert_alpha()
+    s_key_image = pygame.image.load(s_key_file).convert_alpha()
     s_key_image = pygame.transform.scale(s_key_image, (50, 50))
     s_key_rect = s_key_image.get_rect(topleft=(arrow_keys_rect.left, arrow_keys_rect.bottom+line_spacing))
     screen.blit(s_key_image, s_key_rect)
@@ -743,25 +756,25 @@ def pause_menu():
     #press S to solve text
     font_size = 16
     font = pygame.font.Font(font_file, font_size)
-    press_S_text = font.render("to see the maze solution", True, pause_menu_text_color)
+    press_S_text = font.render("- toggle maze solution", True, pause_menu_text_color)
     press_S_rect = press_S_text.get_rect(midleft=(s_key_rect.right+line_spacing, s_key_rect.centery))
     screen.blit(press_S_text, press_S_rect)
     
     #mouse right click image
-    mouse_image = pygame.image.load("mouse-right-click.png").convert_alpha()
-    mouse_image = pygame.transform.scale(mouse_image, (50, 50))
+    mouse_image = pygame.image.load(mouse_right_click_file).convert_alpha()
+    mouse_image = pygame.transform.scale(mouse_image, (50, 62))
     mouse_rect = mouse_image.get_rect(topleft=(s_key_rect.left, s_key_rect.bottom+line_spacing))
     screen.blit(mouse_image, mouse_rect)
     
     #mouse right click text
     font_size = 16
     font = pygame.font.Font(font_file, font_size)
-    right_click_text = font.render("to place/remove a marker", True, pause_menu_text_color)
+    right_click_text = font.render("- place/remove ", True, pause_menu_text_color)
     right_click_text_rect = right_click_text.get_rect(midleft=(mouse_rect.right+line_spacing, mouse_rect.centery))
     screen.blit(right_click_text, right_click_text_rect)
     
     #flag image
-    flag_image = pygame.image.load("red-flag.png").convert_alpha()
+    flag_image = pygame.image.load(flag_file).convert_alpha()
     flag_image = pygame.transform.scale(flag_image, (30, 30))
     flag_rect = flag_image.get_rect(bottomleft=right_click_text_rect.bottomright)
     screen.blit(flag_image, flag_rect)
@@ -916,7 +929,7 @@ def play():
     all_sprites.add(player)
     
     #pause button
-    pause_button_image = pygame.image.load("pause-button.png").convert_alpha()
+    pause_button_image = pygame.image.load(pause_button_file).convert_alpha()
     pause_button_image = pygame.transform.scale(pause_button_image, (30, 30))
     pause_button_rect = pause_button_image.get_rect(topright=(SCREEN_WIDTH - 10, 10))
     screen.blit(pause_button_image, pause_button_rect)
@@ -1025,9 +1038,10 @@ def play():
         play()
     else:
         home_screen()
-    
-home_screen()
 
-pygame.quit()
-sys.exit()
+if __name__ == "__main__":   
+    home_screen()
+
+    pygame.quit()
+    sys.exit()
     
