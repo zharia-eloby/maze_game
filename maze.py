@@ -52,7 +52,7 @@ arrow_file = "images/arrow.png"
 ratio_locked_file = "images/ratio-locked.png"
 ratio_unlocked_file = "images/ratio-unlocked.png"
 arrow_keys_file = "images/arrow-keys.png"
-s_key_file = "images/s-key.png"
+space_bar_file = "images/space-bar.png"
 mouse_right_click_file = "images/mouse-right-click.png"
 close_button_file = "images/close-button.png"
 pause_button_file = "images/pause-button.png"
@@ -766,25 +766,25 @@ def pause_menu():
     nav_text_rect = nav_text.get_rect(midleft=(arrow_keys_rect.right+line_spacing, arrow_keys_rect.centery))
     screen.blit(nav_text, nav_text_rect)
     
-    #s key image
-    dimensions = get_dimensions(None, desired_height, s_key_file)
-    s_key_image = pygame.image.load(s_key_file).convert_alpha()
-    s_key_image = pygame.transform.smoothscale(s_key_image, (dimensions[0], dimensions[1]))
-    s_key_rect = s_key_image.get_rect(topleft=(arrow_keys_rect.left, arrow_keys_rect.bottom+line_spacing))
-    screen.blit(s_key_image, s_key_rect)
+    #space bar image
+    dimensions = get_dimensions(100, None, space_bar_file)
+    space_bar_image = pygame.image.load(space_bar_file).convert_alpha()
+    space_bar_image = pygame.transform.smoothscale(space_bar_image, (dimensions[0], dimensions[1]))
+    space_bar_rect = space_bar_image.get_rect(topleft=(arrow_keys_rect.left, arrow_keys_rect.bottom+line_spacing))
+    screen.blit(space_bar_image, space_bar_rect)
     
-    #press S to solve text
+    #press space text
     font_size = 16
     font = pygame.font.Font(font_file, font_size)
-    press_S_text = font.render("- toggle maze solution", True, pause_menu_text_color)
-    press_S_rect = press_S_text.get_rect(midleft=(s_key_rect.right+line_spacing, s_key_rect.centery))
-    screen.blit(press_S_text, press_S_rect)
+    space_bar_text = font.render("- toggle maze solution", True, pause_menu_text_color)
+    space_bar_text_rect = space_bar_text.get_rect(midleft=(space_bar_rect.right+line_spacing, space_bar_rect.centery))
+    screen.blit(space_bar_text, space_bar_text_rect)
     
     #mouse right click image
     dimensions = get_dimensions(None, desired_height, mouse_right_click_file)
     mouse_image = pygame.image.load(mouse_right_click_file).convert_alpha()
     mouse_image = pygame.transform.smoothscale(mouse_image, (dimensions[0], dimensions[1]))
-    mouse_rect = mouse_image.get_rect(topleft=(s_key_rect.left, s_key_rect.bottom+line_spacing))
+    mouse_rect = mouse_image.get_rect(topleft=(space_bar_rect.left, space_bar_rect.bottom+line_spacing))
     screen.blit(mouse_image, mouse_rect)
     
     #mouse right click text
@@ -996,18 +996,18 @@ def play():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_menu()
-                if event.key == pygame.K_UP and not solving:
+                if (event.key == pygame.K_UP or event.key == pygame.K_w) and not solving:
                     player.update(0, -1, wall_list)
-                if event.key == pygame.K_DOWN and not solving:
+                if (event.key == pygame.K_DOWN or event.key == pygame.K_s) and not solving:
                     player.update(0, 1, wall_list)
-                if event.key == pygame.K_LEFT and not solving:
+                if (event.key == pygame.K_LEFT or event.key == pygame.K_a) and not solving:
                     player.update(-1, 0, wall_list)
-                if event.key == pygame.K_RIGHT and not solving:
+                if (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and not solving:
                     player.update(1, 0, wall_list)
                 if pygame.sprite.collide_rect(player, end_cell):
                     message = "YOU DID IT!"
                     done = True
-                if event.key == pygame.K_s and not solved:
+                if event.key == pygame.K_SPACE and not solved:
                     if solving:
                         solving = False
                         all_sprites.remove(player)
