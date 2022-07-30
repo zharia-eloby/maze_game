@@ -47,7 +47,7 @@ MAZE_HEIGHT = 600
 
 font_file = "Roboto-Regular.ttf"
 flag_file = "images/red-flag.png"
-back_button_file = "images/back-arrow.png"
+back_button_file = "images/back-button.png"
 arrow_file = "images/arrow.png"
 ratio_locked_file = "images/ratio-locked.png"
 ratio_unlocked_file = "images/ratio-unlocked.png"
@@ -63,10 +63,10 @@ maze_rows = 10
 
 maze_startpoint = (0, 75)
 
-CELL_WIDTH = 0
-CELL_HEIGHT = 0
+CELL_WIDTH = None      #placeholder. will assign later
+CELL_HEIGHT = None     #placeholder. will assign later
 
-WALL_THICKNESS = 0
+WALL_THICKNESS = None  #placeholder. will assign later
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
@@ -721,7 +721,7 @@ def get_dimensions(desired_width, desired_height, image_file):
         new_width = desired_width
         new_height = math.floor(desired_width * height/width)
     return (new_width, new_height)
-
+    
 def pause_menu():
     margin = 20
     line_spacing = 10
