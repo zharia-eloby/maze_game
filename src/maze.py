@@ -66,15 +66,10 @@ pygame.display.set_caption("Maze - created by Zharia Eloby")
 clock = pygame.time.Clock()
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, width, height, button_color):
+    def __init__(self, width, height):
         pygame.sprite.Sprite.__init__(self)
-
         self.width = width
         self.height = height
-        self.button_color = button_color
-
-        self.button_text = None
-        self.button_text_rect = None
         self.button_rect = pygame.Rect(0, 0, self.width, self.height)
 
     def setCenterPosition(self, x, y):
@@ -83,6 +78,20 @@ class Button(pygame.sprite.Sprite):
     def setTopLeftPosition(self, x, y):
         self.button_rect.topleft = (x, y)
 
+    def draw_button(self):
+        pass
+
+    def is_clicked(self, mouse_position):
+        return self.button_rect.collidepoint(mouse_position)
+
+class TextButton(Button):
+    def __init__(self, width, height, button_color):
+        super().__init__(width, height)
+        self.button_color = button_color
+        self.button_text = None
+        self.button_text_rect = None
+        self.button_rect = pygame.Rect(0, 0, self.width, self.height)
+
     def setText(self, text, font_size, text_color):
         font = pygame.font.Font(font_file, font_size)
         self.button_text = font.render(text, True, text_color)
@@ -90,11 +99,18 @@ class Button(pygame.sprite.Sprite):
 
     def draw_button(self):
         pygame.draw.rect(screen, self.button_color, self.button_rect, 0, 12)
-        if (self.button_text and self.button_text_rect):
-            screen.blit(self.button_text, self.button_text_rect)
+        screen.blit(self.button_text, self.button_text_rect)
 
-    def is_clicked(self, mouse_position):
-        return self.button_rect.collidepoint(mouse_position)
+class ImageButton(Button):
+    def __init__(self, width, height, file_path):
+        super().__init__(width, height)
+        self.file_path = file_path
+        self.button = pygame.image.load(self.file_path).convert_alpha()
+        self.button = pygame.transform.scale(self.button, (self.width, self.height))
+        self.button_rect = self.button.get_rect()
+
+    def draw_button(self):
+        screen.blit(self.button, self.button_rect)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
@@ -343,7 +359,7 @@ def home_screen():
     screen.blit(credit_text, credit_text_rect)
     
     #play button
-    play_button = Button(SCREEN_WIDTH/2, SCREEN_HEIGHT/8, button_color)
+    play_button = TextButton(SCREEN_WIDTH/2, SCREEN_HEIGHT/8, button_color)
     play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + play_button.height/2)
     play_button.setText("play", 24, button_text_color)
     play_button.draw_button()
@@ -368,11 +384,9 @@ preset sizes are easy, medium, and hard, or they can customize the size
 def pick_size_screen():
     screen.fill(background_color)
     
-    back_button = pygame.image.load(image_file_path + "arrow.png").convert_alpha()
-    back_button = pygame.transform.scale(back_button, (20, 32))
-    back_button = pygame.transform.rotate(back_button, 180)
-    back_button_rect = back_button.get_rect(topleft=(25, 25))
-    screen.blit(back_button, back_button_rect)
+    back_button = ImageButton(20, 32, image_file_path + "arrow.png")
+    back_button.setTopLeftPosition(25, 25)
+    back_button.draw_button()
     
     num_buttons = 4
     space_between_buttons = SCREEN_HEIGHT/20
@@ -387,25 +401,25 @@ def pick_size_screen():
     font = pygame.font.Font(font_file, font_size)
     
     #easy button
-    easy_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    easy_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
     easy_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons + button_height/2)
     easy_button.setText("easy", font_size, button_text_color)
     easy_button.draw_button()
     
     #medium button
-    medium_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    medium_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
     medium_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*2 + button_height + button_height/2)
     medium_button.setText("medium", font_size, button_text_color)
     medium_button.draw_button()
     
     #hard button
-    hard_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    hard_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
     hard_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*3+button_height*2 + button_height/2)
     hard_button.setText("hard", font_size, button_text_color)
     hard_button.draw_button()
     
     #custom button
-    custom_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    custom_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
     custom_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*4+button_height*3 + button_height/2)
     custom_button.setText("custom", font_size, button_text_color)
     custom_button.draw_button()
@@ -430,7 +444,7 @@ def pick_size_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         m_pos = pygame.mouse.get_pos()
-                        if (back_button_rect.collidepoint(m_pos)):
+                        if (back_button.is_clicked(m_pos)):
                             home_screen()
                         if (easy_button.is_clicked(m_pos)):
                             maze_rows = easy_dim[0]
@@ -464,11 +478,9 @@ def custom_size_screen():
     rows = 15
     cols = 15
     
-    back_button = pygame.image.load(image_file_path + "arrow.png").convert_alpha()
-    back_button = pygame.transform.scale(back_button, (20, 32))
-    back_button = pygame.transform.rotate(back_button, 180)
-    back_button_rect = back_button.get_rect(topleft=(25, 25))
-    screen.blit(back_button, back_button_rect)
+    back_button = ImageButton(20, 32, image_file_path + "arrow.png")
+    back_button.setTopLeftPosition(25, 25)
+    back_button.draw_button()
     
     #select dimensions text
     font_size = 36
@@ -498,7 +510,7 @@ def custom_size_screen():
     
     #play button
     font_size = 24
-    play_button = Button(SCREEN_WIDTH/2, font_size*2, button_color)
+    play_button = TextButton(SCREEN_WIDTH/2, font_size*2, button_color)
     play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/5*4)
     play_button.setText("play", font_size, button_text_color)
     play_button.draw_button()
@@ -509,27 +521,21 @@ def custom_size_screen():
     
     arrow_padding = 125
     
-    row_up_arrow_image = pygame.image.load(image_file_path + "arrow-2.png").convert_alpha()
-    row_up_arrow_image = pygame.transform.scale(row_up_arrow_image, (arrow_width, arrow_height))
-    row_up_arrow_rect = row_up_arrow_image.get_rect(center=(row_text_rect.centerx, row_text_rect.centery - arrow_padding))
-    screen.blit(row_up_arrow_image, row_up_arrow_rect)
+    row_up_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "up-arrow.png")
+    row_up_arrow_button.setCenterPosition(row_text_rect.centerx, row_text_rect.centery - arrow_padding)
+    row_up_arrow_button.draw_button()
     
-    row_down_arrow_image = pygame.image.load(image_file_path + "arrow-2.png").convert_alpha()
-    row_down_arrow_image = pygame.transform.scale(row_down_arrow_image, (arrow_width, arrow_height))
-    row_down_arrow_image = pygame.transform.rotate(row_down_arrow_image, 180)
-    row_down_arrow_rect = row_down_arrow_image.get_rect(center=(row_text_rect.centerx, row_text_rect.centery + arrow_padding))
-    screen.blit(row_down_arrow_image, row_down_arrow_rect)
+    row_down_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "down-arrow.png")
+    row_down_arrow_button.setCenterPosition(row_text_rect.centerx, row_text_rect.centery + arrow_padding)
+    row_down_arrow_button.draw_button()
     
-    col_up_arrow_image = pygame.image.load(image_file_path + "arrow-2.png").convert_alpha()
-    col_up_arrow_image = pygame.transform.scale(col_up_arrow_image, (arrow_width, arrow_height))
-    col_up_arrow_rect = col_up_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery - arrow_padding))
-    screen.blit(col_up_arrow_image, col_up_arrow_rect)
+    col_up_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "up-arrow.png")
+    col_up_arrow_button.setCenterPosition(col_text_rect.centerx, col_text_rect.centery - arrow_padding)
+    col_up_arrow_button.draw_button()
     
-    col_down_arrow_image = pygame.image.load(image_file_path + "arrow-2.png").convert_alpha()
-    col_down_arrow_image = pygame.transform.scale(col_down_arrow_image, (arrow_width, arrow_height))
-    col_down_arrow_image = pygame.transform.rotate(col_down_arrow_image, 180)
-    col_down_arrow_rect = col_down_arrow_image.get_rect(center=(col_text_rect.centerx, col_text_rect.centery + arrow_padding))
-    screen.blit(col_down_arrow_image, col_down_arrow_rect)
+    col_down_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "down-arrow.png")
+    col_down_arrow_button.setCenterPosition(col_text_rect.centerx, col_text_rect.centery + arrow_padding)
+    col_down_arrow_button.draw_button()
     
     #ratio lock
     lock_image = pygame.image.load(image_file_path + "ratio-lock.png").convert_alpha()
@@ -586,7 +592,7 @@ def custom_size_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
-                    if (back_button_rect.collidepoint(m_pos)):
+                    if (back_button.is_clicked(m_pos)):
                         pick_size_screen()
                     if (lock_background_rect.collidepoint(m_pos)):
                         if locked:
@@ -611,28 +617,28 @@ def custom_size_screen():
                         play()
                         ready = True
                         break
-                    if (row_up_arrow_rect.collidepoint(m_pos) and rows < row_max):
+                    if (row_up_arrow_button.is_clicked(m_pos) and rows < row_max):
                         rows += 1
                         if locked: 
                             cols += 1
                         elif (rows - cols > 10):
                             cols += 1
                             display_bounds_message = True
-                    if (row_down_arrow_rect.collidepoint(m_pos) and rows > row_min):
+                    if (row_down_arrow_button.is_clicked(m_pos) and rows > row_min):
                         rows -= 1
                         if locked:
                             cols -= 1
                         elif (cols - rows > 10):
                             cols -= 1
                             display_bounds_message = True
-                    if (col_up_arrow_rect.collidepoint(m_pos) and cols < col_max):
+                    if (col_up_arrow_button.is_clicked(m_pos) and cols < col_max):
                         cols += 1
                         if locked:
                             rows += 1
                         elif (cols - rows > 10):
                             rows += 1
                             display_bounds_message = True
-                    if (col_down_arrow_rect.collidepoint(m_pos) and cols > col_min):
+                    if (col_down_arrow_button.is_clicked(m_pos) and cols > col_min):
                         cols -= 1
                         if locked:
                             rows -= 1
@@ -691,10 +697,9 @@ def pause_menu():
     screen.blit(paused_text, paused_text_rect)
     
     #close button
-    close_button_image = pygame.image.load(image_file_path + "close-button.png").convert_alpha()
-    close_button_image = pygame.transform.scale(close_button_image, (25, 25))
-    close_button_rect = close_button_image.get_rect(midright=(paused_bar_rect.right-line_spacing, paused_bar_rect.centery))
-    screen.blit(close_button_image, close_button_rect)
+    close_button = ImageButton(25, 25, image_file_path + "close-button.png")
+    close_button.setCenterPosition(paused_bar_rect.right-line_spacing-(close_button.height/2), paused_bar_rect.centery)
+    close_button.draw_button()
     
     #arrow keys for nav info
     arrow_keys_image = pygame.image.load(image_file_path + "arrow-keys.png").convert_alpha()
@@ -742,7 +747,7 @@ def pause_menu():
     screen.blit(flag_image, flag_rect)
     
     #exit button
-    exit_button = Button(background_rect.width-margin*2, 50, pause_menu_button_color)
+    exit_button = TextButton(background_rect.width-margin*2, 50, pause_menu_button_color)
     exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom-margin - exit_button.height/2)
     exit_button.setText("exit to home screen", 16, pause_menu_button_text_color)
     exit_button.draw_button()
@@ -765,7 +770,7 @@ def pause_menu():
                     if exit_button.is_clicked(m_pos):
                         home_screen()
                         paused = False
-                    if close_button_rect.collidepoint(m_pos):
+                    if close_button.is_clicked(m_pos):
                         background.set_alpha(0)
                         paused = False
                     
@@ -795,13 +800,13 @@ def finished_menu(message):
     font_size = 16
     
     #play again button
-    play_again_button = Button(button_width, button_height, finished_menu_button_color)
+    play_again_button = TextButton(button_width, button_height, finished_menu_button_color)
     play_again_button.setCenterPosition(background_rect.centerx, background_rect.bottom - button_height/2 - button_height - margin - line_spacing)
     play_again_button.setText("play again", font_size, finished_menu_button_text_color)
     play_again_button.draw_button()
     
     #exit to home screen button
-    exit_button = Button(button_width, button_height, finished_menu_button_color)
+    exit_button = TextButton(button_width, button_height, finished_menu_button_color)
     exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom - margin - button_height/2)
     exit_button.setText("exit to home screen", font_size, finished_menu_button_text_color)
     exit_button.draw_button()
@@ -873,10 +878,9 @@ def play():
     all_sprites.add(player)
     
     #pause button
-    pause_button_image = pygame.image.load(image_file_path + "pause-button.png").convert_alpha()
-    pause_button_image = pygame.transform.scale(pause_button_image, (30, 30))
-    pause_button_rect = pause_button_image.get_rect(topright=(SCREEN_WIDTH - 10, 10))
-    screen.blit(pause_button_image, pause_button_rect)
+    pause_button = ImageButton(30, 30, image_file_path + "pause-button.png")
+    pause_button.setTopLeftPosition(SCREEN_WIDTH - 10 - pause_button.width, 10)
+    pause_button.draw_button()
     
     #'press Enter to skip animation'
     font_size = 24
@@ -902,7 +906,7 @@ def play():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
-                    if (pause_button_rect.collidepoint(m_pos)):
+                    if (pause_button.is_clicked(m_pos)):
                         pause_menu()
                         paused = True
                 if pygame.mouse.get_pressed() == (0, 0, 1):
@@ -968,7 +972,7 @@ def play():
         screen.fill(background_color)
         all_sprites.draw(screen)
         
-        screen.blit(pause_button_image, pause_button_rect)
+        pause_button.draw_button()
         if solving:
             screen.blit(skip_text, skip_text_rect)
         
