@@ -57,6 +57,45 @@ CELL_HEIGHT = 0
 
 WALL_THICKNESS = 0
 
+pygame.init()
+pygame.font.init()
+
+screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+pygame.display.set_caption("Maze - created by Zharia Eloby")
+
+clock = pygame.time.Clock()
+
+class Button(pygame.sprite.Sprite):
+    def __init__(self, width, height, button_color):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.width = width
+        self.height = height
+        self.button_color = button_color
+
+        self.button_text = None
+        self.button_text_rect = None
+        self.button_rect = pygame.Rect(0, 0, self.width, self.height)
+
+    def setCenterPosition(self, x, y):
+        self.button_rect.center = (x, y)
+
+    def setTopLeftPosition(self, x, y):
+        self.button_rect.topleft = (x, y)
+
+    def setText(self, text, font_size, text_color):
+        font = pygame.font.Font(font_file, font_size)
+        self.button_text = font.render(text, True, text_color)
+        self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
+
+    def draw_button(self):
+        pygame.draw.rect(screen, self.button_color, self.button_rect, 0, 12)
+        if (self.button_text and self.button_text_rect):
+            screen.blit(self.button_text, self.button_text_rect)
+
+    def is_clicked(self, mouse_position):
+        return self.button_rect.collidepoint(mouse_position)
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
         pygame.sprite.Sprite.__init__(self)
@@ -67,10 +106,7 @@ class Player(pygame.sprite.Sprite):
         
         #cell width may differ from cell height -> make the diameter of the player object that of the lesser value between 
         #   CELL_HEIGHT and CELL_WIDTH so the player image doesn't overlap the walls of the maze
-        if CELL_WIDTH > CELL_HEIGHT:
-            pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), (CELL_HEIGHT - WALL_THICKNESS)/3)
-        else:
-            pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), (CELL_WIDTH - WALL_THICKNESS)/3)
+        pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), min((CELL_HEIGHT - WALL_THICKNESS)/3, (CELL_WIDTH - WALL_THICKNESS)/3))
 
     """
     update() called to move the player
@@ -169,14 +205,6 @@ class Flag(pygame.sprite.Sprite):
     
     def is_clicked(self, m_pos):
         return self.rect.collidepoint(m_pos)
-
-pygame.init()
-pygame.font.init()
-
-screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-pygame.display.set_caption("Maze - created by Zharia Eloby")
-
-clock = pygame.time.Clock()
 
 """
 only used when creating the maze. returns a list of unvisited neighbors
@@ -315,18 +343,10 @@ def home_screen():
     screen.blit(credit_text, credit_text_rect)
     
     #play button
-    play_button = pygame.Surface([SCREEN_WIDTH/2, SCREEN_HEIGHT/8])
-    play_button.fill(button_color)
-    play_rect = play_button.get_rect(center=(SCREEN_WIDTH/2, 0))
-    play_rect.top = SCREEN_HEIGHT/2
-    
-    font_size = 24
-    font = pygame.font.Font(font_file, font_size)
-    
-    play_text = font.render("play", True, button_text_color)
-    play_text_rect = play_text.get_rect(center=play_rect.center)
-    screen.blit(play_button, play_rect)
-    screen.blit(play_text, play_text_rect)
+    play_button = Button(SCREEN_WIDTH/2, SCREEN_HEIGHT/8, button_color)
+    play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + play_button.height/2)
+    play_button.setText("play", 24, button_text_color)
+    play_button.draw_button()
     
     pygame.display.flip()
     
@@ -338,7 +358,7 @@ def home_screen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
-                    if (play_rect.collidepoint(m_pos)): 
+                    if (play_button.is_clicked(m_pos)): 
                         pick_size_screen()
 
 """
@@ -367,69 +387,28 @@ def pick_size_screen():
     font = pygame.font.Font(font_file, font_size)
     
     #easy button
-    easy_button = pygame.Surface([SCREEN_WIDTH/2, button_height])
-    easy_button.fill(button_color)
-    easy_button_rect = easy_button.get_rect(center=(SCREEN_WIDTH/2, 0))
-    easy_button_rect.top = space_between_buttons
-    
-    easy_text = font.render("easy", True, button_text_color)
-    easy_text_rect = easy_text.get_rect(center=easy_button_rect.center)
-    screen.blit(easy_button, easy_button_rect)
-    screen.blit(easy_text, easy_text_rect)
+    easy_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    easy_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons + button_height/2)
+    easy_button.setText("easy", font_size, button_text_color)
+    easy_button.draw_button()
     
     #medium button
-    medium_button = pygame.Surface([SCREEN_WIDTH/2, button_height])
-    medium_button.fill(button_color)
-    medium_button_rect = medium_button.get_rect(center=(SCREEN_WIDTH/2, 0))
-    medium_button_rect.top = space_between_buttons*2+button_height
-    
-    medium_text = font.render("medium", True, button_text_color)
-    medium_text_rect = medium_text.get_rect(center=medium_button_rect.center)
-    screen.blit(medium_button, medium_button_rect)
-    screen.blit(medium_text, medium_text_rect)
+    medium_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    medium_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*2 + button_height + button_height/2)
+    medium_button.setText("medium", font_size, button_text_color)
+    medium_button.draw_button()
     
     #hard button
-    hard_button = pygame.Surface([SCREEN_WIDTH/2, button_height])
-    hard_button.fill(button_color)
-    hard_button_rect = hard_button.get_rect(center=(SCREEN_WIDTH/2, 0))
-    hard_button_rect.top = space_between_buttons*3+button_height*2
-    
-    hard_text = font.render("hard", True, button_text_color)
-    hard_text_rect = hard_text.get_rect(center=hard_button_rect.center)
-    screen.blit(hard_button, hard_button_rect)
-    screen.blit(hard_text, hard_text_rect)
+    hard_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    hard_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*3+button_height*2 + button_height/2)
+    hard_button.setText("hard", font_size, button_text_color)
+    hard_button.draw_button()
     
     #custom button
-    custom_button = pygame.Surface([SCREEN_WIDTH/2, button_height])
-    custom_button.fill(button_color)
-    custom_button_rect = custom_button.get_rect(center=(SCREEN_WIDTH/2, 0))
-    custom_button_rect.top = space_between_buttons*4+button_height*3
-    
-    custom_text = font.render("custom", True, button_text_color)
-    custom_text_rect = custom_text.get_rect(center=custom_button_rect.center)
-    screen.blit(custom_button, custom_button_rect)
-    screen.blit(custom_text, custom_text_rect)
-    
-    font_size = math.floor(font_size/2)
-    font = pygame.font.Font(font_file, font_size)
-    
-    #dimension text for easy button
-    easy_dim_text = font.render(("(" + str(easy_dim[0]) + " x " + str(easy_dim[1]) + ")"), True, button_text_color)
-    easy_dim_text_rect = easy_dim_text.get_rect(center=easy_text_rect.center)
-    easy_dim_text_rect.top = easy_text_rect.bottom
-    screen.blit(easy_dim_text, easy_dim_text_rect)
-
-    #dimension text for medium button
-    medium_dim_text = font.render(("(" + str(medium_dim[0]) + " x " + str(medium_dim[1]) + ")"), True, button_text_color)
-    medium_dim_text_rect = medium_dim_text.get_rect(center=medium_text_rect.center)
-    medium_dim_text_rect.top = medium_text_rect.bottom
-    screen.blit(medium_dim_text, medium_dim_text_rect)
-
-    #dimension text for hard button
-    hard_dim_text = font.render(("(" + str(hard_dim[0]) + " x " + str(hard_dim[1]) + ")"), True, button_text_color)
-    hard_dim_text_rect = hard_dim_text.get_rect(center=hard_text_rect.center)
-    hard_dim_text_rect.top = hard_text_rect.bottom
-    screen.blit(hard_dim_text, hard_dim_text_rect)
+    custom_button = Button(SCREEN_WIDTH/2, button_height, button_color)
+    custom_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*4+button_height*3 + button_height/2)
+    custom_button.setText("custom", font_size, button_text_color)
+    custom_button.draw_button()
 
     pygame.display.flip()
     
@@ -453,19 +432,19 @@ def pick_size_screen():
                         m_pos = pygame.mouse.get_pos()
                         if (back_button_rect.collidepoint(m_pos)):
                             home_screen()
-                        if (easy_button_rect.collidepoint(m_pos)):
+                        if (easy_button.is_clicked(m_pos)):
                             maze_rows = easy_dim[0]
                             maze_cols = easy_dim[1]
                             ready = True
-                        if (medium_button_rect.collidepoint(m_pos)):
+                        if (medium_button.is_clicked(m_pos)):
                             maze_rows = medium_dim[0]
                             maze_cols = medium_dim[1]
                             ready = True
-                        if (hard_button_rect.collidepoint(m_pos)):
+                        if (hard_button.is_clicked(m_pos)):
                             maze_rows = hard_dim[0]
                             maze_cols = hard_dim[1]
                             ready = True
-                        if (custom_button_rect.collidepoint(m_pos)):
+                        if (custom_button.is_clicked(m_pos)):
                             custom_size_screen()
                             
     CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
@@ -519,15 +498,10 @@ def custom_size_screen():
     
     #play button
     font_size = 24
-    font = pygame.font.Font(font_file, font_size)
-    play_button = pygame.Surface([SCREEN_WIDTH/2, font_size*2])
-    play_button.fill(button_color)
-    play_button_rect = play_button.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/5*4))
-    
-    play_text = font.render("play", True, button_text_color)
-    play_text_rect = play_text.get_rect(center=play_button_rect.center)
-    screen.blit(play_button, play_button_rect)
-    screen.blit(play_text, play_text_rect)
+    play_button = Button(SCREEN_WIDTH/2, font_size*2, button_color)
+    play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/5*4)
+    play_button.setText("play", font_size, button_text_color)
+    play_button.draw_button()
     
     #arrows
     arrow_width = 100
@@ -623,7 +597,7 @@ def custom_size_screen():
                             locked = True
                         pygame.display.update(screen.blit(lock_background, lock_background_rect))
                         pygame.display.update(screen.blit(lock_image, lock_image_rect))
-                    if (play_button_rect.collidepoint(m_pos)):
+                    if (play_button.is_clicked(m_pos)):
                         maze_rows = rows
                         maze_cols = cols
                         CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
@@ -768,17 +742,10 @@ def pause_menu():
     screen.blit(flag_image, flag_rect)
     
     #exit button
-    exit_button = pygame.Surface([background_rect.width-margin*2, 50])
-    exit_button.fill(pause_menu_button_color)
-    exit_button_rect = exit_button.get_rect(midbottom=(background_rect.centerx, background_rect.bottom-margin))
-    screen.blit(exit_button, exit_button_rect)
-    
-    #exit text for exit button
-    font_size = 16
-    font = pygame.font.Font(font_file, font_size)
-    exit_text = font.render("exit to home screen", True, pause_menu_button_text_color)
-    exit_text_rect = exit_text.get_rect(center=exit_button_rect.center)
-    screen.blit(exit_text, exit_text_rect)
+    exit_button = Button(background_rect.width-margin*2, 50, pause_menu_button_color)
+    exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom-margin - exit_button.height/2)
+    exit_button.setText("exit to home screen", 16, pause_menu_button_text_color)
+    exit_button.draw_button()
     
     pygame.display.update()
     
@@ -795,7 +762,7 @@ def pause_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
-                    if exit_button_rect.collidepoint(m_pos):
+                    if exit_button.is_clicked(m_pos):
                         home_screen()
                         paused = False
                     if close_button_rect.collidepoint(m_pos):
@@ -825,30 +792,19 @@ def finished_menu(message):
     
     button_height = 40
     button_width = background_rect.width-margin*2
+    font_size = 16
     
     #play again button
-    play_again_button = pygame.Surface([button_width, button_height])
-    play_again_button.fill(finished_menu_button_color)
-    play_again_button_rect = play_again_button.get_rect(bottomleft=(background_rect.left+margin, background_rect.bottom-margin-line_spacing-button_height))
-    screen.blit(play_again_button, play_again_button_rect)
-    
-    #text for play again button
-    font_size = 16
-    font = pygame.font.Font(font_file, font_size)
-    play_again_text = font.render("play again", True, finished_menu_button_text_color)
-    play_again_text_rect = play_again_text.get_rect(center=play_again_button_rect.center)
-    screen.blit(play_again_text, play_again_text_rect)
+    play_again_button = Button(button_width, button_height, finished_menu_button_color)
+    play_again_button.setCenterPosition(background_rect.centerx, background_rect.bottom - button_height/2 - button_height - margin - line_spacing)
+    play_again_button.setText("play again", font_size, finished_menu_button_text_color)
+    play_again_button.draw_button()
     
     #exit to home screen button
-    exit_button = pygame.Surface([button_width, button_height])
-    exit_button.fill(finished_menu_button_color)
-    exit_button_rect = exit_button.get_rect(bottomleft=(background_rect.left+margin, background_rect.bottom-margin))
-    screen.blit(exit_button, exit_button_rect)
-    
-    #text for exit button
-    exit_button_text = font.render("exit to home screen", True, finished_menu_button_text_color)
-    exit_button_text_rect = exit_button_text.get_rect(center=exit_button_rect.center)
-    screen.blit(exit_button_text, exit_button_text_rect)
+    exit_button = Button(button_width, button_height, finished_menu_button_color)
+    exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom - margin - button_height/2)
+    exit_button.setText("exit to home screen", font_size, finished_menu_button_text_color)
+    exit_button.draw_button()
     
     pygame.display.update()
     
@@ -861,9 +817,9 @@ def finished_menu(message):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
-                    if play_again_button_rect.collidepoint(m_pos):    
+                    if play_again_button.is_clicked(m_pos):    
                         return True
-                    if exit_button_rect.collidepoint(m_pos):
+                    if exit_button.is_clicked(m_pos):
                         return False
         clock.tick(30)
 
