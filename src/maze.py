@@ -7,6 +7,7 @@ import pygame
 import random
 import math
 import sys
+import os
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -44,8 +45,9 @@ SCREEN_HEIGHT = 750
 MAZE_WIDTH = 600
 MAZE_HEIGHT = 600
 
-font_file = "./src/assets/fonts/Roboto-Regular.ttf"
-image_file_path = "./src/assets/images/"
+src_path = sys.path[0]
+font_file = os.path.join(src_path, "./assets/fonts/Roboto-Regular.ttf")
+image_file_path = os.path.join(src_path, "./assets/images/")
 
 maze_cols = 10
 maze_rows = 10
@@ -617,35 +619,63 @@ def custom_size_screen():
                         play()
                         ready = True
                         break
-                    if (row_up_arrow_button.is_clicked(m_pos) and rows < row_max):
+                    if (row_up_arrow_button.is_clicked(m_pos) and rows <= row_max):
                         rows += 1
                         if locked: 
                             cols += 1
+                            if (rows > row_max):
+                                cols -= 1
+                                rows -= 1
+                                display_bounds_message = True
                         elif (rows - cols > 10):
                             cols += 1
                             display_bounds_message = True
-                    if (row_down_arrow_button.is_clicked(m_pos) and rows > row_min):
+                        elif (rows > row_max):
+                            rows -= 1
+                            display_bounds_message = True
+                    if (row_down_arrow_button.is_clicked(m_pos) and rows >= row_min):
                         rows -= 1
                         if locked:
                             cols -= 1
+                            if (rows < row_min):
+                                cols += 1
+                                rows += 1
+                                display_bounds_message = True
                         elif (cols - rows > 10):
                             cols -= 1
                             display_bounds_message = True
-                    if (col_up_arrow_button.is_clicked(m_pos) and cols < col_max):
+                        elif (rows < row_min):
+                            rows += 1
+                            display_bounds_message = True
+                    if (col_up_arrow_button.is_clicked(m_pos) and cols <= col_max):
                         cols += 1
                         if locked:
                             rows += 1
+                            if (cols > col_max):
+                                cols -= 1
+                                rows -= 1
+                                display_bounds_message = True
                         elif (cols - rows > 10):
                             rows += 1
                             display_bounds_message = True
-                    if (col_down_arrow_button.is_clicked(m_pos) and cols > col_min):
+                        elif (cols > col_max):
+                            cols -= 1
+                            display_bounds_message = True
+                    if (col_down_arrow_button.is_clicked(m_pos) and cols >= col_min):
                         cols -= 1
                         if locked:
                             rows -= 1
+                            if (cols < col_min):
+                                cols += 1
+                                rows += 1
+                                display_bounds_message = True
                         elif (rows - cols > 10):
                             rows -= 1
                             display_bounds_message = True
-                    if display_bounds_message:
+                        elif (cols < col_min):
+                            cols += 1
+                            display_bounds_message = True
+                    if display_bounds_message and bounds_message.get_alpha() == 0:
                         bounds_message.set_alpha(255)
                     
                     screen.fill(background_color)
