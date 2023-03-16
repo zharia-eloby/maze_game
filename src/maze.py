@@ -8,6 +8,7 @@ import random
 import math
 import sys
 import os
+from pynput import mouse
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -16,6 +17,7 @@ blue = (52, 118, 168)
 red = (215, 74, 74)
 green = (56, 220, 156)
 tan = (234, 203, 187)
+light_gray = (227, 227, 227)
 
 background_color = tan
 wall_color = black
@@ -73,6 +75,7 @@ class Button(pygame.sprite.Sprite):
         self.width = width
         self.height = height
         self.button_rect = pygame.Rect(0, 0, self.width, self.height)
+        self.hovered = False
 
     def setCenterPosition(self, x, y):
         self.button_rect.center = (x, y)
@@ -85,11 +88,16 @@ class Button(pygame.sprite.Sprite):
 
     def is_clicked(self, mouse_position):
         return self.button_rect.collidepoint(mouse_position)
+        
+    def is_hovered(self, mouse_position):
+        self.hovered = self.button_rect.collidepoint(mouse_position)
+        return self.hovered
 
 class TextButton(Button):
     def __init__(self, width, height, button_color):
         super().__init__(width, height)
         self.button_color = button_color
+        self.button_hover_color = light_gray
         self.button_text = None
         self.button_text_rect = None
         self.button_rect = pygame.Rect(0, 0, self.width, self.height)
@@ -100,8 +108,16 @@ class TextButton(Button):
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
 
     def draw_button(self):
-        pygame.draw.rect(screen, self.button_color, self.button_rect, 0, 12)
-        screen.blit(self.button_text, self.button_text_rect)
+        new_rect = pygame.draw.rect(screen, self.button_color, self.button_rect, 0, 12)
+        pygame.display.update([new_rect, screen.blit(self.button_text, self.button_text_rect)])
+        
+    def on_hover_enter(self):
+        self.button_color = self.button_hover_color
+        self.draw_button()
+        
+    def on_hover_exit(self):
+        self.button_color = button_color
+        self.draw_button()
 
 class ImageButton(Button):
     def __init__(self, width, height, file_path):
@@ -339,7 +355,7 @@ def solve_maze(maze, start, end):
     return solution_path
     
 """
-home screen = the first screen the user sees. the hub
+home screen = the first screen the user sees
 """
 def home_screen():
     screen.fill(background_color)
@@ -367,17 +383,25 @@ def home_screen():
     play_button.draw_button()
     
     pygame.display.flip()
-    
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
                     if (play_button.is_clicked(m_pos)): 
                         pick_size_screen()
+            elif event.type == pygame.MOUSEMOTION:
+                m_pos = pygame.mouse.get_pos()
+                if (not play_button.hovered and play_button.is_hovered(m_pos)):
+                    play_button.on_hover_enter()
+                elif (play_button.hovered and not play_button.is_hovered(m_pos)):
+                    play_button.on_hover_exit()
+            elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
+                pygame.display.flip()
 
 """
 the user can pick the size of their maze
@@ -391,7 +415,7 @@ def pick_size_screen():
     back_button.draw_button()
     
     num_buttons = 4
-    space_between_buttons = SCREEN_HEIGHT/20
+    space_between_buttons = SCREEN_HEIGHT/15
     button_height = (SCREEN_HEIGHT - space_between_buttons*(num_buttons+1))/num_buttons
     
     #set the dimensions for each difficulty
@@ -440,28 +464,48 @@ def pick_size_screen():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit() 
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                    if pygame.mouse.get_pressed() == (1, 0, 0):
-                        m_pos = pygame.mouse.get_pos()
-                        if (back_button.is_clicked(m_pos)):
-                            home_screen()
-                        if (easy_button.is_clicked(m_pos)):
-                            maze_rows = easy_dim[0]
-                            maze_cols = easy_dim[1]
-                            ready = True
-                        if (medium_button.is_clicked(m_pos)):
-                            maze_rows = medium_dim[0]
-                            maze_cols = medium_dim[1]
-                            ready = True
-                        if (hard_button.is_clicked(m_pos)):
-                            maze_rows = hard_dim[0]
-                            maze_cols = hard_dim[1]
-                            ready = True
-                        if (custom_button.is_clicked(m_pos)):
-                            custom_size_screen()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed() == (1, 0, 0):
+                    m_pos = pygame.mouse.get_pos()
+                    if (back_button.is_clicked(m_pos)):
+                        home_screen()
+                    elif (easy_button.is_clicked(m_pos)):
+                        maze_rows = easy_dim[0]
+                        maze_cols = easy_dim[1]
+                        ready = True
+                    elif (medium_button.is_clicked(m_pos)):
+                        maze_rows = medium_dim[0]
+                        maze_cols = medium_dim[1]
+                        ready = True
+                    elif (hard_button.is_clicked(m_pos)):
+                        maze_rows = hard_dim[0]
+                        maze_cols = hard_dim[1]
+                        ready = True
+                    elif (custom_button.is_clicked(m_pos)):
+                        custom_size_screen()
+            elif event.type == pygame.MOUSEMOTION:
+                m_pos = pygame.mouse.get_pos()
+                if not easy_button.hovered and easy_button.is_hovered(m_pos):
+                    easy_button.on_hover_enter()
+                elif easy_button.hovered and not easy_button.is_hovered(m_pos):
+                    easy_button.on_hover_exit()
+                elif not medium_button.hovered and medium_button.is_hovered(m_pos):
+                    medium_button.on_hover_enter()
+                elif medium_button.hovered and not medium_button.is_hovered(m_pos):
+                    medium_button.on_hover_exit()
+                elif not hard_button.hovered and hard_button.is_hovered(m_pos):
+                    hard_button.on_hover_enter()
+                elif hard_button.hovered and not hard_button.is_hovered(m_pos):
+                    hard_button.on_hover_exit()
+                elif not custom_button.hovered and custom_button.is_hovered(m_pos):
+                    custom_button.on_hover_enter()
+                elif custom_button.hovered and not custom_button.is_hovered(m_pos):
+                    custom_button.on_hover_exit()
+            elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
+                pygame.display.flip()
                             
     CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
     CELL_WIDTH -= CELL_WIDTH%2
