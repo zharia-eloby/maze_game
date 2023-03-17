@@ -94,15 +94,16 @@ class Button(pygame.sprite.Sprite):
         return self.hovered
 
 class TextButton(Button):
-    def __init__(self, width, height, button_color):
+    def __init__(self, width, height, button_color, text, font_size, text_color):
         super().__init__(width, height)
         self.button_color = button_color
         self.button_hover_color = light_gray
-        self.button_text = None
-        self.button_text_rect = None
+        font = pygame.font.Font(font_file, font_size)
+        self.button_text = font.render(text, True, text_color)
+        self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         self.button_rect = pygame.Rect(0, 0, self.width, self.height)
 
-    def setText(self, text, font_size, text_color):
+    def changeText(self, text, font_size, text_color):
         font = pygame.font.Font(font_file, font_size)
         self.button_text = font.render(text, True, text_color)
         self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
@@ -110,6 +111,10 @@ class TextButton(Button):
     def draw_button(self):
         new_rect = pygame.draw.rect(screen, self.button_color, self.button_rect, 0, 12)
         pygame.display.update([new_rect, screen.blit(self.button_text, self.button_text_rect)])
+        
+    def setCenterPosition(self, x, y):
+        super().setCenterPosition(x, y)
+        self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
         
     def on_hover_enter(self):
         self.button_color = self.button_hover_color
@@ -355,7 +360,8 @@ def solve_maze(maze, start, end):
     return solution_path
     
 """
-home screen = the first screen the user sees
+home screen
+- contains title, play button, and 'created by' text
 """
 def home_screen():
     screen.fill(background_color)
@@ -377,30 +383,30 @@ def home_screen():
     screen.blit(credit_text, credit_text_rect)
     
     #play button
-    play_button = TextButton(SCREEN_WIDTH/2, SCREEN_HEIGHT/8, button_color)
+    play_button = TextButton(SCREEN_WIDTH/2, SCREEN_HEIGHT/8, button_color, "play", 24, button_text_color)
     play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + play_button.height/2)
-    play_button.setText("play", 24, button_text_color)
     play_button.draw_button()
     
     pygame.display.flip()
 
+    #until the user exits or presses the play button...
     while True:
-        for event in pygame.event.get():
+        for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:  # check for play button pressed
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     m_pos = pygame.mouse.get_pos()
                     if (play_button.is_clicked(m_pos)): 
                         pick_size_screen()
-            elif event.type == pygame.MOUSEMOTION:
+            elif event.type == pygame.MOUSEMOTION:      # check for play button hovered 
                 m_pos = pygame.mouse.get_pos()
                 if (not play_button.hovered and play_button.is_hovered(m_pos)):
                     play_button.on_hover_enter()
                 elif (play_button.hovered and not play_button.is_hovered(m_pos)):
                     play_button.on_hover_exit()
-            elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
+            elif event.type == pygame.WINDOWRESTORED:   #redraw window upon reopening after minimizing
                 pygame.display.flip()
 
 """
@@ -414,9 +420,10 @@ def pick_size_screen():
     back_button.setTopLeftPosition(25, 25)
     back_button.draw_button()
     
-    num_buttons = 4
-    space_between_buttons = SCREEN_HEIGHT/15
-    button_height = (SCREEN_HEIGHT - space_between_buttons*(num_buttons+1))/num_buttons
+    buttons = []
+    button_width = SCREEN_WIDTH/2
+    button_height = 100
+    space_between_buttons = 30
     
     #set the dimensions for each difficulty
     easy_dim = (10, 10)
@@ -427,28 +434,27 @@ def pick_size_screen():
     font = pygame.font.Font(font_file, font_size)
     
     #easy button
-    easy_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
-    easy_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons + button_height/2)
-    easy_button.setText("easy", font_size, button_text_color)
-    easy_button.draw_button()
+    easy_button = TextButton(button_width, button_height, button_color, "easy", font_size, button_text_color)
+    buttons += [easy_button]
     
     #medium button
-    medium_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
-    medium_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*2 + button_height + button_height/2)
-    medium_button.setText("medium", font_size, button_text_color)
-    medium_button.draw_button()
+    medium_button = TextButton(button_width, button_height, button_color, "medium", font_size, button_text_color)
+    buttons += [medium_button]
     
     #hard button
-    hard_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
-    hard_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*3+button_height*2 + button_height/2)
-    hard_button.setText("hard", font_size, button_text_color)
-    hard_button.draw_button()
+    hard_button = TextButton(button_width, button_height, button_color, "hard", font_size, button_text_color)
+    buttons += [hard_button]
     
     #custom button
-    custom_button = TextButton(SCREEN_WIDTH/2, button_height, button_color)
-    custom_button.setCenterPosition(SCREEN_WIDTH/2, space_between_buttons*4+button_height*3 + button_height/2)
-    custom_button.setText("custom", font_size, button_text_color)
-    custom_button.draw_button()
+    custom_button = TextButton(button_width, button_height, button_color, "custom", font_size, button_text_color)
+    buttons += [custom_button]
+    
+    total_buttons_height = len(buttons) * button_height + (len(buttons)-1) * space_between_buttons
+    next_y_position = (SCREEN_HEIGHT - total_buttons_height) / 2 + button_height/2
+    for i in range(len(buttons)):
+        buttons[i].setCenterPosition(SCREEN_WIDTH/2, next_y_position)
+        buttons[i].draw_button()
+        next_y_position += button_height + space_between_buttons
 
     pygame.display.flip()
     
@@ -460,7 +466,7 @@ def pick_size_screen():
     
     ready = False   
     while not ready:
-        for event in pygame.event.get():
+        for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit() 
