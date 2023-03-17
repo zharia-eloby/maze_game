@@ -562,9 +562,8 @@ def custom_size_screen():
     
     #play button
     font_size = 24
-    play_button = TextButton(SCREEN_WIDTH/2, font_size*2, button_color)
+    play_button = TextButton(SCREEN_WIDTH/2, font_size*2, button_color, "play", font_size, button_text_color)
     play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/5*4)
-    play_button.setText("play", font_size, button_text_color)
     play_button.draw_button()
     
     #arrows
@@ -827,9 +826,8 @@ def pause_menu():
     screen.blit(flag_image, flag_rect)
     
     #exit button
-    exit_button = TextButton(background_rect.width-margin*2, 50, pause_menu_button_color)
+    exit_button = TextButton(background_rect.width-margin*2, 50, pause_menu_button_color, "exit to home screen", 16, pause_menu_button_text_color)
     exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom-margin - exit_button.height/2)
-    exit_button.setText("exit to home screen", 16, pause_menu_button_text_color)
     exit_button.draw_button()
     
     pygame.display.update()
@@ -880,15 +878,13 @@ def finished_menu(message):
     font_size = 16
     
     #play again button
-    play_again_button = TextButton(button_width, button_height, finished_menu_button_color)
+    play_again_button = TextButton(button_width, button_height, finished_menu_button_color, "play again", font_size, finished_menu_button_text_color)
     play_again_button.setCenterPosition(background_rect.centerx, background_rect.bottom - button_height/2 - button_height - margin - line_spacing)
-    play_again_button.setText("play again", font_size, finished_menu_button_text_color)
     play_again_button.draw_button()
     
     #exit to home screen button
-    exit_button = TextButton(button_width, button_height, finished_menu_button_color)
+    exit_button = TextButton(button_width, button_height, finished_menu_button_color, "exit to home screen", font_size, finished_menu_button_text_color)
     exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom - margin - button_height/2)
-    exit_button.setText("exit to home screen", font_size, finished_menu_button_text_color)
     exit_button.draw_button()
     
     pygame.display.update()
