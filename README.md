@@ -8,12 +8,18 @@ units of each other)
 
 <br>
 
-## How to run:
-
-1. Download the folder from the 'main' branch in this github repo
+## How to run from exe:
+1. Download this repo
 2. Open the downloaded folder in your File Explorer
 3. Open the 'build' folder
 4. In this folder there will be a file named 'maze.exe'. Click on it to start playing!
+
+## How to run from source:
+1. Install pygame by running *pip install pygame*
+2. Install pynput by running *pip install pynput*
+3. Install pygame_gui by running *pip install pygame_gui*
+4. Download this repo
+5. Run the *maze.py* file
 
 <br>
 

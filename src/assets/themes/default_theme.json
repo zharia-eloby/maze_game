@@ -1,0 +1,54 @@
+{
+    "button":
+    {
+        "colours":
+        {
+            "normal_bg": "#efefef",
+            "hovered_bg": "#d1d1d1"
+        },
+        "font":
+        {
+            "name": "roboto",
+            "size": "24",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "Roboto-Regular.ttf"
+            }
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "15",
+            "border_width" : "0"
+        }
+    },
+    "label":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "roboto",
+            "size": "64",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "Roboto-Regular.ttf"
+            }
+        },
+        "misc":
+        {
+            "text_shadow": "1",
+            "text_shadow_size": "1",
+            "text_shadow_offset": "0,0",
+            "text_vert_alignment": "bottom"
+        }
+    },
+    "#credits": {
+        "font" : {
+            "name": "roboto",
+            "size": "20"
+        }
+    }
+}

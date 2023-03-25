@@ -4,10 +4,13 @@ Maze Game with Pygame
 """
 
 import pygame
+import pygame_gui
+from pygame_gui.core import ObjectID
 import random
 import math
 import sys
 import os
+import time
 from pynput import mouse
 
 black = (0, 0, 0)
@@ -50,9 +53,7 @@ MAZE_HEIGHT = 600
 src_path = sys.path[0]
 font_file = os.path.join(src_path, "./assets/fonts/Roboto-Regular.ttf")
 image_file_path = os.path.join(src_path, "./assets/images/")
-
-maze_cols = 10
-maze_rows = 10
+theme_file = os.path.join(src_path, "./assets/themes/default_theme.json")
 
 maze_startpoint = (0, 75)
 
@@ -66,6 +67,8 @@ pygame.font.init()
 
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Maze - created by Zharia Eloby")
+
+manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
 clock = pygame.time.Clock()
 
@@ -364,63 +367,83 @@ home screen
 - contains title, play button, and 'created by' text
 """
 def home_screen():
+    manager.clear_and_reset()
     screen.fill(background_color)
+
+    #play button
+    button_width = SCREEN_WIDTH/2
+    button_height = SCREEN_HEIGHT/8
+    play_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - button_width/2,  # x
+        SCREEN_HEIGHT/2,                  # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    play_button = pygame_gui.elements.UIButton(
+        relative_rect=play_rect, 
+        text="play"
+    )
     
     #game title
-    font_size = 100
-    font = pygame.font.Font(font_file, font_size)
-    title = "MAZE"
-    title_text = font.render(title, True, text_color)
-    text_rect = title_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - font_size))
-    screen.blit(title_text, text_rect)
+    title_rect = pygame.Rect(0, 0, SCREEN_WIDTH, play_rect.top)
+    title = pygame_gui.elements.UILabel(
+        relative_rect=title_rect, 
+        text="Maze"
+    )
 
     #credits
-    font_size = 18
-    font = pygame.font.Font(font_file, font_size)
-    credit_text = font.render("created by Zharia Eloby", True, text_color)
-    credit_text_rect = credit_text.get_rect(center=(SCREEN_WIDTH/2, 0))
-    credit_text_rect.bottom = SCREEN_HEIGHT - 10
-    screen.blit(credit_text, credit_text_rect)
-    
-    #play button
-    play_button = TextButton(SCREEN_WIDTH/2, SCREEN_HEIGHT/8, button_color, "play", 24, button_text_color)
-    play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/2 + play_button.height/2)
-    play_button.draw_button()
-    
+    credits_rect = pygame.Rect(0, play_rect.bottom, SCREEN_WIDTH, SCREEN_HEIGHT - play_rect.bottom)
+    credits = pygame_gui.elements.UILabel(
+        relative_rect=credits_rect, 
+        text="code by Zharia Eloby",
+        object_id=ObjectID(object_id="#credits")
+    )
+
     pygame.display.flip()
 
     #until the user exits or presses the play button...
+    time_delta = math.floor(time.time()) # time of last call to update
     while True:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:  # check for play button pressed
-                if pygame.mouse.get_pressed() == (1, 0, 0):
-                    m_pos = pygame.mouse.get_pos()
-                    if (play_button.is_clicked(m_pos)): 
-                        pick_size_screen()
-            elif event.type == pygame.MOUSEMOTION:      # check for play button hovered 
-                m_pos = pygame.mouse.get_pos()
-                if (not play_button.hovered and play_button.is_hovered(m_pos)):
-                    play_button.on_hover_enter()
-                elif (play_button.hovered and not play_button.is_hovered(m_pos)):
-                    play_button.on_hover_exit()
+
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == play_button:
+                    pick_size_screen()
+
             elif event.type == pygame.WINDOWRESTORED:   #redraw window upon reopening after minimizing
                 pygame.display.flip()
+
+            manager.process_events(event)
+
+        time_delta = math.floor(time.time()) - time_delta
+        manager.update(time_delta)
+        screen.fill(background_color)
+        manager.draw_ui(screen)
+        pygame.display.update()
 
 """
 the user can pick the size of their maze
 preset sizes are easy, medium, and hard, or they can customize the size
 """
 def pick_size_screen():
-    screen.fill(background_color)
+    manager.clear_and_reset()
+
+    #back button
+    back_button_rect = pygame.Rect(
+        25, # x
+        25, # y
+        50, # width
+        35  # height
+    )
+    back_button = pygame_gui.elements.UIButton(
+        relative_rect=back_button_rect, 
+        text="<",
+        manager=manager
+    )
     
-    back_button = ImageButton(20, 32, image_file_path + "arrow.png")
-    back_button.setTopLeftPosition(25, 25)
-    back_button.draw_button()
-    
-    buttons = []
     button_width = SCREEN_WIDTH/2
     button_height = 100
     space_between_buttons = 30
@@ -429,42 +452,61 @@ def pick_size_screen():
     easy_dim = (10, 10)
     medium_dim = (20, 20)
     hard_dim = (30, 30)
-    
-    font_size = math.floor(button_height/4)
-    font = pygame.font.Font(font_file, font_size)
+
+    num_buttons = 3
+    total_buttons_height = num_buttons*button_height + (num_buttons-1)*space_between_buttons
+    starting_y_pos = (SCREEN_HEIGHT - total_buttons_height)/2
     
     #easy button
-    easy_button = TextButton(button_width, button_height, button_color, "easy", font_size, button_text_color)
-    buttons += [easy_button]
+    easy_button_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - button_width/2,  # x
+        starting_y_pos,                 # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    easy_button = pygame_gui.elements.UIButton(
+        relative_rect=easy_button_rect, 
+        text="easy",
+        manager=manager
+    )
     
     #medium button
-    medium_button = TextButton(button_width, button_height, button_color, "medium", font_size, button_text_color)
-    buttons += [medium_button]
+    medium_button_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - button_width/2,  # x
+        easy_button_rect.bottom + space_between_buttons,    # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    medium_button = pygame_gui.elements.UIButton(
+        relative_rect=medium_button_rect, 
+        text="medium",
+        manager=manager
+    )
     
     #hard button
-    hard_button = TextButton(button_width, button_height, button_color, "hard", font_size, button_text_color)
-    buttons += [hard_button]
-    
-    #custom button
-    custom_button = TextButton(button_width, button_height, button_color, "custom", font_size, button_text_color)
-    buttons += [custom_button]
-    
-    total_buttons_height = len(buttons) * button_height + (len(buttons)-1) * space_between_buttons
-    next_y_position = (SCREEN_HEIGHT - total_buttons_height) / 2 + button_height/2
-    for i in range(len(buttons)):
-        buttons[i].setCenterPosition(SCREEN_WIDTH/2, next_y_position)
-        buttons[i].draw_button()
-        next_y_position += button_height + space_between_buttons
+    hard_button_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - button_width/2,  # x
+        medium_button_rect.bottom + space_between_buttons,  # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    hard_button = pygame_gui.elements.UIButton(
+        relative_rect=hard_button_rect, 
+        text="hard",
+        manager=manager
+    )
 
+    manager.update(0)
+    screen.fill(background_color)
+    manager.draw_ui(screen)
     pygame.display.flip()
     
-    global maze_cols
-    global maze_rows
     global CELL_WIDTH
     global CELL_HEIGHT
     global WALL_THICKNESS
     
-    ready = False   
+    ready = False
+    time_delta = math.floor(time.time())
     while not ready:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -473,57 +515,31 @@ def pick_size_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed() == (1, 0, 0):
-                    m_pos = pygame.mouse.get_pos()
-                    if (back_button.is_clicked(m_pos)):
-                        home_screen()
-                    elif (easy_button.is_clicked(m_pos)):
-                        maze_rows = easy_dim[0]
-                        maze_cols = easy_dim[1]
-                        ready = True
-                    elif (medium_button.is_clicked(m_pos)):
-                        maze_rows = medium_dim[0]
-                        maze_cols = medium_dim[1]
-                        ready = True
-                    elif (hard_button.is_clicked(m_pos)):
-                        maze_rows = hard_dim[0]
-                        maze_cols = hard_dim[1]
-                        ready = True
-                    elif (custom_button.is_clicked(m_pos)):
-                        custom_size_screen()
-            elif event.type == pygame.MOUSEMOTION:
-                m_pos = pygame.mouse.get_pos()
-                if not easy_button.hovered and easy_button.is_hovered(m_pos):
-                    easy_button.on_hover_enter()
-                elif easy_button.hovered and not easy_button.is_hovered(m_pos):
-                    easy_button.on_hover_exit()
-                elif not medium_button.hovered and medium_button.is_hovered(m_pos):
-                    medium_button.on_hover_enter()
-                elif medium_button.hovered and not medium_button.is_hovered(m_pos):
-                    medium_button.on_hover_exit()
-                elif not hard_button.hovered and hard_button.is_hovered(m_pos):
-                    hard_button.on_hover_enter()
-                elif hard_button.hovered and not hard_button.is_hovered(m_pos):
-                    hard_button.on_hover_exit()
-                elif not custom_button.hovered and custom_button.is_hovered(m_pos):
-                    custom_button.on_hover_enter()
-                elif custom_button.hovered and not custom_button.is_hovered(m_pos):
-                    custom_button.on_hover_exit()
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == easy_button:
+                    ready = True
+                    play(easy_dim[0], easy_dim[1])
+                elif event.ui_element == medium_button:
+                    ready = True
+                    play(medium_dim[0], medium_dim[1])
+                elif event.ui_element == hard_button:
+                    ready = True
+                    play(hard_dim[0], hard_dim[1])
+                elif event.ui_element == back_button:
+                    home_screen()
             elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
                 pygame.display.flip()
-                            
-    CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
-    CELL_WIDTH -= CELL_WIDTH%2
-    CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
-    CELL_HEIGHT -= CELL_HEIGHT%2
 
-    WALL_THICKNESS = round(CELL_WIDTH/10)
-    WALL_THICKNESS -= WALL_THICKNESS%2
-    if (WALL_THICKNESS < 2):
-        WALL_THICKNESS = 2
-    play()
+            manager.process_events(event)
+        
+        time_delta = math.floor(time.time()) - time_delta
+        manager.update(time_delta)
 
+        screen.fill(background_color)
+        manager.draw_ui(screen)
+        pygame.display.update()
+
+"""
 def custom_size_screen():
     screen.fill(background_color)
     
@@ -751,6 +767,7 @@ def custom_size_screen():
                 bounds_message.set_alpha(0)
             pygame.display.update(screen.blit(bounds_message, bounds_message_rect))
         clock.tick(30)
+"""
 
 def pause_menu():
     margin = 20
@@ -910,11 +927,27 @@ def check_for_flag(flag_list, m_pos):
             return flag
     return None
 
-def play():
+def play(rows, columns):
+    global CELL_WIDTH
+    global CELL_HEIGHT
+    global MAZE_WIDTH
+    global MAZE_HEIGHT
+    global WALL_THICKNESS
+
+    CELL_WIDTH = math.floor(MAZE_WIDTH/columns)
+    CELL_WIDTH -= CELL_WIDTH%2
+    CELL_HEIGHT = math.floor(MAZE_HEIGHT/rows)
+    CELL_HEIGHT -= CELL_HEIGHT%2
+
+    WALL_THICKNESS = round(CELL_WIDTH/10)
+    WALL_THICKNESS -= WALL_THICKNESS%2
+    if (WALL_THICKNESS < 2):
+        WALL_THICKNESS = 2
+
     font_size = 24
     font = pygame.font.Font(font_file, font_size)
 
-    maze = create_maze(maze_rows, maze_cols)
+    maze = create_maze(rows, columns)
     
     all_sprites = pygame.sprite.Group()
     wall_list = pygame.sprite.Group()
@@ -923,8 +956,8 @@ def play():
     #draw the maze
     x_pos = maze_startpoint[0]
     y_pos = maze_startpoint[1]
-    for i in range(0, maze_rows*2+1):
-        for j in range(0, maze_cols*2+1):
+    for i in range(0, rows*2+1):
+        for j in range(0, columns*2+1):
             if (i % 2 == 0 and j % 2 == 1): #horizontal
                 if (maze[i][j] == 'w'):
                     wall = Wall(x_pos, y_pos, CELL_WIDTH, WALL_THICKNESS, 'h')
@@ -941,9 +974,9 @@ def play():
             y_pos += CELL_HEIGHT
         x_pos = 0
 
-    startpoint = (random.randrange(0, maze_rows), random.randrange(0, maze_cols))
+    startpoint = (random.randrange(0, rows), random.randrange(0, columns))
     while (startpoint == endpoint):
-        startpoint = (random.randrange(0, maze_rows), random.randrange(0, maze_cols))
+        startpoint = (random.randrange(0, rows), random.randrange(0, columns))
     start_cell = Cell(CELL_WIDTH * startpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * startpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, startpoint_color, "rectangle")
     all_sprites.add(start_cell)
     
