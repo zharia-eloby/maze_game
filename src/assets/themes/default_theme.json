@@ -50,5 +50,48 @@
             "name": "roboto",
             "size": "20"
         }
+    },
+    "#paused": {
+        "font": {
+            "name": "roboto",
+            "size": "20"
+        },
+        "misc":
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "#close-button": {
+        "colours": {
+            "normal_text": "#000000"
+        },
+        "font": {
+            "name": "roboto",
+            "size": "12"
+        },
+        "images": {
+            "normal_image": {
+                "package": "assets.images",
+                "resource": "close-button.png"
+            }
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "4",
+            "border_width" : "0"
+        }
+    },
+    "#exit-button": {
+        "font": {
+            "name": "roboto",
+            "size": "16"
+        }
+    },
+    "#finished-message": {
+        "font": {
+            "name": "roboto",
+            "size": "16"
+        }
     }
 }

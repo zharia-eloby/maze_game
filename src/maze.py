@@ -59,8 +59,14 @@ maze_startpoint = (0, 75)
 
 CELL_WIDTH = 0
 CELL_HEIGHT = 0
-
 WALL_THICKNESS = 0
+
+rows = 0
+columns = 0
+
+easy_dim = (10, 10)
+medium_dim = (20, 20)
+hard_dim = (30, 30)
 
 pygame.init()
 pygame.font.init()
@@ -448,11 +454,6 @@ def pick_size_screen():
     button_height = 100
     space_between_buttons = 30
     
-    #set the dimensions for each difficulty
-    easy_dim = (10, 10)
-    medium_dim = (20, 20)
-    hard_dim = (30, 30)
-
     num_buttons = 3
     total_buttons_height = num_buttons*button_height + (num_buttons-1)*space_between_buttons
     starting_y_pos = (SCREEN_HEIGHT - total_buttons_height)/2
@@ -501,10 +502,9 @@ def pick_size_screen():
     manager.draw_ui(screen)
     pygame.display.flip()
     
-    global CELL_WIDTH
-    global CELL_HEIGHT
-    global WALL_THICKNESS
-    
+    global rows
+    global columns
+
     ready = False
     time_delta = math.floor(time.time())
     while not ready:
@@ -518,13 +518,19 @@ def pick_size_screen():
             elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == easy_button:
                     ready = True
-                    play(easy_dim[0], easy_dim[1])
+                    rows = easy_dim[0]
+                    columns = easy_dim[1]
+                    play()
                 elif event.ui_element == medium_button:
                     ready = True
-                    play(medium_dim[0], medium_dim[1])
+                    rows = medium_dim[0]
+                    columns = medium_dim[1]
+                    play()
                 elif event.ui_element == hard_button:
                     ready = True
-                    play(hard_dim[0], hard_dim[1])
+                    rows = hard_dim[0]
+                    columns = hard_dim[1]
+                    play()
                 elif event.ui_element == back_button:
                     home_screen()
             elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
@@ -770,156 +776,190 @@ def custom_size_screen():
 """
 
 def pause_menu():
+    # all interactive elements will have this manager
+    interactive_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+
+    # all non-interactive elements will have this manager
+    background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
     margin = 20
     line_spacing = 10
     
     #background rectangle
-    background = pygame.Surface([SCREEN_WIDTH/2, SCREEN_HEIGHT/2])
-    background.fill(pause_menu_background_color)
-    background_rect = background.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-    screen.blit(background, background_rect)
+    menu_width = SCREEN_WIDTH * 0.5
+    menu_height = SCREEN_HEIGHT * 0.3
+    background_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - menu_width/2, 
+        SCREEN_HEIGHT/2 - menu_height/2, 
+        menu_width, 
+        menu_height
+    )
+    background = pygame_gui.elements.UIPanel(
+        relative_rect = background_rect,
+        manager=background_manager
+    )
+
+    exit_button_height = 30
+    exit_button_width = menu_width - margin*2
+    exit_button_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - exit_button_width/2,
+        background_rect.bottom - margin - exit_button_height,
+        exit_button_width,
+        exit_button_height
+    )
+    exit_button = pygame_gui.elements.UIButton(
+        relative_rect=exit_button_rect,
+        text="exit to home screen",
+        manager=interactive_manager,
+        object_id=ObjectID(object_id="#exit-button")
+    )
+
+    close_button_height = 30
+    close_button_width = 30
+    close_button_rect = pygame.Rect(
+        background_rect.right - close_button_width - margin,
+        background_rect.top + margin,
+        close_button_width,
+        close_button_height
+    )
+    close_button = pygame_gui.elements.UIButton(
+        relative_rect=close_button_rect,
+        text="",
+        manager=interactive_manager,
+        object_id=ObjectID(object_id="#close-button")
+    )
+
+    paused_text_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - menu_width/2, 
+        close_button_rect.bottom,
+        menu_width, 
+        exit_button_rect.top - close_button_rect.bottom
+    )
+    paused_text = pygame_gui.elements.UILabel(
+        relative_rect=paused_text_rect,
+        text="paused",
+        manager=interactive_manager,
+        object_id=ObjectID(object_id="#paused")
+    )
     
-    #paused bar
-    paused_bar = pygame.Surface([background_rect.width, 30])
-    paused_bar.fill(pause_menu_button_color)
-    paused_bar_rect = paused_bar.get_rect(topleft=background_rect.topleft)
-    screen.blit(paused_bar, paused_bar_rect)
-    
-    #paused bar text
-    font_size = 16
-    font = pygame.font.Font(font_file, font_size)
-    paused_text = font.render("PAUSED", True, pause_menu_button_text_color)
-    paused_text_rect = paused_text.get_rect(center=paused_bar_rect.center)
-    screen.blit(paused_text, paused_text_rect)
-    
-    #close button
-    close_button = ImageButton(25, 25, image_file_path + "close-button.png")
-    close_button.setCenterPosition(paused_bar_rect.right-line_spacing-(close_button.height/2), paused_bar_rect.centery)
-    close_button.draw_button()
-    
-    #arrow keys for nav info
-    arrow_keys_image = pygame.image.load(image_file_path + "arrow-keys.png").convert_alpha()
-    arrow_keys_image = pygame.transform.scale(arrow_keys_image, (50, 50))
-    arrow_keys_rect = arrow_keys_image.get_rect(topleft=(paused_bar_rect.left+margin, paused_bar_rect.bottom+line_spacing))
-    screen.blit(arrow_keys_image, arrow_keys_rect)
-    
-    #navigation info
-    font_size = 16
-    font = pygame.font.Font(font_file, font_size)
-    nav_text = font.render("to navigate through the maze", True, pause_menu_text_color)
-    nav_text_rect = nav_text.get_rect(midleft=(arrow_keys_rect.right+line_spacing, arrow_keys_rect.centery))
-    screen.blit(nav_text, nav_text_rect)
-    
-    #s key image
-    s_key_image = pygame.image.load(image_file_path + "s-key.png").convert_alpha()
-    s_key_image = pygame.transform.scale(s_key_image, (50, 50))
-    s_key_rect = s_key_image.get_rect(topleft=(arrow_keys_rect.left, arrow_keys_rect.bottom+line_spacing))
-    screen.blit(s_key_image, s_key_rect)
-    
-    #press S to solve text
-    font_size = 16
-    font = pygame.font.Font(font_file, font_size)
-    press_S_text = font.render("to see the maze solution", True, pause_menu_text_color)
-    press_S_rect = press_S_text.get_rect(midleft=(s_key_rect.right+line_spacing, s_key_rect.centery))
-    screen.blit(press_S_text, press_S_rect)
-    
-    #mouse right click image
-    mouse_image = pygame.image.load(image_file_path + "mouse-right-click.png").convert_alpha()
-    mouse_image = pygame.transform.scale(mouse_image, (50, 50))
-    mouse_rect = mouse_image.get_rect(topleft=(s_key_rect.left, s_key_rect.bottom+line_spacing))
-    screen.blit(mouse_image, mouse_rect)
-    
-    #mouse right click text
-    font_size = 16
-    font = pygame.font.Font(font_file, font_size)
-    right_click_text = font.render("to place/remove a marker", True, pause_menu_text_color)
-    right_click_text_rect = right_click_text.get_rect(midleft=(mouse_rect.right+line_spacing, mouse_rect.centery))
-    screen.blit(right_click_text, right_click_text_rect)
-    
-    #flag image
-    flag_image = pygame.image.load(image_file_path + "red-flag.png").convert_alpha()
-    flag_image = pygame.transform.scale(flag_image, (30, 30))
-    flag_rect = flag_image.get_rect(bottomleft=right_click_text_rect.bottomright)
-    screen.blit(flag_image, flag_rect)
-    
-    #exit button
-    exit_button = TextButton(background_rect.width-margin*2, 50, pause_menu_button_color, "exit to home screen", 16, pause_menu_button_text_color)
-    exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom-margin - exit_button.height/2)
-    exit_button.draw_button()
-    
+    background_manager.update(0)
+    background_manager.draw_ui(screen)
+    interactive_manager.update(0)
+    interactive_manager.draw_ui(screen)
     pygame.display.update()
     
     paused = True
+    time_delta = math.floor(time.time())
     while paused:
-        for event in pygame.event.get():
+        for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    background.set_alpha(0)
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == exit_button:
+                    print("exit button")
                     paused = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed() == (1, 0, 0):
-                    m_pos = pygame.mouse.get_pos()
-                    if exit_button.is_clicked(m_pos):
-                        home_screen()
-                        paused = False
-                    if close_button.is_clicked(m_pos):
-                        background.set_alpha(0)
-                        paused = False
-                    
-                
-        clock.tick(60)
+                    home_screen()
+                elif event.ui_element == close_button:
+                    print("close button")
+                    paused = False
+
+            interactive_manager.process_events(event)
+
+        time_delta = math.floor(time.time()) - time_delta
+        interactive_manager.update(time_delta)
+        interactive_manager.draw_ui(screen)
+        pygame.display.update()
         
 def finished_menu(message):
+    interactive_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+    background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+
     margin = 35
     line_spacing = 5
     
     #background surface
-    background = pygame.Surface([2*SCREEN_WIDTH/3, SCREEN_HEIGHT/3])
-    background.fill(finished_menu_background_color)
-    background.set_alpha(200)
-    background_rect = background.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-    screen.blit(background, background_rect)
+    menu_width = SCREEN_WIDTH * 0.5
+    menu_height = SCREEN_HEIGHT * 0.25
+    background_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - menu_width/2,
+        SCREEN_HEIGHT/2 - menu_height/2,
+        menu_width,
+        menu_height
+    )
+    background = pygame_gui.elements.UIPanel(
+        relative_rect=background_rect,
+        manager=background_manager
+    )
     
     #congrats message
-    font_size = 24
-    font = pygame.font.Font(font_file, font_size)
-    message_text = font.render(message, True, finished_menu_text_color)
-    message_text_rect = message_text.get_rect(center=(background_rect.centerx, background_rect.top+margin))
-    screen.blit(message_text, message_text_rect)
+    finished_message_rect = pygame.Rect(
+        background_rect.left + margin,
+        background_rect.top + margin,
+        background_rect.width - margin*2,
+        30
+    )
+    finished_message = pygame_gui.elements.UILabel (
+        relative_rect=finished_message_rect,
+        text=message,
+        manager=background_manager,
+        object_id=ObjectID(object_id="#finished-message")
+    )
     
     button_height = 40
     button_width = background_rect.width-margin*2
-    font_size = 16
-    
-    #play again button
-    play_again_button = TextButton(button_width, button_height, finished_menu_button_color, "play again", font_size, finished_menu_button_text_color)
-    play_again_button.setCenterPosition(background_rect.centerx, background_rect.bottom - button_height/2 - button_height - margin - line_spacing)
-    play_again_button.draw_button()
     
     #exit to home screen button
-    exit_button = TextButton(button_width, button_height, finished_menu_button_color, "exit to home screen", font_size, finished_menu_button_text_color)
-    exit_button.setCenterPosition(background_rect.centerx, background_rect.bottom - margin - button_height/2)
-    exit_button.draw_button()
-    
+    exit_button_rect = pygame.Rect(
+        background_rect.left + margin,
+        background_rect.bottom - margin - button_height,
+        button_width,
+        button_height
+    )
+    exit_button = pygame_gui.elements.UIButton(
+        relative_rect=exit_button_rect,
+        text="exit to home screen",
+        manager=interactive_manager,
+        object_id=ObjectID(object_id="#exit-button")
+    )
+
+    #play again button
+    play_button_rect = pygame.Rect(
+        background_rect.left + margin,
+        exit_button_rect.top - button_height - line_spacing,
+        button_width,
+        button_height
+    )
+    play_button = pygame_gui.elements.UIButton(
+        relative_rect=play_button_rect,
+        text="play again",
+        manager=interactive_manager,
+        object_id=ObjectID(object_id="#exit-button")
+    )
+
+    background_manager.update(0)
+    background_manager.draw_ui(screen)
+    interactive_manager.update(0)
+    interactive_manager.draw_ui(screen)
     pygame.display.update()
     
     done = False
+    time_delta = math.floor(time.time())
     while not done:
-        for event in pygame.event.get():
+        for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed() == (1, 0, 0):
-                    m_pos = pygame.mouse.get_pos()
-                    if play_again_button.is_clicked(m_pos):    
-                        return True
-                    if exit_button.is_clicked(m_pos):
-                        return False
-        clock.tick(30)
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == exit_button:
+                    home_screen()
+                if event.ui_element == play_button:
+                    play()
+            interactive_manager.process_events(event)
+        
+        time_delta = math.floor(time.time()) - time_delta
+        interactive_manager.update(time_delta)
+        interactive_manager.draw_ui(screen)
+        pygame.display.update()
 
 def check_for_flag(flag_list, m_pos):
     for flag in flag_list:
@@ -927,12 +967,15 @@ def check_for_flag(flag_list, m_pos):
             return flag
     return None
 
-def play(rows, columns):
+def play():
+    manager.clear_and_reset()
     global CELL_WIDTH
     global CELL_HEIGHT
     global MAZE_WIDTH
     global MAZE_HEIGHT
     global WALL_THICKNESS
+    global rows
+    global columns
 
     CELL_WIDTH = math.floor(MAZE_WIDTH/columns)
     CELL_WIDTH -= CELL_WIDTH%2
