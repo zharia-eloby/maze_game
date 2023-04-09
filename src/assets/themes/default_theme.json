@@ -1,4 +1,24 @@
 {
+    "#regular-text":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "roboto",
+            "size": "16",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "Roboto-Regular.ttf"
+            }
+        },
+        "misc":
+        {
+            "text_shadow_size": "0"
+        }
+    },
     "button":
     {
         "colours":
@@ -14,12 +34,6 @@
                 "package": "assets.fonts",
                 "resource": "Roboto-Regular.ttf"
             }
-        },
-        "misc":
-        {
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": "15",
-            "border_width" : "0"
         }
     },
     "label":
@@ -39,16 +53,108 @@
         },
         "misc":
         {
-            "text_shadow": "1",
-            "text_shadow_size": "1",
+            "text_shadow_size": "0",
             "text_shadow_offset": "0,0",
             "text_vert_alignment": "bottom"
         }
     },
-    "#credits": {
-        "font" : {
+    "@title": {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
             "name": "roboto",
-            "size": "20"
+            "size": "72",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "Roboto-Regular.ttf"
+            }
+        },
+        "misc":
+        {
+            "text_shadow_size": "0",
+            "text_vert_alignment": "bottom"
+        }
+    },
+    "@heading": {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "roboto",
+            "size": "36",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "Roboto-Regular.ttf"
+            }
+        },
+        "misc":
+        {
+            "text_shadow_size": "0",
+            "text_vert_alignment": "bottom"
+        }
+    },
+    "@regular-text-bottom": {
+        "prototype": "#regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "bottom"
+        }
+    },
+    "@regular-text-center": {
+        "prototype": "#regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "@large-text-center": {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "roboto",
+            "size": "64",
+            "regular_resource": {
+                "package": "assets.fonts",
+                "resource": "Roboto-Regular.ttf"
+            }
+        },
+        "misc":
+        {
+            "text_shadow_size": "0",
+            "text_vert_alignment": "center"
+        }
+    },
+    "@small-button": {
+        "font": {
+            "name": "roboto",
+            "size": "16"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "4",
+            "border_width" : "0"
+        }
+    },
+    "@large-button": {
+        "font": {
+            "name": "roboto",
+            "size": "24"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "15",
+            "border_width" : "0",
+            "shadow_width": "0"
         }
     },
     "#paused": {
@@ -62,36 +168,54 @@
         }
     },
     "#close-button": {
-        "colours": {
-            "normal_text": "#000000"
-        },
-        "font": {
-            "name": "roboto",
-            "size": "12"
-        },
         "images": {
             "normal_image": {
                 "package": "assets.images",
                 "resource": "close-button.png"
             }
+        }
+    },
+    "#pause-button": {
+        "images": {
+            "normal_image": {
+                "package": "assets.images",
+                "resource": "pause-button.png"
+            }
+        }
+    },
+    "#up-arrow": {
+        "images": {
+            "normal_image": {
+                "package": "assets.images",
+                "resource": "up-arrow.png"
+            }
+        }
+    },
+    "#down-arrow": {
+        "images": {
+            "normal_image": {
+                "package": "assets.images",
+                "resource": "down-arrow.png"
+            }
+        }
+    },
+    "#locked-button": {
+        "images": {
+            "normal_image": {
+                "package": "assets.images",
+                "resource": "ratio-lock.png"
+            }
+        }
+    },
+    "#unlocked-button": {
+        "colours": {
+            "normal_bg": "#787878"
         },
-        "misc":
-        {
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": "4",
-            "border_width" : "0"
-        }
-    },
-    "#exit-button": {
-        "font": {
-            "name": "roboto",
-            "size": "16"
-        }
-    },
-    "#finished-message": {
-        "font": {
-            "name": "roboto",
-            "size": "16"
+        "images": {
+            "normal_image": {
+                "package": "assets.images",
+                "resource": "ratio-lock.png"
+            }
         }
     }
 }

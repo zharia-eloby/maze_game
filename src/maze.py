@@ -78,72 +78,6 @@ manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
 clock = pygame.time.Clock()
 
-class Button(pygame.sprite.Sprite):
-    def __init__(self, width, height):
-        pygame.sprite.Sprite.__init__(self)
-        self.width = width
-        self.height = height
-        self.button_rect = pygame.Rect(0, 0, self.width, self.height)
-        self.hovered = False
-
-    def setCenterPosition(self, x, y):
-        self.button_rect.center = (x, y)
-
-    def setTopLeftPosition(self, x, y):
-        self.button_rect.topleft = (x, y)
-
-    def draw_button(self):
-        pass
-
-    def is_clicked(self, mouse_position):
-        return self.button_rect.collidepoint(mouse_position)
-        
-    def is_hovered(self, mouse_position):
-        self.hovered = self.button_rect.collidepoint(mouse_position)
-        return self.hovered
-
-class TextButton(Button):
-    def __init__(self, width, height, button_color, text, font_size, text_color):
-        super().__init__(width, height)
-        self.button_color = button_color
-        self.button_hover_color = light_gray
-        font = pygame.font.Font(font_file, font_size)
-        self.button_text = font.render(text, True, text_color)
-        self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
-        self.button_rect = pygame.Rect(0, 0, self.width, self.height)
-
-    def changeText(self, text, font_size, text_color):
-        font = pygame.font.Font(font_file, font_size)
-        self.button_text = font.render(text, True, text_color)
-        self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
-
-    def draw_button(self):
-        new_rect = pygame.draw.rect(screen, self.button_color, self.button_rect, 0, 12)
-        pygame.display.update([new_rect, screen.blit(self.button_text, self.button_text_rect)])
-        
-    def setCenterPosition(self, x, y):
-        super().setCenterPosition(x, y)
-        self.button_text_rect = self.button_text.get_rect(center=self.button_rect.center)
-        
-    def on_hover_enter(self):
-        self.button_color = self.button_hover_color
-        self.draw_button()
-        
-    def on_hover_exit(self):
-        self.button_color = button_color
-        self.draw_button()
-
-class ImageButton(Button):
-    def __init__(self, width, height, file_path):
-        super().__init__(width, height)
-        self.file_path = file_path
-        self.button = pygame.image.load(self.file_path).convert_alpha()
-        self.button = pygame.transform.scale(self.button, (self.width, self.height))
-        self.button_rect = self.button.get_rect()
-
-    def draw_button(self):
-        screen.blit(self.button, self.button_rect)
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, color):
         pygame.sprite.Sprite.__init__(self)
@@ -387,14 +321,16 @@ def home_screen():
     )
     play_button = pygame_gui.elements.UIButton(
         relative_rect=play_rect, 
-        text="play"
+        text="play",
+        object_id=ObjectID(class_id="@large-button")
     )
     
     #game title
     title_rect = pygame.Rect(0, 0, SCREEN_WIDTH, play_rect.top)
     title = pygame_gui.elements.UILabel(
         relative_rect=title_rect, 
-        text="Maze"
+        text="Maze",
+        object_id=ObjectID(class_id="@title")
     )
 
     #credits
@@ -402,9 +338,11 @@ def home_screen():
     credits = pygame_gui.elements.UILabel(
         relative_rect=credits_rect, 
         text="code by Zharia Eloby",
-        object_id=ObjectID(object_id="#credits")
+        object_id=ObjectID(class_id="@regular-text-bottom")
     )
 
+    manager.update(0)
+    manager.draw_ui(screen)
     pygame.display.flip()
 
     #until the user exits or presses the play button...
@@ -447,14 +385,15 @@ def pick_size_screen():
     back_button = pygame_gui.elements.UIButton(
         relative_rect=back_button_rect, 
         text="<",
-        manager=manager
+        manager=manager,
+        object_id=ObjectID(class_id="@small-button")
     )
     
     button_width = SCREEN_WIDTH/2
     button_height = 100
     space_between_buttons = 30
     
-    num_buttons = 3
+    num_buttons = 4
     total_buttons_height = num_buttons*button_height + (num_buttons-1)*space_between_buttons
     starting_y_pos = (SCREEN_HEIGHT - total_buttons_height)/2
     
@@ -468,7 +407,8 @@ def pick_size_screen():
     easy_button = pygame_gui.elements.UIButton(
         relative_rect=easy_button_rect, 
         text="easy",
-        manager=manager
+        manager=manager,
+        object_id=ObjectID(class_id="@large-button")
     )
     
     #medium button
@@ -481,7 +421,8 @@ def pick_size_screen():
     medium_button = pygame_gui.elements.UIButton(
         relative_rect=medium_button_rect, 
         text="medium",
-        manager=manager
+        manager=manager,
+        object_id=ObjectID(class_id="@large-button")
     )
     
     #hard button
@@ -494,7 +435,22 @@ def pick_size_screen():
     hard_button = pygame_gui.elements.UIButton(
         relative_rect=hard_button_rect, 
         text="hard",
-        manager=manager
+        manager=manager,
+        object_id=ObjectID(class_id="@large-button")
+    )
+
+    #custom button
+    custom_button_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - button_width/2,  # x
+        hard_button_rect.bottom + space_between_buttons,  # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    custom_button = pygame_gui.elements.UIButton(
+        relative_rect=custom_button_rect, 
+        text="custom",
+        manager=manager,
+        object_id=ObjectID(class_id="@large-button")
     )
 
     manager.update(0)
@@ -531,6 +487,9 @@ def pick_size_screen():
                     rows = hard_dim[0]
                     columns = hard_dim[1]
                     play()
+                elif event.ui_element == custom_button:
+                    ready = True
+                    custom_size_screen()
                 elif event.ui_element == back_button:
                     home_screen()
             elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
@@ -545,98 +504,206 @@ def pick_size_screen():
         manager.draw_ui(screen)
         pygame.display.update()
 
-"""
 def custom_size_screen():
-    screen.fill(background_color)
+    manager.clear_and_reset()
+
+    global rows
+    global columns
+    global CELL_WIDTH
+    global CELL_HEIGHT
+    global WALL_THICKNESS
     
     rows = 15
-    cols = 15
+    columns = 15
     
-    back_button = ImageButton(20, 32, image_file_path + "arrow.png")
-    back_button.setTopLeftPosition(25, 25)
-    back_button.draw_button()
+    screen.fill(background_color)
+    
+    #back button
+    back_button_rect = pygame.Rect(
+        25, # x
+        25, # y
+        50, # width
+        35  # height
+    )
+    back_button = pygame_gui.elements.UIButton(
+        relative_rect=back_button_rect, 
+        text="<",
+        manager=manager,
+        object_id=ObjectID(class_id="@small-button")
+    )
     
     #select dimensions text
-    font_size = 36
-    font = pygame.font.Font(font_file, font_size)
-    select_text = font.render("Select Your Dimensions", True, text_color)
-    select_text_rect = select_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/5))
-    screen.blit(select_text, select_text_rect)
+    select_text_rect = pygame.Rect(
+        0,
+        back_button_rect.bottom,
+        SCREEN_WIDTH,
+        70
+    )
+    select_text = pygame_gui.elements.UILabel(
+        relative_rect=select_text_rect,
+        text="Select your Dimensions",
+        manager=manager,
+        object_id=ObjectID(class_id="@heading")
+    )
+
+    # warning text
+    warning_text_width = SCREEN_WIDTH
+    warning_text_height = 20
+    warning_text_rect = pygame.Rect(
+        0,
+        select_text_rect.bottom,
+        warning_text_width,
+        warning_text_height
+    )
+    warning_text = pygame_gui.elements.UILabel(
+        relative_rect=warning_text_rect,
+        text="* dimensions must be within 10 units of each other *",
+        manager=manager,
+        object_id=ObjectID(object_id="@regular-text-center")
+    )
     
     #'x' text
-    font_size = 24
-    font = pygame.font.Font(font_file, font_size)
-    x_text = font.render("x", True, text_color)
-    x_text_rect = x_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
-    screen.blit(x_text, x_text_rect)
+    x_width = SCREEN_WIDTH * 0.1
+    x_height = 80
+    x_text_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - x_width/2,
+        SCREEN_HEIGHT/2 - x_height/2,
+        x_width,
+        x_height
+    )
+    x_text = pygame_gui.elements.UILabel(
+        relative_rect=x_text_rect,
+        text="x",
+        manager=manager,
+        object_id=ObjectID(class_id="@large-text-center")
+    )
     
     #row text
-    font_size = 125
-    font = pygame.font.Font(font_file, font_size)
-    row_text = font.render(str(rows), True, text_color)
-    row_text_rect = row_text.get_rect(center=(SCREEN_WIDTH/6*2, SCREEN_HEIGHT/2))
-    screen.blit(row_text, row_text_rect)
+    text_height = 100
+    row_text_rect = pygame.Rect(
+        0,
+        SCREEN_HEIGHT/2 - text_height/2,
+        x_text_rect.left,
+        text_height
+    )
+    row_text = pygame_gui.elements.UILabel(
+        relative_rect=row_text_rect,
+        text=str(rows),
+        manager=manager,
+        object_id=ObjectID(class_id="@large-text-center")
+    )
 
     #column text
-    col_text = font.render(str(cols), True, text_color)
-    col_text_rect = col_text.get_rect(center=(SCREEN_WIDTH/6*4, SCREEN_HEIGHT/2))
-    screen.blit(col_text, col_text_rect)
+    col_text_rect = pygame.Rect(
+        x_text_rect.right,
+        SCREEN_HEIGHT/2 - text_height/2,
+        SCREEN_WIDTH - x_text_rect.right,
+        text_height
+    )
+    col_text = pygame_gui.elements.UILabel(
+        relative_rect=col_text_rect,
+        text=str(columns),
+        manager=manager,
+        object_id=ObjectID(class_id="@large-text-center")
+    )
+
+    #arrows
+    arrow_width = 75
+    arrow_height = 75
+
+    row_up_arrow_rect = pygame.Rect(
+        row_text_rect.centerx - arrow_width/2,
+        row_text_rect.top - arrow_height,
+        arrow_width,
+        arrow_height
+    )
+    row_up_arrow_button = pygame_gui.elements.UIButton(
+        relative_rect=row_up_arrow_rect,
+        text="",
+        manager=manager,
+        object_id=ObjectID(object_id="#up-arrow")
+    )
+
+    row_down_arrow_rect = pygame.Rect(
+        row_text_rect.centerx - arrow_width/2,
+        row_text_rect.bottom,
+        arrow_width,
+        arrow_height
+    )
+    row_down_arrow_button = pygame_gui.elements.UIButton(
+        relative_rect=row_down_arrow_rect,
+        text="",
+        manager=manager,
+        object_id=ObjectID(object_id="#down-arrow")
+    )
+
+    column_up_arrow_rect = pygame.Rect(
+        col_text_rect.centerx - arrow_width/2,
+        col_text_rect.top - arrow_height,
+        arrow_width,
+        arrow_height
+    )
+    column_up_arrow_button = pygame_gui.elements.UIButton(
+        relative_rect=column_up_arrow_rect,
+        text="",
+        manager=manager,
+        object_id=ObjectID(object_id="#up-arrow")
+    )
+
+    column_down_arrow_rect = pygame.Rect(
+        col_text_rect.centerx - arrow_width/2,
+        col_text_rect.bottom,
+        arrow_width,
+        arrow_height
+    )
+    column_down_arrow_button = pygame_gui.elements.UIButton(
+        relative_rect=column_down_arrow_rect,
+        text="",
+        manager=manager,
+        object_id=ObjectID(object_id="#down-arrow")
+    )
+
+    #ratio lock
+    lock_button_width = 50
+    lock_button_height = 50
+    lock_button_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - lock_button_width/2,
+        row_down_arrow_rect.bottom - lock_button_height,
+        lock_button_width,
+        lock_button_height
+    )
+    locked_button = pygame_gui.elements.UIButton(
+        relative_rect=lock_button_rect,
+        text="",
+        manager=manager,
+        object_id=ObjectID(object_id="#locked-button")
+    )
+    unlocked_button = pygame_gui.elements.UIButton(
+        relative_rect=lock_button_rect,
+        text="",
+        manager=manager,
+        object_id=ObjectID(object_id="#unlocked-button")
+    )
+    unlocked_button.hide()
     
     #play button
-    font_size = 24
-    play_button = TextButton(SCREEN_WIDTH/2, font_size*2, button_color, "play", font_size, button_text_color)
-    play_button.setCenterPosition(SCREEN_WIDTH/2, SCREEN_HEIGHT/5*4)
-    play_button.draw_button()
-    
-    #arrows
-    arrow_width = 100
-    arrow_height = 100
-    
-    arrow_padding = 125
-    
-    row_up_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "up-arrow.png")
-    row_up_arrow_button.setCenterPosition(row_text_rect.centerx, row_text_rect.centery - arrow_padding)
-    row_up_arrow_button.draw_button()
-    
-    row_down_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "down-arrow.png")
-    row_down_arrow_button.setCenterPosition(row_text_rect.centerx, row_text_rect.centery + arrow_padding)
-    row_down_arrow_button.draw_button()
-    
-    col_up_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "up-arrow.png")
-    col_up_arrow_button.setCenterPosition(col_text_rect.centerx, col_text_rect.centery - arrow_padding)
-    col_up_arrow_button.draw_button()
-    
-    col_down_arrow_button = ImageButton(arrow_width, arrow_height, image_file_path + "down-arrow.png")
-    col_down_arrow_button.setCenterPosition(col_text_rect.centerx, col_text_rect.centery + arrow_padding)
-    col_down_arrow_button.draw_button()
-    
-    #ratio lock
-    lock_image = pygame.image.load(image_file_path + "ratio-lock.png").convert_alpha()
-    lock_image = pygame.transform.scale(lock_image, (30, 30))
-    lock_image_rect = lock_image.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2+125))
-    lock_background = pygame.Surface([lock_image_rect.width+10, lock_image_rect.height+10])
-    lock_background.fill(button_color)
-    lock_background_rect = lock_background.get_rect(center=lock_image_rect.center)
-    screen.blit(lock_background, lock_background_rect)
-    screen.blit(lock_image, lock_image_rect)
-    
-    #dimension error text
-    font_size = 16
-    font = pygame.font.Font(font_file, font_size)
-    bounds_message = font.render("dimensions must stay within bounds", True, error_color)
-    bounds_message_rect = bounds_message.get_rect(center=(SCREEN_WIDTH/2, 0))
-    bounds_message_rect.top = select_text_rect.bottom
-    bounds_message.set_alpha(0)
-    screen.blit(bounds_message, bounds_message_rect)
-    
-    #makes sure that past displays don't show behind current text (specifically for single digit dimension)
-    row_background = pygame.Surface([row_text_rect.width, row_text_rect.height])
-    row_background.fill(background_color)
-    row_background_rect = row_background.get_rect(center=row_text_rect.center)
-    
-    col_background = pygame.Surface([col_text_rect.width, col_text_rect.height])
-    col_background.fill(background_color)
-    col_background_rect = col_background.get_rect(center=col_text_rect.center)
+    button_width = SCREEN_WIDTH/2
+    button_height = 50
+    play_button_rect = pygame.Rect(
+        SCREEN_WIDTH/2 - button_width/2, # x
+        SCREEN_HEIGHT/5*4, # y
+        button_width,   # width
+        button_height   # height
+    )
+    play_button = pygame_gui.elements.UIButton(
+        relative_rect=play_button_rect, 
+        text="play",
+        manager=manager,
+        object_id=ObjectID(class_id="@large-button-center")
+    )
+
+    manager.update(0)
+    manager.draw_ui(screen)
     
     pygame.display.flip()
     
@@ -644,136 +711,112 @@ def custom_size_screen():
     row_max = 50
     col_min = 5
     col_max = 50
-    
-    global maze_cols
-    global maze_rows
-    global CELL_WIDTH
-    global CELL_HEIGHT
-    global WALL_THICKNESS
-    
-    display_bounds_message = False
+
+    max_diff = 10
+
     ready = False
     locked = True #if True, rows and cols change simultaneously
     while not ready:
-        for event in pygame.event.get():
+        time_delta = clock.tick(60)/1000.00
+        for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     home_screen()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed() == (1, 0, 0):
-                    m_pos = pygame.mouse.get_pos()
-                    if (back_button.is_clicked(m_pos)):
-                        pick_size_screen()
-                    if (lock_background_rect.collidepoint(m_pos)):
-                        if locked:
-                            locked = False
-                            lock_background.fill(background_color)
-                        else:
-                            lock_background.fill(button_color)
-                            locked = True
-                        pygame.display.update(screen.blit(lock_background, lock_background_rect))
-                        pygame.display.update(screen.blit(lock_image, lock_image_rect))
-                    if (play_button.is_clicked(m_pos)):
-                        maze_rows = rows
-                        maze_cols = cols
-                        CELL_WIDTH = math.floor(MAZE_WIDTH/maze_cols)
-                        CELL_WIDTH -= CELL_WIDTH % 2
-                        CELL_HEIGHT = math.floor(MAZE_HEIGHT/maze_rows)
-                        CELL_HEIGHT -= CELL_HEIGHT % 2
-                        WALL_THICKNESS = round(CELL_WIDTH/10)
-                        WALL_THICKNESS -= WALL_THICKNESS%2
-                        if (WALL_THICKNESS < 2):
-                            WALL_THICKNESS = 2
-                        play()
-                        ready = True
-                        break
-                    if (row_up_arrow_button.is_clicked(m_pos) and rows <= row_max):
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == back_button:
+                    pick_size_screen()
+                elif (event.ui_element == locked_button) or (event.ui_element == unlocked_button):
+                    if locked:
+                        locked = False
+                        locked_button.hide()
+                        unlocked_button.show()
+                    else:
+                        locked = True
+                        unlocked_button.hide()
+                        locked_button.show()
+                elif event.ui_element == play_button:
+                    ready = True
+                    play()
+                    break
+                if locked:
+                    if (event.ui_element == row_up_arrow_button) or (event.ui_element == column_up_arrow_button):
+                        if (rows < row_max and columns < col_max):
+                            rows += 1
+                            columns += 1
+                            if (rows == row_max):
+                                row_up_arrow_button.disable()
+                            if (columns == col_max):
+                                column_up_arrow_button.disable()
+                            if not (row_down_arrow_button.is_enabled):
+                                row_down_arrow_button.enable()
+                            if not (column_down_arrow_button.is_enabled):
+                                column_down_arrow_button.enable()
+                    if (event.ui_element == row_down_arrow_button) or (event.ui_element == column_down_arrow_button):
+                        if (rows > row_min and columns > col_min):
+                            rows -= 1
+                            columns -= 1
+                            if (rows == row_min):
+                                row_down_arrow_button.disable()
+                            if (columns == col_min):
+                                column_down_arrow_button.disable()
+                            if not (row_up_arrow_button.is_enabled):
+                                row_up_arrow_button.enable()
+                            if not (column_up_arrow_button.is_enabled):
+                                column_up_arrow_button.enable()
+                else:
+                    if (event.ui_element == row_up_arrow_button):
                         rows += 1
-                        if locked: 
-                            cols += 1
-                            if (rows > row_max):
-                                cols -= 1
-                                rows -= 1
-                                display_bounds_message = True
-                        elif (rows - cols > 10):
-                            cols += 1
-                            display_bounds_message = True
-                        elif (rows > row_max):
-                            rows -= 1
-                            display_bounds_message = True
-                    if (row_down_arrow_button.is_clicked(m_pos) and rows >= row_min):
+                        if (abs(rows-columns) > max_diff):
+                            columns += 1
+                            if not (column_down_arrow_button.is_enabled):
+                                column_down_arrow_button.enable()
+                        if (rows == row_max):
+                            row_up_arrow_button.disable()
+                        if not row_down_arrow_button.is_enabled:
+                            row_down_arrow_button.enable()
+                    elif (event.ui_element == row_down_arrow_button):
                         rows -= 1
-                        if locked:
-                            cols -= 1
-                            if (rows < row_min):
-                                cols += 1
-                                rows += 1
-                                display_bounds_message = True
-                        elif (cols - rows > 10):
-                            cols -= 1
-                            display_bounds_message = True
-                        elif (rows < row_min):
+                        if (abs(rows-columns) > max_diff):
+                            columns -= 1
+                            if not (column_up_arrow_button.is_enabled):
+                                column_up_arrow_button.enable()
+                        if (rows == row_min):
+                            row_down_arrow_button.disable()
+                        if not row_up_arrow_button.is_enabled:
+                            row_up_arrow_button.enable()
+                    elif (event.ui_element == column_up_arrow_button):
+                        columns += 1
+                        if (abs(rows-columns) > max_diff):
                             rows += 1
-                            display_bounds_message = True
-                    if (col_up_arrow_button.is_clicked(m_pos) and cols <= col_max):
-                        cols += 1
-                        if locked:
-                            rows += 1
-                            if (cols > col_max):
-                                cols -= 1
-                                rows -= 1
-                                display_bounds_message = True
-                        elif (cols - rows > 10):
-                            rows += 1
-                            display_bounds_message = True
-                        elif (cols > col_max):
-                            cols -= 1
-                            display_bounds_message = True
-                    if (col_down_arrow_button.is_clicked(m_pos) and cols >= col_min):
-                        cols -= 1
-                        if locked:
+                            if not (row_down_arrow_button.is_enabled):
+                                row_down_arrow_button.enable()
+                        if (columns == col_max):
+                            column_up_arrow_button.disable()
+                        if not column_down_arrow_button.is_enabled:
+                            column_down_arrow_button.enable()
+                    elif (event.ui_element == column_down_arrow_button):
+                        columns -= 1
+                        if (abs(rows-columns) > max_diff):
                             rows -= 1
-                            if (cols < col_min):
-                                cols += 1
-                                rows += 1
-                                display_bounds_message = True
-                        elif (rows - cols > 10):
-                            rows -= 1
-                            display_bounds_message = True
-                        elif (cols < col_min):
-                            cols += 1
-                            display_bounds_message = True
-                    if display_bounds_message and bounds_message.get_alpha() == 0:
-                        bounds_message.set_alpha(255)
-                    
-                    screen.fill(background_color)
-                    
-                    pygame.display.update(screen.blit(row_background, row_background_rect))
-                    pygame.display.update(screen.blit(col_background, col_background_rect))
-                    
-                    font_size = 125
-                    font = pygame.font.Font(font_file, font_size)
-                    row_text = font.render(str(rows), True, text_color)
-                    row_text_rect = row_text.get_rect(center=(SCREEN_WIDTH/6*2, SCREEN_HEIGHT/2), width=200)
-                    pygame.display.update(screen.blit(row_text, row_text_rect))
+                            if not (row_up_arrow_button.is_enabled):
+                                row_up_arrow_button.enable()
+                        if (columns == col_min):
+                            column_down_arrow_button.disable()
+                        if not column_up_arrow_button.is_enabled:
+                            column_up_arrow_button.enable()
+                col_text.set_text(str(columns))
+                row_text.set_text(str(rows))
+            
+            manager.process_events(event)
 
-                    col_text = font.render(str(cols), True, text_color)
-                    col_text_rect = col_text.get_rect(center=(SCREEN_WIDTH/6*4, SCREEN_HEIGHT/2))
-                    pygame.display.update(screen.blit(col_text, col_text_rect))
-   
-        #bounds message slowly fades over a few seconds
-        if display_bounds_message:
-            screen.fill(background_color)
-            bounds_message.set_alpha(bounds_message.get_alpha()-2)
-            if bounds_message.get_alpha() <= 50:
-                display_bounds_message = False
-                bounds_message.set_alpha(0)
-            pygame.display.update(screen.blit(bounds_message, bounds_message_rect))
-        clock.tick(30)
-"""
+        screen.fill(background_color)
+        manager.update(time_delta)
+        manager.draw_ui(screen)
+        pygame.display.update()
+
 
 def pause_menu():
     # all interactive elements will have this manager
@@ -810,7 +853,7 @@ def pause_menu():
         relative_rect=exit_button_rect,
         text="exit to home screen",
         manager=interactive_manager,
-        object_id=ObjectID(object_id="#exit-button")
+        object_id=ObjectID(class_id="@small-button")
     )
 
     close_button_height = 30
@@ -825,7 +868,7 @@ def pause_menu():
         relative_rect=close_button_rect,
         text="",
         manager=interactive_manager,
-        object_id=ObjectID(object_id="#close-button")
+        object_id=ObjectID(object_id="#close-button", class_id="@small-button")
     )
 
     paused_text_rect = pygame.Rect(
@@ -838,7 +881,7 @@ def pause_menu():
         relative_rect=paused_text_rect,
         text="paused",
         manager=interactive_manager,
-        object_id=ObjectID(object_id="#paused")
+        object_id=ObjectID(class_id="@regular-text-center")
     )
     
     background_manager.update(0)
@@ -856,16 +899,16 @@ def pause_menu():
                 sys.exit()
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == exit_button:
-                    print("exit button")
                     paused = False
                     home_screen()
                 elif event.ui_element == close_button:
-                    print("close button")
                     paused = False
 
             interactive_manager.process_events(event)
 
         time_delta = math.floor(time.time()) - time_delta
+        background_manager.update(time_delta)
+        background_manager.draw_ui(screen)
         interactive_manager.update(time_delta)
         interactive_manager.draw_ui(screen)
         pygame.display.update()
@@ -879,7 +922,7 @@ def finished_menu(message):
     
     #background surface
     menu_width = SCREEN_WIDTH * 0.5
-    menu_height = SCREEN_HEIGHT * 0.25
+    menu_height = SCREEN_HEIGHT * 0.3
     background_rect = pygame.Rect(
         SCREEN_WIDTH/2 - menu_width/2,
         SCREEN_HEIGHT/2 - menu_height/2,
@@ -889,20 +932,6 @@ def finished_menu(message):
     background = pygame_gui.elements.UIPanel(
         relative_rect=background_rect,
         manager=background_manager
-    )
-    
-    #congrats message
-    finished_message_rect = pygame.Rect(
-        background_rect.left + margin,
-        background_rect.top + margin,
-        background_rect.width - margin*2,
-        30
-    )
-    finished_message = pygame_gui.elements.UILabel (
-        relative_rect=finished_message_rect,
-        text=message,
-        manager=background_manager,
-        object_id=ObjectID(object_id="#finished-message")
     )
     
     button_height = 40
@@ -919,7 +948,7 @@ def finished_menu(message):
         relative_rect=exit_button_rect,
         text="exit to home screen",
         manager=interactive_manager,
-        object_id=ObjectID(object_id="#exit-button")
+        object_id=ObjectID(class_id="@small-button")
     )
 
     #play again button
@@ -933,7 +962,21 @@ def finished_menu(message):
         relative_rect=play_button_rect,
         text="play again",
         manager=interactive_manager,
-        object_id=ObjectID(object_id="#exit-button")
+        object_id=ObjectID(class_id="@small-button")
+    )
+
+    #congrats message
+    finished_message_rect = pygame.Rect(
+        background_rect.left + margin,
+        background_rect.top + margin,
+        background_rect.width - margin*2,
+        play_button_rect.top - (background_rect.top+margin)
+    )
+    finished_message = pygame_gui.elements.UILabel (
+        relative_rect=finished_message_rect,
+        text=message,
+        manager=background_manager,
+        object_id=ObjectID(class_id="@regular-text-center")
     )
 
     background_manager.update(0)
@@ -969,6 +1012,7 @@ def check_for_flag(flag_list, m_pos):
 
 def play():
     manager.clear_and_reset()
+
     global CELL_WIDTH
     global CELL_HEIGHT
     global MAZE_WIDTH
@@ -986,9 +1030,6 @@ def play():
     WALL_THICKNESS -= WALL_THICKNESS%2
     if (WALL_THICKNESS < 2):
         WALL_THICKNESS = 2
-
-    font_size = 24
-    font = pygame.font.Font(font_file, font_size)
 
     maze = create_maze(rows, columns)
     
@@ -1030,15 +1071,37 @@ def play():
     all_sprites.add(player)
     
     #pause button
-    pause_button = ImageButton(30, 30, image_file_path + "pause-button.png")
-    pause_button.setTopLeftPosition(SCREEN_WIDTH - 10 - pause_button.width, 10)
-    pause_button.draw_button()
+    margin = 10
+
+    pause_button_width = 30
+    pause_button_height = 30
+    pause_button_rect = pygame.Rect(
+        SCREEN_WIDTH - margin - pause_button_width,
+        margin,
+        pause_button_width,
+        pause_button_height
+    )
+    pause_button = pygame_gui.elements.UIButton(
+        relative_rect=pause_button_rect,
+        text="",
+        manager=manager,
+        object_id=ObjectID(object_id="#pause-button", class_id="@small-button")
+    )
     
     #'press Enter to skip animation'
-    font_size = 24
-    font = pygame.font.Font(font_file, font_size)
-    skip_text = font.render("press ENTER to skip animation", True, text_color)
-    skip_text_rect = skip_text.get_rect(topleft=(10, 10))
+    skip_text_rect = pygame.Rect(
+        10,
+        10,
+        SCREEN_WIDTH,
+        50
+    )
+    skip_text = pygame_gui.elements.UILabel(
+        relative_rect=skip_text_rect,
+        text="press ENTER to skip animation",
+        manager=manager,
+        object_id=ObjectID(class_id="@regular-text-center")
+    )
+    skip_text.hide()
                     
     done = False
     solving = False
@@ -1048,19 +1111,20 @@ def play():
     curr_index = 1
     paused = False
 
+    manager.update(0)
+    manager.draw_ui(screen)
     while not done:
-        
+        time_delta = clock.tick(60)/1000.00
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == pause_button:
+                    paused = True
+                    pause_menu()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed() == (1, 0, 0):
-                    m_pos = pygame.mouse.get_pos()
-                    if (pause_button.is_clicked(m_pos)):
-                        pause_menu()
-                        paused = True
                 if pygame.mouse.get_pressed() == (0, 0, 1):
                     m_pos = pygame.mouse.get_pos()
                     flag = check_for_flag(flag_list, m_pos)
@@ -1088,6 +1152,7 @@ def play():
                 if event.key == pygame.K_s and not solved:
                     if solving:
                         solving = False
+                        skip_text.hide()
                         all_sprites.remove(player)
                         all_sprites.add(player)
                     else:
@@ -1096,6 +1161,7 @@ def play():
                             end = (endpoint[0]*2+1, endpoint[1]*2+1)
                             solution_stack = solve_maze(maze, start, end)
                         solving = True
+                        skip_text.show()
                 if event.key == pygame.K_RETURN and solving:
                     while (curr_index < len(solution_stack)-1):
                         curr_cell = solution_stack[curr_index]
@@ -1106,8 +1172,11 @@ def play():
                         curr_index += 1
                     solving = False
                     solved = True
+                    skip_text.hide()
                     all_sprites.remove(player)
                     all_sprites.add(player)
+
+            manager.process_events(event)
         if solving and curr_index < len(solution_stack):
             curr_cell = solution_stack[curr_index]
             new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
@@ -1118,19 +1187,16 @@ def play():
             if curr_index >= len(solution_stack)-1:
                 solving = False
                 solved = True
+                skip_text.hide()
                 all_sprites.remove(player)
                 all_sprites.add(player)
 
         screen.fill(background_color)
         all_sprites.draw(screen)
+        manager.update(time_delta)
+        manager.draw_ui(screen)
         
-        pause_button.draw_button()
-        if solving:
-            screen.blit(skip_text, skip_text_rect)
-        
-        pygame.display.flip()
-        
-        clock.tick(30)
+        pygame.display.update()
         
     restart = finished_menu(message)
     del all_sprites
