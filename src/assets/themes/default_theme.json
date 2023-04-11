@@ -8,7 +8,7 @@
         "font":
         {
             "name": "roboto",
-            "size": "16",
+            "size": "1",
             "regular_resource": {
                 "package": "assets.fonts",
                 "resource": "Roboto-Regular.ttf"
@@ -19,12 +19,32 @@
             "text_shadow_size": "0"
         }
     },
+    "#small-regular-text": {
+        "prototype": "#regular-text",
+        "font":
+        {
+            "name": "roboto",
+            "size": "16"
+        }
+    },
+    "#large-regular-text": {
+        "prototype": "#regular-text",
+        "font":
+        {
+            "name": "roboto",
+            "size": "64"
+        }
+    },
     "button":
     {
         "colours":
         {
             "normal_bg": "#efefef",
-            "hovered_bg": "#d1d1d1"
+            "hovered_bg": "#d1d1d1",
+            "active_bg": "#515151",
+            "normal_text": "#000000",
+            "hovered_text": "#000000",
+            "active_text": "#000000"
         },
         "font":
         {
@@ -34,6 +54,12 @@
                 "package": "assets.fonts",
                 "resource": "Roboto-Regular.ttf"
             }
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "border_width" : "0",
+            "shadow_width": "0"
         }
     },
     "label":
@@ -58,78 +84,67 @@
             "text_vert_alignment": "bottom"
         }
     },
-    "@title": {
+    "#background": {
         "colours":
         {
-            "normal_text": "#ffffff"
-        },
-        "font":
-        {
-            "name": "roboto",
-            "size": "72",
-            "regular_resource": {
-                "package": "assets.fonts",
-                "resource": "Roboto-Regular.ttf"
-            }
+            "dark_bg": "#d8bac6"
         },
         "misc":
         {
-            "text_shadow_size": "0",
+            "border_width": "0",
+            "shadow_width": "0"
+        }
+    },
+    "#title": {
+        "prototype": "#regular-text",
+        "font":
+        {
+            "name": "roboto",
+            "size": "72"
+        },
+        "misc":
+        {
             "text_vert_alignment": "bottom"
         }
     },
     "@heading": {
-        "colours":
-        {
-            "normal_text": "#ffffff"
-        },
+        "prototype": "#regular-text",
         "font":
         {
             "name": "roboto",
-            "size": "36",
-            "regular_resource": {
-                "package": "assets.fonts",
-                "resource": "Roboto-Regular.ttf"
-            }
+            "size": "36"
         },
         "misc":
         {
-            "text_shadow_size": "0",
             "text_vert_alignment": "bottom"
         }
     },
-    "@regular-text-bottom": {
-        "prototype": "#regular-text",
+    "@small-text-bottom": {
+        "prototype": "#small-regular-text",
         "misc":
         {
             "text_vert_alignment": "bottom"
         }
     },
-    "@regular-text-center": {
-        "prototype": "#regular-text",
+    "@small-text-center": {
+        "prototype": "#small-regular-text",
         "misc":
         {
             "text_vert_alignment": "center"
         }
     },
     "@large-text-center": {
-        "colours":
-        {
-            "normal_text": "#ffffff"
-        },
-        "font":
-        {
-            "name": "roboto",
-            "size": "64",
-            "regular_resource": {
-                "package": "assets.fonts",
-                "resource": "Roboto-Regular.ttf"
-            }
-        },
+        "prototype": "#large-regular-text",
         "misc":
         {
-            "text_shadow_size": "0",
             "text_vert_alignment": "center"
+        }
+    },
+    "@large-text-bottom": {
+        "prototype": "#large-regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "bottom"
         }
     },
     "@small-button": {
@@ -139,22 +154,31 @@
         },
         "misc":
         {
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": "4",
-            "border_width" : "0"
+            "shape_corner_radius": "6"
         }
     },
     "@large-button": {
-        "font": {
+        "font": 
+        {
             "name": "roboto",
             "size": "24"
         },
         "misc":
         {
-            "shape": "rounded_rectangle",
-            "shape_corner_radius": "15",
-            "border_width" : "0",
-            "shadow_width": "0"
+            "shape_corner_radius": "15"
+        }
+    },
+    "@menu-background": {
+        "colours": 
+        {
+            "dark_bg": "#9c9c9c"
+        },
+        "misc": 
+        {
+            "border_width": "0",
+            "shadow_width": "0",
+            "shape_corner_radius": "6",
+            "shape": "rounded_rectangle"
         }
     },
     "#paused": {
