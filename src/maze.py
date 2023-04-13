@@ -19,7 +19,6 @@ blue = (52, 118, 168)
 green = (56, 220, 156)
 tan = (234, 203, 187)
 
-background_color = tan
 wall_color = black
 player_color = blue
 startpoint_color = gray
@@ -36,7 +35,6 @@ MAZE_WIDTH = 600
 MAZE_HEIGHT = 600
 
 src_path = sys.path[0]
-font_file = os.path.join(src_path, "./assets/fonts/Roboto-Regular.ttf")
 image_file_path = os.path.join(src_path, "./assets/images/")
 theme_file = os.path.join(src_path, "./assets/themes/default_theme.json")
 
@@ -59,7 +57,6 @@ pygame.font.init()
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Maze - created by Zharia Eloby")
 
-manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
 background_rect = pygame.Rect(
@@ -73,8 +70,6 @@ background = pygame_gui.elements.UIPanel(
     manager=background_manager,
     object_id=ObjectID(object_id="#background")
 )
-background_manager.update(0)
-background_manager.draw_ui(screen)
 
 clock = pygame.time.Clock()
 
@@ -124,8 +119,8 @@ class Cell(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=(x, y))
         elif type == "circle":
             self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
-            self.image.fill(background_color)
-            self.image.set_colorkey(background_color)
+            self.image.fill(white)
+            self.image.set_colorkey(white)
             self.rect = self.image.get_rect(topleft=(x, y))
             if (CELL_WIDTH > CELL_HEIGHT):
                 radius = math.ceil(CELL_HEIGHT/8)
@@ -134,8 +129,8 @@ class Cell(pygame.sprite.Sprite):
             pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), radius)
         elif type == "line":
             self.image = pygame.Surface([CELL_WIDTH, CELL_HEIGHT])
-            self.image.fill(background_color)
-            self.image.set_colorkey(background_color)
+            self.image.fill(white)
+            self.image.set_colorkey(white)
             self.rect = self.image.get_rect(topleft=(x - WALL_THICKNESS, y - WALL_THICKNESS))
             self.color = color
 
@@ -307,9 +302,8 @@ home screen
 - contains title, play button, and 'created by' text
 """
 def title_screen():
-    manager.clear_and_reset()
-    background_manager.update(0)
-    background_manager.draw_ui(screen)
+    title_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+    title_screen_manager.clear_and_reset()
 
     #play button
     button_width = SCREEN_WIDTH/2
@@ -323,6 +317,7 @@ def title_screen():
     play_button = pygame_gui.elements.UIButton(
         relative_rect=play_rect, 
         text="play",
+        manager=title_screen_manager,
         object_id=ObjectID(class_id="@large-button")
     )
     
@@ -331,6 +326,7 @@ def title_screen():
     title = pygame_gui.elements.UILabel(
         relative_rect=title_rect, 
         text="Maze",
+        manager=title_screen_manager,
         object_id=ObjectID(object_id="#title")
     )
 
@@ -339,17 +335,21 @@ def title_screen():
     credits = pygame_gui.elements.UILabel(
         relative_rect=credits_rect, 
         text="code by Zharia Eloby",
+        manager=title_screen_manager,
         object_id=ObjectID(class_id="@small-text-bottom")
     )
 
-    manager.update(0)
-    manager.draw_ui(screen)
+    background_manager.update(0)
+    background_manager.draw_ui(screen)
+    title_screen_manager.update(0)
+    title_screen_manager.draw_ui(screen)
     pygame.display.flip()
 
     #until the user exits or presses the play button...
     time_delta = math.floor(time.time()) # time of last call to update
     while True:
         for event in [pygame.event.wait()]+pygame.event.get():
+            print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
@@ -361,13 +361,12 @@ def title_screen():
             elif event.type == pygame.WINDOWRESTORED:   #redraw window upon reopening after minimizing
                 pygame.display.flip()
 
-            manager.process_events(event)
+            title_screen_manager.process_events(event)
 
         time_delta = math.floor(time.time()) - time_delta
-        background_manager.update(time_delta)
         background_manager.draw_ui(screen)
-        manager.update(time_delta)
-        manager.draw_ui(screen)
+        title_screen_manager.update(time_delta)
+        title_screen_manager.draw_ui(screen)
         pygame.display.update()
 
 """
@@ -375,7 +374,8 @@ the user can pick the size of their maze
 preset sizes are easy, medium, and hard, or they can customize the size
 """
 def pick_size_screen():
-    manager.clear_and_reset()
+    pick_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+    pick_size_screen_manager.clear_and_reset()
 
     #back button
     back_button_rect = pygame.Rect(
@@ -387,7 +387,7 @@ def pick_size_screen():
     back_button = pygame_gui.elements.UIButton(
         relative_rect=back_button_rect, 
         text="<",
-        manager=manager,
+        manager=pick_size_screen_manager,
         object_id=ObjectID(class_id="@small-button")
     )
     
@@ -409,7 +409,7 @@ def pick_size_screen():
     easy_button = pygame_gui.elements.UIButton(
         relative_rect=easy_button_rect, 
         text="easy",
-        manager=manager,
+        manager=pick_size_screen_manager,
         object_id=ObjectID(class_id="@large-button")
     )
     
@@ -423,7 +423,7 @@ def pick_size_screen():
     medium_button = pygame_gui.elements.UIButton(
         relative_rect=medium_button_rect, 
         text="medium",
-        manager=manager,
+        manager=pick_size_screen_manager,
         object_id=ObjectID(class_id="@large-button")
     )
     
@@ -437,7 +437,7 @@ def pick_size_screen():
     hard_button = pygame_gui.elements.UIButton(
         relative_rect=hard_button_rect, 
         text="hard",
-        manager=manager,
+        manager=pick_size_screen_manager,
         object_id=ObjectID(class_id="@large-button")
     )
 
@@ -451,14 +451,14 @@ def pick_size_screen():
     custom_button = pygame_gui.elements.UIButton(
         relative_rect=custom_button_rect, 
         text="custom",
-        manager=manager,
+        manager=pick_size_screen_manager,
         object_id=ObjectID(class_id="@large-button")
     )
 
-    manager.update(0)
+    pick_size_screen_manager.update(0)
     background_manager.update(0)
     background_manager.draw_ui(screen)
-    manager.draw_ui(screen)
+    pick_size_screen_manager.draw_ui(screen)
     pygame.display.flip()
     
     global rows
@@ -498,18 +498,17 @@ def pick_size_screen():
             elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
                 pygame.display.flip()
 
-            manager.process_events(event)
+            pick_size_screen_manager.process_events(event)
         
         time_delta = math.floor(time.time()) - time_delta
-        manager.update(time_delta)
+        pick_size_screen_manager.update(time_delta)
 
-        background_manager.update(time_delta)
         background_manager.draw_ui(screen)
-        manager.draw_ui(screen)
+        pick_size_screen_manager.draw_ui(screen)
         pygame.display.update()
 
 def custom_size_screen():
-    manager.clear_and_reset()
+    custom_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     global rows
     global columns
@@ -519,9 +518,6 @@ def custom_size_screen():
     
     rows = 15
     columns = 15
-    
-    background_manager.update(0)
-    background_manager.draw_ui(screen)
     
     #back button
     back_button_rect = pygame.Rect(
@@ -533,7 +529,7 @@ def custom_size_screen():
     back_button = pygame_gui.elements.UIButton(
         relative_rect=back_button_rect, 
         text="<",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@small-button")
     )
     
@@ -547,7 +543,7 @@ def custom_size_screen():
     select_text = pygame_gui.elements.UILabel(
         relative_rect=select_text_rect,
         text="Select your Dimensions",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@heading")
     )
 
@@ -563,7 +559,7 @@ def custom_size_screen():
     warning_text = pygame_gui.elements.UILabel(
         relative_rect=warning_text_rect,
         text="* dimensions must be within 10 units of each other *",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(object_id="@small-text-center")
     )
     
@@ -579,7 +575,7 @@ def custom_size_screen():
     x_text = pygame_gui.elements.UILabel(
         relative_rect=x_text_rect,
         text="x",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-text-center")
     )
     
@@ -594,7 +590,7 @@ def custom_size_screen():
     row_text = pygame_gui.elements.UILabel(
         relative_rect=row_text_rect,
         text=str(rows),
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-text-center")
     )
 
@@ -608,7 +604,7 @@ def custom_size_screen():
     col_text = pygame_gui.elements.UILabel(
         relative_rect=col_text_rect,
         text=str(columns),
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-text-center")
     )
 
@@ -625,7 +621,7 @@ def custom_size_screen():
     row_up_arrow_button = pygame_gui.elements.UIButton(
         relative_rect=row_up_arrow_rect,
         text="",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-button", object_id="#up-arrow")
     )
 
@@ -638,7 +634,7 @@ def custom_size_screen():
     row_down_arrow_button = pygame_gui.elements.UIButton(
         relative_rect=row_down_arrow_rect,
         text="",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-button", object_id="#down-arrow")
     )
 
@@ -651,7 +647,7 @@ def custom_size_screen():
     column_up_arrow_button = pygame_gui.elements.UIButton(
         relative_rect=column_up_arrow_rect,
         text="",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-button", object_id="#up-arrow")
     )
 
@@ -664,7 +660,7 @@ def custom_size_screen():
     column_down_arrow_button = pygame_gui.elements.UIButton(
         relative_rect=column_down_arrow_rect,
         text="",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-button", object_id="#down-arrow")
     )
 
@@ -680,13 +676,13 @@ def custom_size_screen():
     locked_button = pygame_gui.elements.UIButton(
         relative_rect=lock_button_rect,
         text="",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-button", object_id="#locked-button")
     )
     unlocked_button = pygame_gui.elements.UIButton(
         relative_rect=lock_button_rect,
         text="",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-button", object_id="#unlocked-button")
     )
     unlocked_button.hide()
@@ -703,12 +699,14 @@ def custom_size_screen():
     play_button = pygame_gui.elements.UIButton(
         relative_rect=play_button_rect, 
         text="play",
-        manager=manager,
+        manager=custom_size_screen_manager,
         object_id=ObjectID(class_id="@large-button")
     )
 
-    manager.update(0)
-    manager.draw_ui(screen)
+    background_manager.update(0)
+    background_manager.draw_ui(screen)
+    custom_size_screen_manager.update(0)
+    custom_size_screen_manager.draw_ui(screen)
     
     pygame.display.flip()
     
@@ -815,12 +813,11 @@ def custom_size_screen():
                 col_text.set_text(str(columns))
                 row_text.set_text(str(rows))
             
-            manager.process_events(event)
+            custom_size_screen_manager.process_events(event)
 
-        background_manager.update(time_delta)
         background_manager.draw_ui(screen)
-        manager.update(time_delta)
-        manager.draw_ui(screen)
+        custom_size_screen_manager.update(time_delta)
+        custom_size_screen_manager.draw_ui(screen)
         pygame.display.update()
 
 
@@ -829,7 +826,7 @@ def pause_menu():
     interactive_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     # all non-interactive elements will have this manager
-    background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+    menu_background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
     margin = 20
     line_spacing = 10
     
@@ -844,7 +841,7 @@ def pause_menu():
     )
     background = pygame_gui.elements.UIPanel(
         relative_rect = background_rect,
-        manager=background_manager,
+        manager=menu_background_manager,
         object_id=ObjectID(class_id="@menu-background")
     )
 
@@ -891,8 +888,8 @@ def pause_menu():
         object_id=ObjectID(class_id="@small-text-center")
     )
     
-    background_manager.update(0)
-    background_manager.draw_ui(screen)
+    menu_background_manager.update(0)
+    menu_background_manager.draw_ui(screen)
     interactive_manager.update(0)
     interactive_manager.draw_ui(screen)
     pygame.display.update()
@@ -914,15 +911,15 @@ def pause_menu():
             interactive_manager.process_events(event)
 
         time_delta = math.floor(time.time()) - time_delta
-        background_manager.update(time_delta)
-        background_manager.draw_ui(screen)
+        menu_background_manager.update(time_delta)
+        menu_background_manager.draw_ui(screen)
         interactive_manager.update(time_delta)
         interactive_manager.draw_ui(screen)
         pygame.display.update()
         
 def finished_menu(message):
     interactive_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-    background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+    menu_background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     margin = 35
     line_spacing = 5
@@ -938,7 +935,7 @@ def finished_menu(message):
     )
     background = pygame_gui.elements.UIPanel(
         relative_rect=background_rect,
-        manager=background_manager,
+        manager=menu_background_manager,
         object_id=ObjectID(class_id="@menu-background")
     )
     
@@ -983,12 +980,12 @@ def finished_menu(message):
     finished_message = pygame_gui.elements.UILabel (
         relative_rect=finished_message_rect,
         text=message,
-        manager=background_manager,
+        manager=menu_background_manager,
         object_id=ObjectID(class_id="@small-text-center")
     )
 
-    background_manager.update(0)
-    background_manager.draw_ui(screen)
+    menu_background_manager.update(0)
+    menu_background_manager.draw_ui(screen)
     interactive_manager.update(0)
     interactive_manager.draw_ui(screen)
     pygame.display.update()
@@ -1019,7 +1016,7 @@ def check_for_flag(flag_list, m_pos):
     return None
 
 def play():
-    manager.clear_and_reset()
+    game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     global CELL_WIDTH
     global CELL_HEIGHT
@@ -1092,7 +1089,7 @@ def play():
     pause_button = pygame_gui.elements.UIButton(
         relative_rect=pause_button_rect,
         text="",
-        manager=manager,
+        manager=game_ui_manager,
         object_id=ObjectID(object_id="#pause-button", class_id="@small-button")
     )
     
@@ -1106,7 +1103,7 @@ def play():
     skip_text = pygame_gui.elements.UILabel(
         relative_rect=skip_text_rect,
         text="press ENTER to skip animation",
-        manager=manager,
+        manager=game_ui_manager,
         object_id=ObjectID(class_id="@small-text-center")
     )
     skip_text.hide()
@@ -1119,8 +1116,8 @@ def play():
     curr_index = 1
     paused = False
 
-    manager.update(0)
-    manager.draw_ui(screen)
+    game_ui_manager.update(0)
+    game_ui_manager.draw_ui(screen)
     while not done:
         time_delta = clock.tick(60)/1000.00
         for event in pygame.event.get():
@@ -1184,7 +1181,7 @@ def play():
                     all_sprites.remove(player)
                     all_sprites.add(player)
 
-            manager.process_events(event)
+            game_ui_manager.process_events(event)
         if solving and curr_index < len(solution_stack):
             curr_cell = solution_stack[curr_index]
             new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
@@ -1198,11 +1195,10 @@ def play():
                 skip_text.hide()
                 all_sprites.remove(player)
                 all_sprites.add(player)
-        background_manager.update(time_delta)
         background_manager.draw_ui(screen)
         all_sprites.draw(screen)
-        manager.update(time_delta)
-        manager.draw_ui(screen)
+        game_ui_manager.update(time_delta)
+        game_ui_manager.draw_ui(screen)
         
         pygame.display.update()
         
