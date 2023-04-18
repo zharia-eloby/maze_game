@@ -73,116 +73,6 @@ background = pygame_gui.elements.UIPanel(
 
 clock = pygame.time.Clock()
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y, color):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS*2, CELL_HEIGHT-WALL_THICKNESS*2])
-        self.image.fill(white)
-        self.image.set_colorkey(white)
-        self.rect = self.image.get_rect(center=(x, y))
-        
-        #cell width may differ from cell height -> make the diameter of the player object that of the lesser value between 
-        #   CELL_HEIGHT and CELL_WIDTH so the player image doesn't overlap the walls of the maze
-        pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), min((CELL_HEIGHT - WALL_THICKNESS)/3, (CELL_WIDTH - WALL_THICKNESS)/3))
-
-    """
-    update() called to move the player
-    x_direction and y_direction will always be -1, 0, or 1 with one of the values being 0 and the other being either 1 or -1
-    Returns True if the player successfully moved to the desired cell, False otherwise
-    """
-    def update(self, x_direction, y_direction, wall_list):
-        #moves the player in the desired direction halfway to it's destination
-        if (x_direction != 0):
-            move_factor = CELL_WIDTH/2
-            self.rect.centerx += move_factor*x_direction
-        else:
-            move_factor = CELL_HEIGHT/2
-            self.rect.centery += move_factor*y_direction
-        
-        #is it on a wall?
-        if pygame.sprite.spritecollideany(self, wall_list) == None: #if no, move the player completely to the desired cell
-            self.rect = self.rect.move(move_factor*x_direction, move_factor*y_direction)
-            return True
-        else:   #if yes, move the player back to where they were
-            self.rect = self.rect.move(move_factor*x_direction*-1, move_factor*y_direction*-1)
-            return False
-"""
-used to represent the starting spot, ending spot, and cells in the solution path of the maze
-type - file path string, 'rectangle', or 'circle'
-"""
-class Cell(pygame.sprite.Sprite):
-    def __init__(self, x, y, color, type):
-        pygame.sprite.Sprite.__init__(self)
-        if type == "rectangle":
-            self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
-            self.image.fill(color)
-            self.rect = self.image.get_rect(topleft=(x, y))
-        elif type == "circle":
-            self.image = pygame.Surface([CELL_WIDTH-WALL_THICKNESS, CELL_HEIGHT-WALL_THICKNESS])
-            self.image.fill(white)
-            self.image.set_colorkey(white)
-            self.rect = self.image.get_rect(topleft=(x, y))
-            if (CELL_WIDTH > CELL_HEIGHT):
-                radius = math.ceil(CELL_HEIGHT/8)
-            else:
-                radius = math.ceil(CELL_WIDTH/8)
-            pygame.draw.circle(self.image, color, (self.rect.width/2, self.rect.height/2), radius)
-        elif type == "line":
-            self.image = pygame.Surface([CELL_WIDTH, CELL_HEIGHT])
-            self.image.fill(white)
-            self.image.set_colorkey(white)
-            self.rect = self.image.get_rect(topleft=(x - WALL_THICKNESS, y - WALL_THICKNESS))
-            self.color = color
-
-    def draw_lines(self, prev_cell, curr_cell, next_cell):
-        points = []
-        if prev_cell[0] < curr_cell[0]:     #prev_cell is above curr_cell
-            points += [(self.rect.width/2, 0)]
-        elif prev_cell[0] > curr_cell[0]:   #prev_cell is below curr_cell
-            points += [(self.rect.width/2, self.rect.height)]
-        elif prev_cell[1] < curr_cell[1]:   #prev_cell is to the left of curr_cell
-            points += [(0, self.rect.height/2)]
-        else:                               #prev_cell is to the right of curr_cell
-            points += [(self.rect.width, self.rect.height/2)]
-            
-        points += [(self.rect.width/2, self.rect.height/2)]
-        
-        if next_cell[0] < curr_cell[0]:     #next_cell is above curr_cell
-            points += [(self.rect.width/2, 0)]
-        elif next_cell[0] > curr_cell[0]:   #next_cell is below curr_cell
-            points += [(self.rect.width/2, self.rect.height)]
-        elif next_cell[1] < curr_cell[1]:   #next_cell is to the left of curr_cell
-            points += [(0, self.rect.height/2)]
-        else:                               #next_cell is to the right of curr_cell
-            points += [(self.rect.width, self.rect.height/2)]
-            
-        pygame.draw.lines(self.image, self.color, False, points, 2)
-
-
-"""
-type - either 'v' (vertical wall) or 'h' (horizontal wall)
-"""
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, type):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([width, height])
-        self.image.fill(wall_color)
-        
-        if (type == 'v'):
-            self.rect = self.image.get_rect(midtop=(x, y))
-        else:
-            self.rect = self.image.get_rect(midleft=(x, y))
-
-class Flag(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(image_file_path + "red-flag.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (math.floor(CELL_WIDTH * 0.75), math.floor(CELL_HEIGHT * 0.75)))
-        self.rect = self.image.get_rect(center=(x, y))
-    
-    def is_clicked(self, m_pos):
-        return self.rect.collidepoint(m_pos)
-
 """
 only used when creating the maze. returns a list of unvisited neighbors
 """
@@ -256,6 +146,7 @@ def create_maze(num_rows, num_cols):
             if (cells_to_go == 0):
                 global endpoint
                 endpoint = ((chosen[0]-1)/2, (chosen[1]-1)/2)
+                maze[int(endpoint[0]*2+1)][int(endpoint[1]*2+1)] = 'e'
             stack.append(chosen)
             
         else:
@@ -266,7 +157,7 @@ def create_maze(num_rows, num_cols):
 """
 only used for solving a maze. checks available paths for the current cell
 """
-def check_paths(maze, curr_cell):
+def check_paths(curr_cell):
     available_paths = []
     if (maze[curr_cell[0]+1][curr_cell[1]] != 'w' and maze[curr_cell[0]+2][curr_cell[1]] != 'x'):
         available_paths += [(curr_cell[0]+2, curr_cell[1])]
@@ -287,11 +178,11 @@ def solve_maze(maze, start, end):
     maze[curr_cell[0]][curr_cell[1]] = 'x'  #mark the cell with 'x' in the maze array when visited
     available_paths = []
     while (curr_cell != end):
-        available_paths = check_paths(maze, curr_cell)
+        available_paths = check_paths(curr_cell)
         while not available_paths:
             solution_path.pop()
             curr_cell = solution_path[len(solution_path)-1]
-            available_paths = check_paths(maze, curr_cell)
+            available_paths = check_paths(curr_cell)
         curr_cell = random.choice(available_paths)
         solution_path += [curr_cell]
         maze[curr_cell[0]][curr_cell[1]] = 'x'
@@ -322,7 +213,12 @@ def title_screen():
     )
     
     #game title
-    title_rect = pygame.Rect(0, 0, SCREEN_WIDTH, play_rect.top)
+    title_rect = pygame.Rect(
+        0, 
+        0, 
+        SCREEN_WIDTH, 
+        play_rect.top
+    )
     title = pygame_gui.elements.UILabel(
         relative_rect=title_rect, 
         text="Maze",
@@ -331,7 +227,12 @@ def title_screen():
     )
 
     #credits
-    credits_rect = pygame.Rect(0, play_rect.bottom, SCREEN_WIDTH, SCREEN_HEIGHT - play_rect.bottom)
+    credits_rect = pygame.Rect(
+        0, 
+        play_rect.bottom, 
+        SCREEN_WIDTH, 
+        SCREEN_HEIGHT - play_rect.bottom
+    )
     credits = pygame_gui.elements.UILabel(
         relative_rect=credits_rect, 
         text="code by Zharia Eloby",
@@ -349,12 +250,11 @@ def title_screen():
     time_delta = math.floor(time.time()) # time of last call to update
     while True:
         for event in [pygame.event.wait()]+pygame.event.get():
-            print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED :
                 if event.ui_element == play_button:
                     pick_size_screen()
 
@@ -1009,11 +909,30 @@ def finished_menu(message):
         interactive_manager.draw_ui(screen)
         pygame.display.update()
 
-def check_for_flag(flag_list, m_pos):
-    for flag in flag_list:
-        if flag.is_clicked(m_pos):
-            return flag
-    return None
+def move_player(direction, player, current_position):
+    current_left = player.get_relative_rect().left
+    current_top = player.get_relative_rect().top
+    if direction == "up" and maze[current_position[0]-1][current_position[1]] == "o":
+        player.set_relative_position((current_left, current_top - CELL_HEIGHT))
+        maze[current_position[0]][current_position[1]] = "v"
+        maze[current_position[0]-2][current_position[1]] = "p"
+        current_position = (current_position[0] - 2, current_position[1])
+    elif direction == "down" and maze[current_position[0]+1][current_position[1]] == "o":
+        player.set_relative_position((current_left, current_top + CELL_HEIGHT))
+        maze[current_position[0]][current_position[1]] = "v"
+        maze[current_position[0]+2][current_position[1]] = "p"
+        current_position = (current_position[0] + 2, current_position[1])
+    elif direction == "left" and maze[current_position[0]][current_position[1]-1] == "o":
+        player.set_relative_position((current_left - CELL_WIDTH, current_top))
+        maze[current_position[0]][current_position[1]] = "v"
+        maze[current_position[0]][current_position[1]-2] = "p"
+        current_position = (current_position[0], current_position[1] - 2)
+    elif direction == "right" and maze[current_position[0]][current_position[1]+1] == "o":
+        player.set_relative_position((current_left + CELL_WIDTH, current_top))
+        maze[current_position[0]][current_position[1]] = "v"
+        maze[current_position[0]][current_position[1]+2] = "p"
+        current_position = (current_position[0], current_position[1] + 2)
+    return current_position
 
 def play():
     game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
@@ -1036,11 +955,8 @@ def play():
     if (WALL_THICKNESS < 2):
         WALL_THICKNESS = 2
 
+    global maze
     maze = create_maze(rows, columns)
-    
-    all_sprites = pygame.sprite.Group()
-    wall_list = pygame.sprite.Group()
-    flag_list = pygame.sprite.Group()
 
     #draw the maze
     x_pos = maze_startpoint[0]
@@ -1049,31 +965,84 @@ def play():
         for j in range(0, columns*2+1):
             if (i % 2 == 0 and j % 2 == 1): #horizontal
                 if (maze[i][j] == 'w'):
-                    wall = Wall(x_pos, y_pos, CELL_WIDTH, WALL_THICKNESS, 'h')
-                    wall_list.add(wall)
-                    all_sprites.add(wall)
+                    wall_rect = pygame.Rect(
+                        x_pos,
+                        y_pos,
+                        CELL_WIDTH,
+                        WALL_THICKNESS
+                    )
+                    wall = pygame_gui.elements.UIPanel(
+                        relative_rect=wall_rect,
+                        manager=game_ui_manager,
+                        object_id=ObjectID(object_id="#wall")
+                    )
                 x_pos += CELL_WIDTH
             elif (i % 2 == 1 and j % 2 == 0): #vertical
                 if (maze[i][j] == 'w'):
-                    wall = Wall(x_pos, y_pos, WALL_THICKNESS, CELL_HEIGHT, 'v')
-                    wall_list.add(wall)
-                    all_sprites.add(wall)
+                    wall_rect = pygame.Rect(
+                        x_pos,
+                        y_pos,
+                        WALL_THICKNESS,
+                        CELL_HEIGHT + WALL_THICKNESS
+                    )
+                    wall = pygame_gui.elements.UIPanel(
+                        relative_rect=wall_rect,
+                        manager=game_ui_manager,
+                        object_id=ObjectID(object_id="#wall")
+                    )
                 x_pos += CELL_WIDTH
         if (i % 2 == 1):
             y_pos += CELL_HEIGHT
         x_pos = 0
 
+    # define starting and ending points
+    global startpoint
     startpoint = (random.randrange(0, rows), random.randrange(0, columns))
     while (startpoint == endpoint):
         startpoint = (random.randrange(0, rows), random.randrange(0, columns))
-    start_cell = Cell(CELL_WIDTH * startpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * startpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, startpoint_color, "rectangle")
-    all_sprites.add(start_cell)
+    maze[int(startpoint[0]*2+1)][int(startpoint[1]*2+1)] = "p"
+    current_position = (int(startpoint[0]*2+1), int(startpoint[1]*2+1))
     
-    end_cell = Cell(CELL_WIDTH * endpoint[1] + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * endpoint[0] + maze_startpoint[1] + WALL_THICKNESS/2, endpoint_color, "rectangle")
-    all_sprites.add(end_cell)
-    
-    player = Player(CELL_WIDTH * startpoint[1] + CELL_WIDTH/2 + maze_startpoint[0], CELL_HEIGHT * startpoint[0] + CELL_HEIGHT/2 + maze_startpoint[1], player_color)
-    all_sprites.add(player)
+    start_rect = pygame.Rect(
+        CELL_WIDTH * startpoint[1] + maze_startpoint[0] + WALL_THICKNESS,
+        CELL_HEIGHT * startpoint[0] + maze_startpoint[1] + WALL_THICKNESS,
+        CELL_WIDTH - WALL_THICKNESS,
+        CELL_HEIGHT - WALL_THICKNESS
+    )
+    start = pygame_gui.elements.UIPanel(
+        relative_rect=start_rect,
+        manager=game_ui_manager,
+        object_id=ObjectID(object_id="#startpoint")
+    )
+
+    end_rect = pygame.Rect(
+        CELL_WIDTH * endpoint[1] + maze_startpoint[0] + WALL_THICKNESS,
+        CELL_HEIGHT * endpoint[0] + maze_startpoint[1] + WALL_THICKNESS,
+        CELL_WIDTH - WALL_THICKNESS,
+        CELL_HEIGHT - WALL_THICKNESS
+    )
+    end = pygame_gui.elements.UIPanel(
+        relative_rect=end_rect,
+        manager=game_ui_manager,
+        object_id=ObjectID(object_id="#endpoint")
+    )
+
+    player_margin = WALL_THICKNESS
+    player_width = start_rect.width - player_margin*2
+    player_height = start_rect.height - player_margin*2
+    player_rect = pygame.Rect(
+        start_rect.left + player_margin,
+        start_rect.top + player_margin,
+        player_width,
+        player_height
+    )
+    player = pygame_gui.elements.UIButton(
+        relative_rect=player_rect,
+        text="", 
+        manager=game_ui_manager,
+        object_id=ObjectID(object_id="#player")
+    )
+    player.generate_click_events_from = []
     
     #pause button
     margin = 10
@@ -1115,6 +1084,12 @@ def play():
     solving = False
     curr_index = 1
     paused = False
+    if CELL_WIDTH > CELL_HEIGHT:
+        flag_height = CELL_HEIGHT - WALL_THICKNESS
+        flag_width = flag_height
+    else:
+        flag_width = CELL_WIDTH - WALL_THICKNESS
+        flag_height = flag_width
 
     game_ui_manager.update(0)
     game_ui_manager.draw_ui(screen)
@@ -1125,41 +1100,30 @@ def play():
                 done = True
                 pygame.quit()
                 sys.exit()
+
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == pause_button:
                     paused = True
                     pause_menu()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if pygame.mouse.get_pressed() == (0, 0, 1):
-                    m_pos = pygame.mouse.get_pos()
-                    flag = check_for_flag(flag_list, m_pos)
-                    if not flag:
-                        new_flag = Flag(m_pos[0], m_pos[1])
-                        flag_list.add(new_flag)
-                        all_sprites.add(new_flag)
-                    else:
-                        flag_list.remove(flag)
-                        all_sprites.remove(flag)
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_menu()
                 if event.key == pygame.K_UP and not solving:
-                    player.update(0, -1, wall_list)
+                    current_position = move_player("up", player, current_position)
                 if event.key == pygame.K_DOWN and not solving:
-                    player.update(0, 1, wall_list)
+                    current_position = move_player("down", player, current_position)
                 if event.key == pygame.K_LEFT and not solving:
-                    player.update(-1, 0, wall_list)
+                    current_position = move_player("left", player, current_position)
                 if event.key == pygame.K_RIGHT and not solving:
-                    player.update(1, 0, wall_list)
-                if pygame.sprite.collide_rect(player, end_cell):
+                    current_position = move_player("right", player, current_position)
+                if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
                     message = "YOU DID IT!"
                     done = True
                 if event.key == pygame.K_s and not solved:
                     if solving:
                         solving = False
                         skip_text.hide()
-                        all_sprites.remove(player)
-                        all_sprites.add(player)
                     else:
                         if not solution_stack:
                             start = (startpoint[0]*2+1, startpoint[1]*2+1)
@@ -1168,42 +1132,123 @@ def play():
                         solving = True
                         skip_text.show()
                 if event.key == pygame.K_RETURN and solving:
-                    while (curr_index < len(solution_stack)-1):
+                    while (curr_index < len(solution_stack)):
                         curr_cell = solution_stack[curr_index]
-                        new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
-                        if solution_image == "line":
-                            new_cell.draw_lines(solution_stack[curr_index-1], curr_cell, solution_stack[curr_index+1])
-                        all_sprites.add(new_cell)
+                        if (curr_cell[1] < solution_stack[curr_index-1][1]): #current cell is to the left of the previous one
+                            solution_rect = pygame.Rect(
+                                ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                                ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                                CELL_WIDTH + WALL_THICKNESS,
+                                WALL_THICKNESS
+                            )
+                            solution = pygame_gui.elements.UIPanel(
+                                relative_rect=solution_rect,
+                                manager=game_ui_manager,
+                                object_id=ObjectID(object_id="#solution-path")
+                            )
+                        elif (curr_cell[1] > solution_stack[curr_index-1][1]): #current cell is to the right of the previous one
+                            solution_rect = pygame.Rect(
+                                (((curr_cell[1]-1)/2)-1)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                                ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                                CELL_WIDTH+WALL_THICKNESS,
+                                WALL_THICKNESS
+                            )
+                            solution = pygame_gui.elements.UIPanel(
+                                relative_rect=solution_rect,
+                                manager=game_ui_manager,
+                                object_id=ObjectID(object_id="#solution-path")
+                            )
+                        elif (curr_cell[0] < solution_stack[curr_index-1][0]): #current cell is above the previous one
+                            solution_rect = pygame.Rect(
+                                ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                                ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                                WALL_THICKNESS,
+                                CELL_HEIGHT + WALL_THICKNESS
+                            )
+                            solution = pygame_gui.elements.UIPanel(
+                                relative_rect=solution_rect,
+                                manager=game_ui_manager,
+                                object_id=ObjectID(object_id="#solution-path")
+                            )
+                        elif (curr_cell[0] > solution_stack[curr_index-1][0]): #current cell is below the previous one
+                            solution_rect = pygame.Rect(
+                                ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                                (((curr_cell[0]-1)/2)-1)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                                WALL_THICKNESS,
+                                CELL_HEIGHT + WALL_THICKNESS
+                            )
+                            solution = pygame_gui.elements.UIPanel(
+                                relative_rect=solution_rect,
+                                manager=game_ui_manager,
+                                object_id=ObjectID(object_id="#solution-path")
+                            )
                         curr_index += 1
                     solving = False
                     solved = True
                     skip_text.hide()
-                    all_sprites.remove(player)
-                    all_sprites.add(player)
-
             game_ui_manager.process_events(event)
         if solving and curr_index < len(solution_stack):
             curr_cell = solution_stack[curr_index]
-            new_cell = Cell(CELL_WIDTH * ((curr_cell[1]-curr_cell[1]%2)/2) + maze_startpoint[0] + WALL_THICKNESS/2, CELL_HEIGHT * ((curr_cell[0]-curr_cell[0]%2)/2) + maze_startpoint[1] + WALL_THICKNESS/2, solution_color, solution_image)
-            if solution_image == "line":
-                new_cell.draw_lines(solution_stack[curr_index-1], curr_cell, solution_stack[curr_index+1])
-            all_sprites.add(new_cell)
+            if (curr_cell[1] < solution_stack[curr_index-1][1]): #current cell is to the left of the previous one
+                solution_rect = pygame.Rect(
+                    ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                    ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                    CELL_WIDTH + WALL_THICKNESS,
+                    WALL_THICKNESS
+                )
+                solution = pygame_gui.elements.UIPanel(
+                    relative_rect=solution_rect,
+                    manager=game_ui_manager,
+                    object_id=ObjectID(object_id="#solution-path")
+                )
+            elif (curr_cell[1] > solution_stack[curr_index-1][1]): #current cell is to the right of the previous one
+                solution_rect = pygame.Rect(
+                    (((curr_cell[1]-1)/2)-1)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                    ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                    CELL_WIDTH+WALL_THICKNESS,
+                    WALL_THICKNESS
+                )
+                solution = pygame_gui.elements.UIPanel(
+                    relative_rect=solution_rect,
+                    manager=game_ui_manager,
+                    object_id=ObjectID(object_id="#solution-path")
+                )
+            elif (curr_cell[0] < solution_stack[curr_index-1][0]): #current cell is above the previous one
+                solution_rect = pygame.Rect(
+                    ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                    ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                    WALL_THICKNESS,
+                    CELL_HEIGHT + WALL_THICKNESS
+                )
+                solution = pygame_gui.elements.UIPanel(
+                    relative_rect=solution_rect,
+                    manager=game_ui_manager,
+                    object_id=ObjectID(object_id="#solution-path")
+                )
+            elif (curr_cell[0] > solution_stack[curr_index-1][0]): #current cell is below the previous one
+                solution_rect = pygame.Rect(
+                    ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                    (((curr_cell[0]-1)/2)-1)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                    WALL_THICKNESS,
+                    CELL_HEIGHT + WALL_THICKNESS
+                )
+                solution = pygame_gui.elements.UIPanel(
+                    relative_rect=solution_rect,
+                    manager=game_ui_manager,
+                    object_id=ObjectID(object_id="#solution-path")
+                )
             curr_index += 1
-            if curr_index >= len(solution_stack)-1:
+            if curr_index > len(solution_stack)-1:
                 solving = False
                 solved = True
                 skip_text.hide()
-                all_sprites.remove(player)
-                all_sprites.add(player)
-        background_manager.draw_ui(screen)
-        all_sprites.draw(screen)
         game_ui_manager.update(time_delta)
+        background_manager.draw_ui(screen)
         game_ui_manager.draw_ui(screen)
         
         pygame.display.update()
         
     restart = finished_menu(message)
-    del all_sprites
     if restart:
         play()
     else:

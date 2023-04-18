@@ -9,7 +9,8 @@
         {
             "name": "roboto",
             "size": "1",
-            "regular_resource": {
+            "regular_resource": 
+            {
                 "package": "assets.fonts",
                 "resource": "Roboto-Regular.ttf"
             }
@@ -50,7 +51,8 @@
         {
             "name": "roboto",
             "size": "24",
-            "regular_resource": {
+            "regular_resource": 
+            {
                 "package": "assets.fonts",
                 "resource": "Roboto-Regular.ttf"
             }
@@ -72,7 +74,8 @@
         {
             "name": "roboto",
             "size": "64",
-            "regular_resource": {
+            "regular_resource": 
+            {
                 "package": "assets.fonts",
                 "resource": "Roboto-Regular.ttf"
             }
@@ -84,7 +87,35 @@
             "text_vert_alignment": "bottom"
         }
     },
-    "#background": {
+    "#player" : 
+    {
+        "colours":
+        {
+            "dark_bg": "#9258d8",
+            "active_bg": "#ffffff00",
+            "hovered_bg": "#ffffff00"
+        },
+        "misc":
+        {
+            "border_width": "0",
+            "shadow_width": "0",
+            "shape": "ellipse"
+        }
+    },
+    "#wall" :
+    {
+        "colours":
+        {
+            "dark_bg": "#000000"
+        },
+        "misc" :
+        {
+            "border_width":"0",
+            "shadow_width":"0"
+        }
+    },
+    "#background": 
+    {
         "colours":
         {
             "dark_bg": "#d8bac6"
@@ -95,7 +126,8 @@
             "shadow_width": "0"
         }
     },
-    "#title": {
+    "#title": 
+    {
         "prototype": "#regular-text",
         "font":
         {
@@ -107,7 +139,32 @@
             "text_vert_alignment": "bottom"
         }
     },
-    "@heading": {
+    "#startpoint":
+    {
+        "colours":
+        {
+            "dark_bg":"#b3b3b3"
+        },
+        "misc":
+        {
+            "shadow_width": "0",
+            "border_width": "0"
+        }
+    },
+    "#endpoint":
+    {
+        "colours":
+        {
+            "dark_bg":"#17d2a3"
+        },
+        "misc":
+        {
+            "shadow_width": "0",
+            "border_width": "0"
+        }
+    },
+    "@heading": 
+    {
         "prototype": "#regular-text",
         "font":
         {
@@ -119,36 +176,42 @@
             "text_vert_alignment": "bottom"
         }
     },
-    "@small-text-bottom": {
+    "@small-text-bottom": 
+    {
         "prototype": "#small-regular-text",
         "misc":
         {
             "text_vert_alignment": "bottom"
         }
     },
-    "@small-text-center": {
+    "@small-text-center": 
+    {
         "prototype": "#small-regular-text",
         "misc":
         {
             "text_vert_alignment": "center"
         }
     },
-    "@large-text-center": {
+    "@large-text-center": 
+    {
         "prototype": "#large-regular-text",
         "misc":
         {
             "text_vert_alignment": "center"
         }
     },
-    "@large-text-bottom": {
+    "@large-text-bottom": 
+    {
         "prototype": "#large-regular-text",
         "misc":
         {
             "text_vert_alignment": "bottom"
         }
     },
-    "@small-button": {
-        "font": {
+    "@small-button": 
+    {
+        "font": 
+        {
             "name": "roboto",
             "size": "16"
         },
@@ -157,7 +220,8 @@
             "shape_corner_radius": "6"
         }
     },
-    "@large-button": {
+    "@large-button": 
+    {
         "font": 
         {
             "name": "roboto",
@@ -168,7 +232,8 @@
             "shape_corner_radius": "15"
         }
     },
-    "@menu-background": {
+    "@menu-background": 
+    {
         "colours": 
         {
             "dark_bg": "#9c9c9c"
@@ -181,8 +246,10 @@
             "shape": "rounded_rectangle"
         }
     },
-    "#paused": {
-        "font": {
+    "#paused": 
+    {
+        "font": 
+        {
             "name": "roboto",
             "size": "20"
         },
@@ -191,55 +258,86 @@
             "text_vert_alignment": "center"
         }
     },
-    "#close-button": {
-        "images": {
-            "normal_image": {
+    "#close-button": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
                 "package": "assets.images",
                 "resource": "close-button.png"
             }
         }
     },
-    "#pause-button": {
-        "images": {
-            "normal_image": {
+    "#pause-button": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
                 "package": "assets.images",
                 "resource": "pause-button.png"
             }
         }
     },
-    "#up-arrow": {
-        "images": {
-            "normal_image": {
+    "#up-arrow": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
                 "package": "assets.images",
                 "resource": "up-arrow.png"
             }
         }
     },
-    "#down-arrow": {
-        "images": {
-            "normal_image": {
+    "#down-arrow": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
                 "package": "assets.images",
                 "resource": "down-arrow.png"
             }
         }
     },
-    "#locked-button": {
-        "images": {
-            "normal_image": {
+    "#locked-button": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
                 "package": "assets.images",
                 "resource": "ratio-lock.png"
             }
         }
     },
-    "#unlocked-button": {
-        "colours": {
+    "#unlocked-button": 
+    {
+        "colours": 
+        {
             "normal_bg": "#787878"
         },
-        "images": {
-            "normal_image": {
+        "images": 
+        {
+            "normal_image": 
+            {
                 "package": "assets.images",
                 "resource": "ratio-lock.png"
             }
+        }
+    },
+    "#solution-path": 
+    {
+        "colours":
+        {
+            "dark_bg": "#570082"
+        },
+        "misc":{
+            "shadow_width":"0",
+            "border_width":"0",
+            "shape": "rectangle"
         }
     }
 }
