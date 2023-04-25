@@ -946,11 +946,17 @@ def move_player(direction, player, current_position):
     return current_position
 
 def show_solution(solution_manager, other_managers):
-    speed = 60
+    speed = 30
+    skip_to_end = False
 
     start = (startpoint[0]*2+1, startpoint[1]*2+1)
     end = (endpoint[0]*2+1, endpoint[1]*2+1)
-    solution_stack = solve_maze(maze, start, end)
+    global solution_stack
+    try:
+        if solution_stack:
+            pass
+    except:
+        solution_stack = solve_maze(maze, start, end)
     curr_index = 1
 
     global CELL_HEIGHT
@@ -962,11 +968,15 @@ def show_solution(solution_manager, other_managers):
     done = False
     while not done:
         time_delta = clock.tick(speed)/1000.00
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:    
+                if event.key == pygame.K_RETURN:
+                    skip_to_end = True
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == pause_button:
                     pause_menu()
@@ -1024,7 +1034,9 @@ def show_solution(solution_manager, other_managers):
         curr_index += 1
         if curr_index == len(solution_stack):
             done = True
-        redraw(other_managers+[solution_manager], time_delta)
+            redraw(other_managers+[solution_manager], time_delta)
+        if not skip_to_end and not done:
+            redraw(other_managers+[solution_manager], time_delta)
 
 def play():
     game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
@@ -1173,10 +1185,8 @@ def play():
                     
     done = False
     solving = False
-    solution_stack = []
     solved = False
     solving = False
-    curr_index = 1
     paused = False
 
     redraw([background_manager, game_ui_manager], 0)
@@ -1207,8 +1217,15 @@ def play():
                 if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
                     message = "YOU DID IT!"
                     done = True
-                if event.key == pygame.K_s and not solved:
-                    show_solution(solution_manager, [background_manager, game_ui_manager])
+                if event.key == pygame.K_s:
+                    if not solved:
+                        show_solution(solution_manager, [background_manager, game_ui_manager])
+                        solved = True
+                    else:
+                        solution_manager.clear_and_reset()
+                        solved = False
+                        show_solution(solution_manager, [background_manager, game_ui_manager])
+                        solved = True
             game_ui_manager.process_events(event)
         time_delta = math.floor(time.time()) - time_delta
         redraw([background_manager, game_ui_manager, solution_manager], time_delta)
