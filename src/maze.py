@@ -955,6 +955,8 @@ def show_solution(solution_manager, other_managers):
     try:
         if solution_stack:
             pass
+        else:
+            solution_stack = solve_maze(maze, start, end)
     except:
         solution_stack = solve_maze(maze, start, end)
     curr_index = 1
@@ -1039,6 +1041,12 @@ def show_solution(solution_manager, other_managers):
             redraw(other_managers+[solution_manager], time_delta)
 
 def play():
+    try:
+        global solution_stack
+        if solution_stack:
+            solution_stack = None
+    except:
+        pass
     game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
     solution_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
@@ -1188,7 +1196,6 @@ def play():
     solved = False
     solving = False
     paused = False
-
     redraw([background_manager, game_ui_manager], 0)
     time_delta = math.floor(time.time())
     while not done:
