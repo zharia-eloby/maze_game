@@ -1041,12 +1041,9 @@ def show_solution(solution_manager, other_managers):
             redraw(other_managers+[solution_manager], time_delta)
 
 def play():
-    try:
-        global solution_stack
-        if solution_stack:
-            solution_stack = None
-    except:
-        pass
+    global solution_stack
+    solution_stack = None
+
     game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
     solution_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
@@ -1176,20 +1173,21 @@ def play():
         object_id=ObjectID(object_id="#pause-button", class_id="@small-button")
     )
     
-    #'press Enter to skip animation'
-    skip_text_rect = pygame.Rect(
-        10,
-        10,
-        SCREEN_WIDTH,
-        50
+    # show solution button
+    button_width = 150
+    button_height = 25
+    show_solution_rect = pygame.Rect(
+        margin,
+        maze_startpoint[1]/2 - button_height/2,
+        button_width,
+        button_height
     )
-    skip_text = pygame_gui.elements.UILabel(
-        relative_rect=skip_text_rect,
-        text="press ENTER to skip animation",
+    show_solution_button = pygame_gui.elements.UIButton(
+        relative_rect=show_solution_rect,
+        text="show solution",
         manager=game_ui_manager,
-        object_id=ObjectID(class_id="@small-text-center")
+        object_id=ObjectID(class_id="@small-button")
     )
-    skip_text.hide()
                     
     done = False
     solving = False
@@ -1209,6 +1207,14 @@ def play():
                 if event.ui_element == pause_button:
                     paused = True
                     pause_menu()
+                if event.ui_element == show_solution_button:
+                    if solved:
+                        solution_manager.clear_and_reset()
+                        solved = False
+                    show_solution_button.disable()
+                    show_solution(solution_manager, [background_manager, game_ui_manager])
+                    show_solution_button.enable()
+                    solved = True
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -1224,15 +1230,6 @@ def play():
                 if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
                     message = "YOU DID IT!"
                     done = True
-                if event.key == pygame.K_s:
-                    if not solved:
-                        show_solution(solution_manager, [background_manager, game_ui_manager])
-                        solved = True
-                    else:
-                        solution_manager.clear_and_reset()
-                        solved = False
-                        show_solution(solution_manager, [background_manager, game_ui_manager])
-                        solved = True
             game_ui_manager.process_events(event)
         time_delta = math.floor(time.time()) - time_delta
         redraw([background_manager, game_ui_manager, solution_manager], time_delta)
