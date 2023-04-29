@@ -36,7 +36,7 @@ MAZE_HEIGHT = 600
 
 src_path = sys.path[0]
 image_file_path = os.path.join(src_path, "./assets/images/")
-theme_file = os.path.join(src_path, "./assets/themes/default_theme.json")
+theme_file = os.path.join(src_path, "./assets/themes/default/theme.json")
 
 maze_startpoint = (0, 75)
 
@@ -1138,11 +1138,14 @@ def play():
     )
 
     player_margin = WALL_THICKNESS
-    player_width = start_rect.width - player_margin*2
-    player_height = start_rect.height - player_margin*2
+    if (start_rect.width > start_rect.height):
+        player_width = start_rect.height - player_margin*2
+    else:
+        player_width = start_rect.width - player_margin*2
+    player_height = player_width
     player_rect = pygame.Rect(
-        start_rect.left + player_margin,
-        start_rect.top + player_margin,
+        start_rect.left + start_rect.width/2 - player_width/2,
+        start_rect.top + start_rect.height/2 - player_height/2,
         player_width,
         player_height
     )
