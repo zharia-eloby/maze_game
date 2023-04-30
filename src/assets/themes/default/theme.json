@@ -1,10 +1,6 @@
 {
-    "#regular-text":
+    "#font-prototype":
     {
-        "colours":
-        {
-            "normal_text": "#ffffff"
-        },
         "font":
         {
             "name": "roboto",
@@ -12,9 +8,17 @@
             "regular_resource": 
             {
                 "package": "assets.fonts",
-                "resource": "Roboto-Regular.ttf"
+                "resource": "Gugi-Regular.ttf"
             }
+        }
+    },
+    "#regular-text":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
         },
+        "prototype": "#font-prototype",
         "misc":
         {
             "text_shadow_size": "0"
@@ -26,6 +30,22 @@
         {
             "name": "roboto",
             "size": "16"
+        }
+    },
+    "@small-text-bottom": 
+    {
+        "prototype": "#small-regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "bottom"
+        }
+    },
+    "@small-text-center": 
+    {
+        "prototype": "#small-regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "center"
         }
     },
     "#large-regular-text": {
@@ -42,20 +62,17 @@
         {
             "normal_bg": "#efefef",
             "hovered_bg": "#d1d1d1",
-            "active_bg": "#515151",
+            "active_bg": "#c0c0c0",
+            "disabled_bg": "#909090",
             "normal_text": "#000000",
             "hovered_text": "#000000",
             "active_text": "#000000"
         },
+        "prototype": "#font-prototype",
         "font":
         {
             "name": "roboto",
-            "size": "24",
-            "regular_resource": 
-            {
-                "package": "assets.fonts",
-                "resource": "Roboto-Regular.ttf"
-            }
+            "size": "24"
         },
         "misc":
         {
@@ -70,15 +87,11 @@
         {
             "normal_text": "#ffffff"
         },
+        "prototype": "#font-prototype",
         "font":
         {
             "name": "roboto",
-            "size": "64",
-            "regular_resource": 
-            {
-                "package": "assets.fonts",
-                "resource": "Roboto-Regular.ttf"
-            }
+            "size": "64"
         },
         "misc":
         {
@@ -174,22 +187,6 @@
         "misc":
         {
             "text_vert_alignment": "bottom"
-        }
-    },
-    "@small-text-bottom": 
-    {
-        "prototype": "#small-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "bottom"
-        }
-    },
-    "@small-text-center": 
-    {
-        "prototype": "#small-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "center"
         }
     },
     "@large-text-center": 
