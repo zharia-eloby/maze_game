@@ -31,14 +31,26 @@ solution_image = "line"
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 750
 
-MAZE_WIDTH = 600
-MAZE_HEIGHT = 600
+SCREEN_MARGIN = 50
+UI_AREA = pygame.Rect(
+    SCREEN_MARGIN,
+    SCREEN_MARGIN,
+    SCREEN_WIDTH - SCREEN_MARGIN*2,
+    SCREEN_HEIGHT - SCREEN_MARGIN*2
+)
+
+if (UI_AREA.width > UI_AREA.height):
+    MAZE_HEIGHT = UI_AREA.height
+    MAZE_WIDTH = MAZE_HEIGHT
+else:
+    MAZE_HEIGHT = UI_AREA.width
+    MAZE_WIDTH = MAZE_HEIGHT
 
 src_path = sys.path[0]
 image_file_path = os.path.join(src_path, "./assets/images/")
 theme_file = os.path.join(src_path, "./assets/themes/default/theme.json")
 
-maze_startpoint = (0, 75)
+maze_startpoint = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2) 
 
 CELL_WIDTH = 0
 CELL_HEIGHT = 0
@@ -205,14 +217,13 @@ home screen
 """
 def title_screen():
     title_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-    title_screen_manager.clear_and_reset()
 
     #play button
-    button_width = SCREEN_WIDTH/2
-    button_height = SCREEN_HEIGHT/8
+    button_width = UI_AREA.width/2
+    button_height = 50
     play_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - button_width/2,  # x
-        SCREEN_HEIGHT/2,                  # y
+        UI_AREA.centerx - button_width/2,  # x
+        UI_AREA.centery + button_height/2, # y
         button_width,                   # width
         button_height                   # height
     )
@@ -225,24 +236,26 @@ def title_screen():
     
     #game title
     title_rect = pygame.Rect(
-        0, 
-        0, 
-        SCREEN_WIDTH, 
-        play_rect.top
+        UI_AREA.left, 
+        UI_AREA.top,
+        UI_AREA.width, 
+        play_rect.top - UI_AREA.top
     )
     title = pygame_gui.elements.UILabel(
         relative_rect=title_rect, 
-        text="Maze",
+        text="MAZE",
         manager=title_screen_manager,
         object_id=ObjectID(object_id="#title")
     )
 
     #credits
+    credits_height = 210
+    print(UI_AREA.bottom - play_rect.bottom)
     credits_rect = pygame.Rect(
-        0, 
+        UI_AREA.left,
         play_rect.bottom, 
-        SCREEN_WIDTH, 
-        SCREEN_HEIGHT - play_rect.bottom
+        UI_AREA.width, 
+        UI_AREA.bottom - play_rect.bottom
     )
     credits = pygame_gui.elements.UILabel(
         relative_rect=credits_rect, 
@@ -286,12 +299,11 @@ preset sizes are easy, medium, and hard, or they can customize the size
 """
 def pick_size_screen():
     pick_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-    pick_size_screen_manager.clear_and_reset()
 
     #back button
     back_button_rect = pygame.Rect(
-        25, # x
-        25, # y
+        UI_AREA.left, # x
+        UI_AREA.top, # y
         50, # width
         35  # height
     )
@@ -302,18 +314,15 @@ def pick_size_screen():
         object_id=ObjectID(class_id="@small-button")
     )
     
-    button_width = SCREEN_WIDTH/2
-    button_height = 100
-    space_between_buttons = 30
-    
     num_buttons = 4
-    total_buttons_height = num_buttons*button_height + (num_buttons-1)*space_between_buttons
-    starting_y_pos = (SCREEN_HEIGHT - total_buttons_height)/2
+    space_between_buttons = 50
+    button_width = UI_AREA.width * 0.6
+    button_height = (UI_AREA.height-back_button_rect.height)/num_buttons - space_between_buttons
     
     #easy button
     easy_button_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - button_width/2,  # x
-        starting_y_pos,                 # y
+        UI_AREA.centerx - button_width/2,  # x
+        back_button_rect.bottom,                    # y
         button_width,                   # width
         button_height                   # height
     )
@@ -326,7 +335,7 @@ def pick_size_screen():
     
     #medium button
     medium_button_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - button_width/2,  # x
+        UI_AREA.centerx - button_width/2,  # x
         easy_button_rect.bottom + space_between_buttons,    # y
         button_width,                   # width
         button_height                   # height
@@ -340,7 +349,7 @@ def pick_size_screen():
     
     #hard button
     hard_button_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - button_width/2,  # x
+        UI_AREA.centerx - button_width/2,  # x
         medium_button_rect.bottom + space_between_buttons,  # y
         button_width,                   # width
         button_height                   # height
@@ -354,7 +363,7 @@ def pick_size_screen():
 
     #custom button
     custom_button_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - button_width/2,  # x
+        UI_AREA.centerx - button_width/2,  # x
         hard_button_rect.bottom + space_between_buttons,  # y
         button_width,                   # width
         button_height                   # height
@@ -432,8 +441,8 @@ def custom_size_screen():
     
     #back button
     back_button_rect = pygame.Rect(
-        25, # x
-        25, # y
+        UI_AREA.left, # x
+        UI_AREA.top, # y
         50, # width
         35  # height
     )
@@ -446,9 +455,9 @@ def custom_size_screen():
     
     #select dimensions text
     select_text_rect = pygame.Rect(
-        0,
+        UI_AREA.left,
         back_button_rect.bottom,
-        SCREEN_WIDTH,
+        UI_AREA.width,
         70
     )
     select_text = pygame_gui.elements.UILabel(
@@ -459,13 +468,11 @@ def custom_size_screen():
     )
 
     # warning text
-    warning_text_width = SCREEN_WIDTH
-    warning_text_height = 20
     warning_text_rect = pygame.Rect(
-        0,
+        UI_AREA.left,
         select_text_rect.bottom,
-        warning_text_width,
-        warning_text_height
+        UI_AREA.width,
+        20
     )
     warning_text = pygame_gui.elements.UILabel(
         relative_rect=warning_text_rect,
@@ -475,11 +482,11 @@ def custom_size_screen():
     )
     
     #'x' text
-    x_width = SCREEN_WIDTH * 0.1
+    x_width = UI_AREA.width * 0.1
     x_height = 80
     x_text_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - x_width/2,
-        SCREEN_HEIGHT/2 - x_height/2,
+        UI_AREA.centerx - x_width/2,
+        UI_AREA.centery - x_height/2,
         x_width,
         x_height
     )
@@ -493,9 +500,9 @@ def custom_size_screen():
     #row text
     text_height = 100
     row_text_rect = pygame.Rect(
-        0,
-        SCREEN_HEIGHT/2 - text_height/2,
-        x_text_rect.left,
+        UI_AREA.left,
+        UI_AREA.centery - text_height/2,
+        x_text_rect.left - UI_AREA.left,
         text_height
     )
     row_text = pygame_gui.elements.UILabel(
@@ -508,8 +515,8 @@ def custom_size_screen():
     #column text
     col_text_rect = pygame.Rect(
         x_text_rect.right,
-        SCREEN_HEIGHT/2 - text_height/2,
-        SCREEN_WIDTH - x_text_rect.right,
+        UI_AREA.centery - text_height/2,
+        UI_AREA.width - x_text_rect.right,
         text_height
     )
     col_text = pygame_gui.elements.UILabel(
@@ -579,7 +586,7 @@ def custom_size_screen():
     lock_button_width = 50
     lock_button_height = 50
     lock_button_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - lock_button_width/2,
+        UI_AREA.centerx - lock_button_width/2,
         row_down_arrow_rect.bottom - lock_button_height,
         lock_button_width,
         lock_button_height
@@ -599,11 +606,11 @@ def custom_size_screen():
     unlocked_button.hide()
     
     #play button
-    button_width = SCREEN_WIDTH/2
+    button_width = UI_AREA.width/2
     button_height = 50
     play_button_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - button_width/2, # x
-        SCREEN_HEIGHT/5*4, # y
+        UI_AREA.centerx- button_width/2, # x
+        UI_AREA.bottom - button_height - 50, # y
         button_width,   # width
         button_height   # height
     )
@@ -739,14 +746,13 @@ def pause_menu():
     # all non-interactive elements will have this manager
     menu_background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
     margin = 20
-    line_spacing = 10
     
     #background rectangle
-    menu_width = SCREEN_WIDTH * 0.5
-    menu_height = SCREEN_HEIGHT * 0.3
+    menu_width = UI_AREA.width * 0.5
+    menu_height = UI_AREA.height * 0.3
     background_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - menu_width/2, 
-        SCREEN_HEIGHT/2 - menu_height/2, 
+        UI_AREA.centerx - menu_width/2, 
+        UI_AREA.centery - menu_height/2, 
         menu_width, 
         menu_height
     )
@@ -759,7 +765,7 @@ def pause_menu():
     exit_button_height = 30
     exit_button_width = menu_width - margin*2
     exit_button_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - exit_button_width/2,
+        UI_AREA.centerx - exit_button_width/2,
         background_rect.bottom - margin - exit_button_height,
         exit_button_width,
         exit_button_height
@@ -787,9 +793,9 @@ def pause_menu():
     )
 
     paused_text_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - menu_width/2, 
+        background_rect.left + margin, 
         close_button_rect.bottom,
-        menu_width, 
+        menu_width - margin*2, 
         exit_button_rect.top - close_button_rect.bottom
     )
     paused_text = pygame_gui.elements.UILabel(
@@ -836,11 +842,11 @@ def finished_menu(message):
     line_spacing = 5
     
     #background surface
-    menu_width = SCREEN_WIDTH * 0.5
-    menu_height = SCREEN_HEIGHT * 0.3
+    menu_width = UI_AREA.width * 0.5
+    menu_height = UI_AREA.height * 0.3
     background_rect = pygame.Rect(
-        SCREEN_WIDTH/2 - menu_width/2,
-        SCREEN_HEIGHT/2 - menu_height/2,
+        UI_AREA.centerx - menu_width/2,
+        UI_AREA.centery - menu_height/2,
         menu_width,
         menu_height
     )
@@ -1103,7 +1109,7 @@ def play():
                 x_pos += CELL_WIDTH
         if (i % 2 == 1):
             y_pos += CELL_HEIGHT
-        x_pos = 0
+        x_pos = maze_startpoint[0]
 
     # define starting and ending points
     global startpoint
@@ -1158,13 +1164,11 @@ def play():
     player.generate_click_events_from = []
     
     #pause button
-    margin = 10
-
     pause_button_width = 30
     pause_button_height = 30
     pause_button_rect = pygame.Rect(
-        SCREEN_WIDTH - margin - pause_button_width,
-        margin,
+        UI_AREA.right - pause_button_width,
+        UI_AREA.top,
         pause_button_width,
         pause_button_height
     )
@@ -1180,8 +1184,8 @@ def play():
     button_width = 150
     button_height = 25
     show_solution_rect = pygame.Rect(
-        margin,
-        maze_startpoint[1]/2 - button_height/2,
+        UI_AREA.left,
+        UI_AREA.top,
         button_width,
         button_height
     )
