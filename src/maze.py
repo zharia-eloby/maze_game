@@ -12,21 +12,8 @@ import sys
 import os
 import time
 
-black = (0, 0, 0)
-white = (255, 255, 255)
-gray = (230, 230, 230)
-blue = (52, 118, 168)
-green = (56, 220, 156)
-tan = (234, 203, 187)
-
-wall_color = black
-player_color = blue
-startpoint_color = gray
-endpoint_color = green
-solution_color = white
-
-#value may be 'rectangle' 'line' or 'circle'
-solution_image = "line"
+src_path = sys.path[0]
+theme_file = os.path.join(src_path, "./assets/themes/default/theme.json")
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 750
@@ -45,10 +32,6 @@ if (UI_AREA.width > UI_AREA.height):
 else:
     MAZE_HEIGHT = UI_AREA.width
     MAZE_WIDTH = MAZE_HEIGHT
-
-src_path = sys.path[0]
-image_file_path = os.path.join(src_path, "./assets/images/")
-theme_file = os.path.join(src_path, "./assets/themes/default/theme.json")
 
 maze_startpoint = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2) 
 
@@ -90,19 +73,19 @@ only used when creating the maze. returns a list of unvisited neighbors
 """
 def check_neighbors(maze, num_rows, num_cols, curr_row, curr_col):
     available_neighbors = []
-    if (curr_col > 1):               #has a left neighbor
+    if (curr_col > 1):               # has a left neighbor
         if (maze[curr_row][curr_col-2] != 'v'):
             available_neighbors += [(curr_row, curr_col-2)]
             
-    if (curr_col < num_rows*2 - 2):         #has right neighbor
+    if (curr_col < num_rows*2 - 2):         # has right neighbor
         if (maze[curr_row][curr_col+2] != 'v'):
             available_neighbors += [(curr_row, curr_col+2)]
             
-    if (curr_row > 1):               #has upper neighbor
+    if (curr_row > 1):               # has upper neighbor
         if (maze[curr_row-2][curr_col] != 'v'):
             available_neighbors += [(curr_row-2, curr_col)]
             
-    if (curr_row < num_cols*2 - 2):         #has below neighbor
+    if (curr_row < num_cols*2 - 2):         # has below neighbor
         if (maze[curr_row+2][curr_col] != 'v'):
             available_neighbors += [(curr_row+2, curr_col)]
             
@@ -112,7 +95,7 @@ def check_neighbors(maze, num_rows, num_cols, curr_row, curr_col):
 creates a maze of the specified dimensions using the backtracking algorithm
 """
 def create_maze(num_rows, num_cols):
-    #create grid. erase walls as maze is created
+    # create grid. erase walls as maze is created
     maze = []
     for i in range(0, num_rows*2+1):
         row = []
@@ -126,7 +109,7 @@ def create_maze(num_rows, num_cols):
                     row += ['c']
         maze.append(row)
     
-    cells_to_go = (num_rows*num_cols)-1 #when this gets to 0, it's done
+    cells_to_go = (num_rows*num_cols)-1 # when this gets to 0, it's done
     
     stack = []
     stack.append((1,1))
@@ -142,14 +125,14 @@ def create_maze(num_rows, num_cols):
             chosen = random.choice(neighbors)
             
             # remove the wall in between the current cell and its chosen neighbor
-            if (chosen[0] == curr_cell[0]):         #same row
-                if (chosen[1] > curr_cell[1]):      #neighbor is on the right
+            if (chosen[0] == curr_cell[0]):         # same row
+                if (chosen[1] > curr_cell[1]):      # neighbor is on the right
                     maze[curr_cell[0]][curr_cell[1]+1] = 'o'
                 else:
                     maze[curr_cell[0]][curr_cell[1]-1] = 'o'
                     
-            else:                                   #same column
-                if (chosen[0] > curr_cell[0]):      #neighbor is below
+            else:                                   # same column
+                if (chosen[0] > curr_cell[0]):      # neighbor is below
                     maze[curr_cell[0]+1][curr_cell[1]] = 'o'
                 else:
                     maze[curr_cell[0]-1][curr_cell[1]] = 'o'
@@ -236,7 +219,7 @@ home screen
 def title_screen():
     title_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
-    #play button
+    # play button
     button_width = UI_AREA.width/2
     button_height = 50
     play_rect = pygame.Rect(
@@ -252,7 +235,7 @@ def title_screen():
         object_id=ObjectID(class_id="@large-button")
     )
     
-    #game title
+    # game title
     title_rect = pygame.Rect(
         UI_AREA.left, 
         UI_AREA.top,
@@ -266,7 +249,7 @@ def title_screen():
         object_id=ObjectID(object_id="#title")
     )
 
-    #credits
+    # credits
     credits_height = 210
     credits_rect = pygame.Rect(
         UI_AREA.left,
@@ -310,7 +293,7 @@ preset sizes are easy, medium, and hard, or they can customize the size in anoth
 def pick_size_screen():
     pick_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
-    #back button
+    # back button
     back_button_rect = pygame.Rect(
         UI_AREA.left, # x
         UI_AREA.top, # y
@@ -330,10 +313,10 @@ def pick_size_screen():
     all_buttons_height = UI_AREA.height - back_button_rect.height
     button_height = (all_buttons_height + space_between_buttons)/num_buttons - space_between_buttons
     
-    #easy button
+    # easy button
     easy_button_rect = pygame.Rect(
         UI_AREA.centerx - button_width/2,  # x
-        back_button_rect.bottom,                    # y
+        back_button_rect.bottom,        # y
         button_width,                   # width
         button_height                   # height
     )
@@ -344,7 +327,7 @@ def pick_size_screen():
         object_id=ObjectID(class_id="@large-button")
     )
     
-    #medium button
+    # medium button
     medium_button_rect = pygame.Rect(
         UI_AREA.centerx - button_width/2,  # x
         easy_button_rect.bottom + space_between_buttons,    # y
@@ -358,7 +341,7 @@ def pick_size_screen():
         object_id=ObjectID(class_id="@large-button")
     )
     
-    #hard button
+    # hard button
     hard_button_rect = pygame.Rect(
         UI_AREA.centerx - button_width/2,  # x
         medium_button_rect.bottom + space_between_buttons,  # y
@@ -372,7 +355,7 @@ def pick_size_screen():
         object_id=ObjectID(class_id="@large-button")
     )
 
-    #custom button
+    # custom button
     custom_button_rect = pygame.Rect(
         UI_AREA.centerx - button_width/2,  # x
         hard_button_rect.bottom + space_between_buttons,  # y
@@ -433,7 +416,7 @@ def pick_size_screen():
                 elif event.ui_element == back_button:
                     title_screen()
 
-            elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
+            elif event.type == pygame.WINDOWRESTORED: # redraw window upon reopening after minimizing
                 pygame.display.update()
 
             pick_size_screen_manager.process_events(event)
@@ -455,7 +438,7 @@ def custom_size_screen():
     rows = 15
     columns = 15
     
-    #back button
+    # back button
     back_button_rect = pygame.Rect(
         UI_AREA.left, # x
         UI_AREA.top, # y
@@ -469,7 +452,7 @@ def custom_size_screen():
         object_id=ObjectID(class_id="@small-button")
     )
     
-    #select dimensions text
+    # select dimensions text
     select_text_rect = pygame.Rect(
         UI_AREA.left,
         back_button_rect.bottom,
@@ -497,7 +480,7 @@ def custom_size_screen():
         object_id=ObjectID(object_id="@small-text-center")
     )
     
-    #'x' text
+    # 'x' text
     x_width = UI_AREA.width * 0.1
     x_height = 80
     x_text_rect = pygame.Rect(
@@ -513,7 +496,7 @@ def custom_size_screen():
         object_id=ObjectID(class_id="@large-text-center")
     )
     
-    #row text
+    # row text
     text_height = 100
     row_text_rect = pygame.Rect(
         UI_AREA.left,
@@ -528,7 +511,7 @@ def custom_size_screen():
         object_id=ObjectID(class_id="@large-text-center")
     )
 
-    #column text
+    # column text
     col_text_rect = pygame.Rect(
         x_text_rect.right,
         UI_AREA.centery - text_height/2,
@@ -542,7 +525,7 @@ def custom_size_screen():
         object_id=ObjectID(class_id="@large-text-center")
     )
 
-    #arrows
+    # arrows
     arrow_width = 75
     arrow_height = 75
 
@@ -598,7 +581,7 @@ def custom_size_screen():
         object_id=ObjectID(class_id="@large-button", object_id="#down-arrow")
     )
 
-    #ratio lock
+    # ratio lock
     lock_button_width = 50
     lock_button_height = 50
     lock_button_rect = pygame.Rect(
@@ -621,7 +604,7 @@ def custom_size_screen():
     )
     unlocked_button.hide()
     
-    #play button
+    # play button
     button_width = UI_AREA.width/2
     button_height = 50
     play_button_rect = pygame.Rect(
@@ -645,7 +628,7 @@ def custom_size_screen():
     max_diff = 10
 
     ready = False
-    locked = True #if True, rows and cols change simultaneously
+    locked = True # if True, rows and cols change simultaneously
     redraw([background_manager, custom_size_screen_manager], 0)
     while not ready:
         time_delta = clock.tick(60)/1000.00
@@ -782,7 +765,7 @@ def pause_menu():
     menu_background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
     margin = 20
     
-    #background rectangle
+    # background rectangle
     menu_width = UI_AREA.width * 0.5
     menu_height = UI_AREA.height * 0.3
     background_rect = pygame.Rect(
@@ -869,7 +852,7 @@ def finished_menu(message):
     margin = 35
     line_spacing = 5
     
-    #background surface
+    # background surface
     menu_width = UI_AREA.width * 0.5
     menu_height = UI_AREA.height * 0.3
     background_rect = pygame.Rect(
@@ -887,7 +870,7 @@ def finished_menu(message):
     button_height = 40
     button_width = background_rect.width-margin*2
     
-    #exit to home screen button
+    # exit to home screen button
     exit_button_rect = pygame.Rect(
         background_rect.left + margin,
         background_rect.bottom - margin - button_height,
@@ -901,7 +884,7 @@ def finished_menu(message):
         object_id=ObjectID(class_id="@small-button")
     )
 
-    #play again button
+    # play again button
     play_button_rect = pygame.Rect(
         background_rect.left + margin,
         exit_button_rect.top - button_height - line_spacing,
@@ -915,7 +898,7 @@ def finished_menu(message):
         object_id=ObjectID(class_id="@small-button")
     )
 
-    #congrats message
+    # congrats message
     finished_message_rect = pygame.Rect(
         background_rect.left + margin,
         background_rect.top + margin,
@@ -1010,7 +993,7 @@ def show_solution(solution_manager, other_managers):
             for m in other_managers:
                 m.process_events(event)
         curr_cell = solution_stack[curr_index]
-        if (curr_cell[1] < solution_stack[curr_index-1][1]): #current cell is to the left of the previous one
+        if (curr_cell[1] < solution_stack[curr_index-1][1]): # current cell is to the left of the previous one
             solution_rect = pygame.Rect(
                 ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
                 ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
@@ -1022,7 +1005,7 @@ def show_solution(solution_manager, other_managers):
                 manager=solution_manager,
                 object_id=ObjectID(object_id="#solution-path")
             )
-        elif (curr_cell[1] > solution_stack[curr_index-1][1]): #current cell is to the right of the previous one
+        elif (curr_cell[1] > solution_stack[curr_index-1][1]): # current cell is to the right of the previous one
             solution_rect = pygame.Rect(
                 (((curr_cell[1]-1)/2)-1)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
                 ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
@@ -1034,7 +1017,7 @@ def show_solution(solution_manager, other_managers):
                 manager=solution_manager,
                 object_id=ObjectID(object_id="#solution-path")
             )
-        elif (curr_cell[0] < solution_stack[curr_index-1][0]): #current cell is above the previous one
+        elif (curr_cell[0] < solution_stack[curr_index-1][0]): # current cell is above the previous one
             solution_rect = pygame.Rect(
                 ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
                 ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
@@ -1046,7 +1029,7 @@ def show_solution(solution_manager, other_managers):
                 manager=solution_manager,
                 object_id=ObjectID(object_id="#solution-path")
             )
-        elif (curr_cell[0] > solution_stack[curr_index-1][0]): #current cell is below the previous one
+        elif (curr_cell[0] > solution_stack[curr_index-1][0]): # current cell is below the previous one
             solution_rect = pygame.Rect(
                 ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
                 (((curr_cell[0]-1)/2)-1)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
@@ -1084,7 +1067,7 @@ def draw_maze(manager):
     y_pos = maze_startpoint[1]
     for i in range(0, rows*2+1):
         for j in range(0, columns*2+1):
-            if (i % 2 == 0 and j % 2 == 1): #horizontal
+            if (i % 2 == 0 and j % 2 == 1): # horizontal
                 if (maze[i][j] == 'w'):
                     wall_rect = pygame.Rect(
                         x_pos,
@@ -1098,7 +1081,7 @@ def draw_maze(manager):
                         object_id=ObjectID(object_id="#wall")
                     )
                 x_pos += CELL_WIDTH
-            elif (i % 2 == 1 and j % 2 == 0): #vertical
+            elif (i % 2 == 1 and j % 2 == 0): # vertical
                 if (maze[i][j] == 'w'):
                     wall_rect = pygame.Rect(
                         x_pos,
@@ -1182,7 +1165,7 @@ def play():
     )
     player.disable()
     
-    #pause button
+    # pause button
     pause_button_width = 30
     pause_button_height = 30
     pause_button_rect = pygame.Rect(
