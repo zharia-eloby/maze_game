@@ -153,12 +153,13 @@ def create_maze(num_rows, num_cols):
                     maze[curr_cell[0]+1][curr_cell[1]] = 'o'
                 else:
                     maze[curr_cell[0]-1][curr_cell[1]] = 'o'
+
             maze[chosen[0]][chosen[1]] = 'v'
             cells_to_go -= 1
             if (cells_to_go == 0):
                 global endpoint
                 endpoint = ((chosen[0]-1)/2, (chosen[1]-1)/2)
-                maze[int(endpoint[0]*2+1)][int(endpoint[1]*2+1)] = 'e'
+                maze[chosen[0]][chosen[1]] = 'e'
             stack.append(chosen)
             
         else:
@@ -171,14 +172,23 @@ only used for solving a maze. checks available paths for the current cell
 """
 def check_paths(curr_cell):
     available_paths = []
+
+    # can go right from curr_cell, and hasn't visited the right neighbor
     if (maze[curr_cell[0]+1][curr_cell[1]] != 'w' and maze[curr_cell[0]+2][curr_cell[1]] != 'x'):
         available_paths += [(curr_cell[0]+2, curr_cell[1])]
+
+    # can go left from curr_cell, and hasn't visited the left neighbor
     if (maze[curr_cell[0]-1][curr_cell[1]] != 'w' and maze[curr_cell[0]-2][curr_cell[1]] != 'x'):
         available_paths += [(curr_cell[0]-2, curr_cell[1])]
+
+    # can go down from curr_cell, and hasn't visited the neighbor below
     if (maze[curr_cell[0]][curr_cell[1]+1] != 'w' and maze[curr_cell[0]][curr_cell[1]+2] != 'x'):
         available_paths += [(curr_cell[0], curr_cell[1]+2)]
+
+    # can go up from curr_cell, and hasn't visited the neighbor above
     if (maze[curr_cell[0]][curr_cell[1]-1] != 'w' and maze[curr_cell[0]][curr_cell[1]-2] != 'x'):
         available_paths += [(curr_cell[0], curr_cell[1]-2)]
+
     return available_paths
 
 """
@@ -187,23 +197,31 @@ solves the maze by picking a random path and backtracking until the end is found
 def solve_maze(maze, start, end):
     solution_path = [start]
     curr_cell = start
-    maze[curr_cell[0]][curr_cell[1]] = 'x'  #mark the cell with 'x' in the maze array when visited
+    
+    # mark the cell with 'x' in the maze array when visited
+    maze[curr_cell[0]][curr_cell[1]] = 'x' 
+
     available_paths = []
     while (curr_cell != end):
         available_paths = check_paths(curr_cell)
+
+        # if all available neighbors have been visited, 
+        # remove cells from the stack until there is an available neighbor
         while not available_paths:
             solution_path.pop()
             curr_cell = solution_path[len(solution_path)-1]
             available_paths = check_paths(curr_cell)
+
         curr_cell = random.choice(available_paths)
         solution_path += [curr_cell]
         maze[curr_cell[0]][curr_cell[1]] = 'x'
+
     return solution_path
 
 """
 redraws all ui elements on the screen
 managers - array of managers that need to draw ui
-time_delta - time in seconds since last call to update
+time_delta - time in seconds since last call to update (as defined by pygame_gui)
 """
 def redraw(managers, time_delta):
     for m in managers:
@@ -250,7 +268,6 @@ def title_screen():
 
     #credits
     credits_height = 210
-    print(UI_AREA.bottom - play_rect.bottom)
     credits_rect = pygame.Rect(
         UI_AREA.left,
         play_rect.bottom, 
@@ -264,14 +281,9 @@ def title_screen():
         object_id=ObjectID(class_id="@small-text-bottom")
     )
 
-    background_manager.update(0)
-    background_manager.draw_ui(screen)
-    title_screen_manager.update(0)
-    title_screen_manager.draw_ui(screen)
-    pygame.display.flip()
+    redraw([background_manager, title_screen_manager], 0)
 
-    #until the user exits or presses the play button...
-    time_delta = math.floor(time.time()) # time of last call to update
+    time_delta = math.floor(time.time())
     while True:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -282,20 +294,18 @@ def title_screen():
                 if event.ui_element == play_button:
                     pick_size_screen()
 
-            elif event.type == pygame.WINDOWRESTORED:   #redraw window upon reopening after minimizing
-                pygame.display.flip()
+            # redraw window upon reopening after minimizing
+            elif event.type == pygame.WINDOWRESTORED:
+                pygame.display.update()
 
             title_screen_manager.process_events(event)
 
         time_delta = math.floor(time.time()) - time_delta
-        background_manager.draw_ui(screen)
-        title_screen_manager.update(time_delta)
-        title_screen_manager.draw_ui(screen)
-        pygame.display.update()
+        redraw([background_manager, title_screen_manager], time_delta)
 
 """
 the user can pick the size of their maze
-preset sizes are easy, medium, and hard, or they can customize the size
+preset sizes are easy, medium, and hard, or they can customize the size in another screen
 """
 def pick_size_screen():
     pick_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
@@ -315,9 +325,10 @@ def pick_size_screen():
     )
     
     num_buttons = 4
-    space_between_buttons = 50
+    space_between_buttons = 75
     button_width = UI_AREA.width * 0.6
-    button_height = (UI_AREA.height-back_button_rect.height)/num_buttons - space_between_buttons
+    all_buttons_height = UI_AREA.height - back_button_rect.height
+    button_height = (all_buttons_height + space_between_buttons)/num_buttons - space_between_buttons
     
     #easy button
     easy_button_rect = pygame.Rect(
@@ -375,11 +386,7 @@ def pick_size_screen():
         object_id=ObjectID(class_id="@large-button")
     )
 
-    pick_size_screen_manager.update(0)
-    background_manager.update(0)
-    background_manager.draw_ui(screen)
-    pick_size_screen_manager.draw_ui(screen)
-    pygame.display.flip()
+    redraw([background_manager, pick_size_screen_manager], 0)
     
     global rows
     global columns
@@ -391,51 +398,60 @@ def pick_size_screen():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit() 
+            
+            # redraw window upon reopening after minimizing
+            elif event.type == pygame.WINDOWRESTORED:
+                pygame.display.update()
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     title_screen()
+
             elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == easy_button:
                     ready = True
                     rows = easy_dim[0]
                     columns = easy_dim[1]
                     play()
+
                 elif event.ui_element == medium_button:
                     ready = True
                     rows = medium_dim[0]
                     columns = medium_dim[1]
                     play()
+
                 elif event.ui_element == hard_button:
                     ready = True
                     rows = hard_dim[0]
                     columns = hard_dim[1]
                     play()
+
                 elif event.ui_element == custom_button:
                     ready = True
                     custom_size_screen()
+
                 elif event.ui_element == back_button:
                     title_screen()
+
             elif event.type == pygame.WINDOWRESTORED: #redraw window upon reopening after minimizing
-                pygame.display.flip()
+                pygame.display.update()
 
             pick_size_screen_manager.process_events(event)
         
         time_delta = math.floor(time.time()) - time_delta
-        pick_size_screen_manager.update(time_delta)
+        redraw([background_manager, pick_size_screen_manager], time_delta)
 
-        background_manager.draw_ui(screen)
-        pick_size_screen_manager.draw_ui(screen)
-        pygame.display.update()
-
+"""
+custom size screen
+- user may pick the dimensions of the maze
+- # of rows and # of columns must be no more than 10 units apart
+- min = 5, max = 50
+"""
 def custom_size_screen():
     custom_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     global rows
     global columns
-    global CELL_WIDTH
-    global CELL_HEIGHT
-    global WALL_THICKNESS
-    
     rows = 15
     columns = 15
     
@@ -621,13 +637,6 @@ def custom_size_screen():
         object_id=ObjectID(class_id="@large-button")
     )
 
-    background_manager.update(0)
-    background_manager.draw_ui(screen)
-    custom_size_screen_manager.update(0)
-    custom_size_screen_manager.draw_ui(screen)
-    
-    pygame.display.flip()
-    
     row_min = 5
     row_max = 50
     col_min = 5
@@ -637,18 +646,26 @@ def custom_size_screen():
 
     ready = False
     locked = True #if True, rows and cols change simultaneously
+    redraw([background_manager, custom_size_screen_manager], 0)
     while not ready:
         time_delta = clock.tick(60)/1000.00
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN:
+            
+            # redraw window upon reopening after minimizing
+            elif event.type == pygame.WINDOWRESTORED:
+                pygame.display.update()
+
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     title_screen()
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == back_button:
                     pick_size_screen()
+
                 elif (event.ui_element == locked_button) or (event.ui_element == unlocked_button):
                     if locked:
                         locked = False
@@ -658,33 +675,42 @@ def custom_size_screen():
                         locked = True
                         unlocked_button.hide()
                         locked_button.show()
+
                 elif event.ui_element == play_button:
                     ready = True
                     play()
                     break
-                if locked:
+
+                elif locked:
                     if (event.ui_element == row_up_arrow_button) or (event.ui_element == column_up_arrow_button):
                         if (rows < row_max and columns < col_max):
                             rows += 1
                             columns += 1
                             if (rows == row_max):
                                 row_up_arrow_button.disable()
+
                             if (columns == col_max):
                                 column_up_arrow_button.disable()
+
                             if not (row_down_arrow_button.is_enabled):
                                 row_down_arrow_button.enable()
+
                             if not (column_down_arrow_button.is_enabled):
                                 column_down_arrow_button.enable()
+
                     if (event.ui_element == row_down_arrow_button) or (event.ui_element == column_down_arrow_button):
                         if (rows > row_min and columns > col_min):
                             rows -= 1
                             columns -= 1
                             if (rows == row_min):
                                 row_down_arrow_button.disable()
+
                             if (columns == col_min):
                                 column_down_arrow_button.disable()
+
                             if not (row_up_arrow_button.is_enabled):
                                 row_up_arrow_button.enable()
+
                             if not (column_up_arrow_button.is_enabled):
                                 column_up_arrow_button.enable()
                 else:
@@ -694,49 +720,58 @@ def custom_size_screen():
                             columns += 1
                             if not (column_down_arrow_button.is_enabled):
                                 column_down_arrow_button.enable()
+
                         if (rows == row_max):
                             row_up_arrow_button.disable()
+
                         if not row_down_arrow_button.is_enabled:
                             row_down_arrow_button.enable()
+
                     elif (event.ui_element == row_down_arrow_button):
                         rows -= 1
                         if (abs(rows-columns) > max_diff):
                             columns -= 1
                             if not (column_up_arrow_button.is_enabled):
                                 column_up_arrow_button.enable()
+
                         if (rows == row_min):
                             row_down_arrow_button.disable()
+
                         if not row_up_arrow_button.is_enabled:
                             row_up_arrow_button.enable()
+
                     elif (event.ui_element == column_up_arrow_button):
                         columns += 1
                         if (abs(rows-columns) > max_diff):
                             rows += 1
                             if not (row_down_arrow_button.is_enabled):
                                 row_down_arrow_button.enable()
+
                         if (columns == col_max):
                             column_up_arrow_button.disable()
+
                         if not column_down_arrow_button.is_enabled:
                             column_down_arrow_button.enable()
+
                     elif (event.ui_element == column_down_arrow_button):
                         columns -= 1
                         if (abs(rows-columns) > max_diff):
                             rows -= 1
                             if not (row_up_arrow_button.is_enabled):
                                 row_up_arrow_button.enable()
+                                
                         if (columns == col_min):
                             column_down_arrow_button.disable()
+
                         if not column_up_arrow_button.is_enabled:
                             column_up_arrow_button.enable()
+
                 col_text.set_text(str(columns))
                 row_text.set_text(str(rows))
             
             custom_size_screen_manager.process_events(event)
 
-        background_manager.draw_ui(screen)
-        custom_size_screen_manager.update(time_delta)
-        custom_size_screen_manager.draw_ui(screen)
-        pygame.display.update()
+        redraw([background_manager, custom_size_screen_manager], time_delta)
 
 
 def pause_menu():
@@ -805,34 +840,27 @@ def pause_menu():
         object_id=ObjectID(class_id="@small-text-center")
     )
     
-    menu_background_manager.update(0)
-    menu_background_manager.draw_ui(screen)
-    interactive_manager.update(0)
-    interactive_manager.draw_ui(screen)
-    pygame.display.update()
-    
     paused = True
     time_delta = math.floor(time.time())
+    redraw([menu_background_manager, interactive_manager], 0)
     while paused:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == exit_button:
                     paused = False
                     title_screen()
+
                 elif event.ui_element == close_button:
                     paused = False
 
             interactive_manager.process_events(event)
 
         time_delta = math.floor(time.time()) - time_delta
-        menu_background_manager.update(time_delta)
-        menu_background_manager.draw_ui(screen)
-        interactive_manager.update(time_delta)
-        interactive_manager.draw_ui(screen)
-        pygame.display.update()
+        redraw([menu_background_manager, interactive_manager], time_delta)
         
 def finished_menu(message):
     interactive_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
@@ -901,11 +929,7 @@ def finished_menu(message):
         object_id=ObjectID(class_id="@small-text-center")
     )
 
-    menu_background_manager.update(0)
-    menu_background_manager.draw_ui(screen)
-    interactive_manager.update(0)
-    interactive_manager.draw_ui(screen)
-    pygame.display.update()
+    redraw([menu_background_manager, interactive_manager], 0)
     
     done = False
     time_delta = math.floor(time.time())
@@ -922,9 +946,7 @@ def finished_menu(message):
             interactive_manager.process_events(event)
         
         time_delta = math.floor(time.time()) - time_delta
-        interactive_manager.update(time_delta)
-        interactive_manager.draw_ui(screen)
-        pygame.display.update()
+        redraw([interactive_manager], time_delta)
 
 def move_player(direction, player, current_position):
     current_left = player.get_relative_rect().left
@@ -934,16 +956,19 @@ def move_player(direction, player, current_position):
         maze[current_position[0]][current_position[1]] = "v"
         maze[current_position[0]-2][current_position[1]] = "p"
         current_position = (current_position[0] - 2, current_position[1])
+
     elif direction == "down" and maze[current_position[0]+1][current_position[1]] == "o":
         player.set_relative_position((current_left, current_top + CELL_HEIGHT))
         maze[current_position[0]][current_position[1]] = "v"
         maze[current_position[0]+2][current_position[1]] = "p"
         current_position = (current_position[0] + 2, current_position[1])
+
     elif direction == "left" and maze[current_position[0]][current_position[1]-1] == "o":
         player.set_relative_position((current_left - CELL_WIDTH, current_top))
         maze[current_position[0]][current_position[1]] = "v"
         maze[current_position[0]][current_position[1]-2] = "p"
         current_position = (current_position[0], current_position[1] - 2)
+
     elif direction == "right" and maze[current_position[0]][current_position[1]+1] == "o":
         player.set_relative_position((current_left + CELL_WIDTH, current_top))
         maze[current_position[0]][current_position[1]] = "v"
@@ -966,12 +991,6 @@ def show_solution(solution_manager, other_managers):
     except:
         solution_stack = solve_maze(maze, start, end)
     curr_index = 1
-
-    global CELL_HEIGHT
-    global CELL_WIDTH
-    global WALL_THICKNESS
-    global maze_startpoint
-    global pause_button
 
     done = False
     while not done:
@@ -1046,20 +1065,10 @@ def show_solution(solution_manager, other_managers):
         if not skip_to_end and not done:
             redraw(other_managers+[solution_manager], time_delta)
 
-def play():
-    global solution_stack
-    solution_stack = None
-
-    game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-    solution_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-
+def draw_maze(manager):
     global CELL_WIDTH
     global CELL_HEIGHT
-    global MAZE_WIDTH
-    global MAZE_HEIGHT
     global WALL_THICKNESS
-    global rows
-    global columns
 
     CELL_WIDTH = math.floor(MAZE_WIDTH/columns)
     CELL_WIDTH -= CELL_WIDTH%2
@@ -1071,10 +1080,6 @@ def play():
     if (WALL_THICKNESS < 2):
         WALL_THICKNESS = 2
 
-    global maze
-    maze = create_maze(rows, columns)
-
-    #draw the maze
     x_pos = maze_startpoint[0]
     y_pos = maze_startpoint[1]
     for i in range(0, rows*2+1):
@@ -1089,7 +1094,7 @@ def play():
                     )
                     wall = pygame_gui.elements.UIPanel(
                         relative_rect=wall_rect,
-                        manager=game_ui_manager,
+                        manager=manager,
                         object_id=ObjectID(object_id="#wall")
                     )
                 x_pos += CELL_WIDTH
@@ -1103,7 +1108,7 @@ def play():
                     )
                     wall = pygame_gui.elements.UIPanel(
                         relative_rect=wall_rect,
-                        manager=game_ui_manager,
+                        manager=manager,
                         object_id=ObjectID(object_id="#wall")
                     )
                 x_pos += CELL_WIDTH
@@ -1111,11 +1116,24 @@ def play():
             y_pos += CELL_HEIGHT
         x_pos = maze_startpoint[0]
 
+def play():
+    global solution_stack
+    solution_stack = None
+
+    game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+    solution_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+
+    global maze
+    maze = create_maze(rows, columns)
+
+    draw_maze(game_ui_manager)
+
     # define starting and ending points
     global startpoint
     startpoint = (random.randrange(0, rows), random.randrange(0, columns))
     while (startpoint == endpoint):
         startpoint = (random.randrange(0, rows), random.randrange(0, columns))
+
     maze[int(startpoint[0]*2+1)][int(startpoint[1]*2+1)] = "p"
     current_position = (int(startpoint[0]*2+1), int(startpoint[1]*2+1))
     
@@ -1144,24 +1162,25 @@ def play():
     )
 
     player_margin = WALL_THICKNESS
+    # set player width to be the smaller of CELL_WIDTH and CELL_HEIGHT. defaults to CELL_WIDTH
     if (start_rect.width > start_rect.height):
-        player_width = start_rect.height - player_margin*2
+        player_width = CELL_HEIGHT - player_margin*2
     else:
-        player_width = start_rect.width - player_margin*2
+        player_width = CELL_WIDTH - player_margin*2
     player_height = player_width
     player_rect = pygame.Rect(
-        start_rect.left + start_rect.width/2 - player_width/2,
-        start_rect.top + start_rect.height/2 - player_height/2,
+        start_rect.centerx - player_width/2,
+        start_rect.centery - player_height/2,
         player_width,
         player_height
     )
     player = pygame_gui.elements.UIButton(
         relative_rect=player_rect,
-        text="", 
+        text="",
         manager=game_ui_manager,
         object_id=ObjectID(object_id="#player")
     )
-    player.generate_click_events_from = []
+    player.disable()
     
     #pause button
     pause_button_width = 30
@@ -1200,7 +1219,6 @@ def play():
     solving = False
     solved = False
     solving = False
-    paused = False
     redraw([background_manager, game_ui_manager], 0)
     time_delta = math.floor(time.time())
     while not done:
@@ -1210,34 +1228,46 @@ def play():
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            # redraw window upon reopening after minimizing
+            elif event.type == pygame.WINDOWRESTORED:
+                pygame.display.update()
+
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == pause_button:
-                    paused = True
                     pause_menu()
-                if event.ui_element == show_solution_button:
+
+                elif event.ui_element == show_solution_button:
                     if solved:
                         solution_manager.clear_and_reset()
                         solved = False
+
                     show_solution_button.disable()
                     show_solution(solution_manager, [background_manager, game_ui_manager])
                     show_solution_button.enable()
                     solved = True
 
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_menu()
-                if event.key == pygame.K_UP and not solving:
+
+                elif event.key == pygame.K_UP and not solving:
                     current_position = move_player("up", player, current_position)
-                if event.key == pygame.K_DOWN and not solving:
+
+                elif event.key == pygame.K_DOWN and not solving:
                     current_position = move_player("down", player, current_position)
-                if event.key == pygame.K_LEFT and not solving:
+
+                elif event.key == pygame.K_LEFT and not solving:
                     current_position = move_player("left", player, current_position)
-                if event.key == pygame.K_RIGHT and not solving:
+                
+                elif event.key == pygame.K_RIGHT and not solving:
                     current_position = move_player("right", player, current_position)
+                
                 if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
                     message = "YOU DID IT!"
                     done = True
+
             game_ui_manager.process_events(event)
+
         time_delta = math.floor(time.time()) - time_delta
         redraw([background_manager, game_ui_manager, solution_manager], time_delta)
         

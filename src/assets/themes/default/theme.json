@@ -104,9 +104,11 @@
     {
         "colours":
         {
-            "dark_bg": "#9258d8",
-            "active_bg": "#ffffff00",
-            "hovered_bg": "#ffffff00"
+            "normal_bg": "#ffffff",
+            "active_bg": "#ffffff",
+            "hovered_bg": "#ffffff",
+            "disabled_bg": "#ffffff",
+            "selected_bg": "#ffffff"
         },
         "misc":
         {
