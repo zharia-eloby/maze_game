@@ -137,9 +137,18 @@
         },
         "misc":
         {
-            "border_width": "0",
-            "shadow_width": "0"
+            "border_width" : "0",
+            "shadow_width" : "0"
+        },
+        "images": 
+        {
+            "disabled_image":
+            {
+                "package": "assets.images",
+                "resource": "bg-abstract-1.jpg"
+            }
         }
+        
     },
     "#title": 
     {

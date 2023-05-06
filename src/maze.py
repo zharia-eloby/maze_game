@@ -11,14 +11,27 @@ import math
 import sys
 import os
 import time
+from PIL import Image
+import json
 
+theme = "default"
 src_path = sys.path[0]
-theme_file = os.path.join(src_path, "./assets/themes/default/theme.json")
+theme_file = os.path.join(src_path, "./assets/themes/" + theme + "/theme.json")
+images_folder = os.path.join(src_path, "assets/images/")
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 750
-
 SCREEN_MARGIN = 50
+
+# resize background image
+file = open(theme_file, "r")
+contents = json.loads(file.read())
+file.close()
+bg_file = contents['#background']['images']['disabled_image']['resource']
+bg = Image.open(images_folder + bg_file)
+bg = bg.resize((SCREEN_WIDTH, SCREEN_HEIGHT))
+bg = bg.save(images_folder + bg_file)
+
 UI_AREA = pygame.Rect(
     SCREEN_MARGIN,
     SCREEN_MARGIN,
@@ -54,17 +67,24 @@ pygame.display.set_caption("Maze - created by Zharia Eloby")
 
 background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
+"""
+this is a UIButton instead of a UIPanel because I
+couldn't figure out how to get an image to show 
+for a UIPanel
+"""
 background_rect = pygame.Rect(
     0,
     0,
     SCREEN_WIDTH,
     SCREEN_HEIGHT
 )
-background = pygame_gui.elements.UIPanel(
+background = pygame_gui.elements.UIButton(
     relative_rect=background_rect,
     manager=background_manager,
+    text="",
     object_id=ObjectID(object_id="#background")
 )
+background.disable()
 
 clock = pygame.time.Clock()
 
@@ -73,19 +93,19 @@ only used when creating the maze. returns a list of unvisited neighbors
 """
 def check_neighbors(maze, num_rows, num_cols, curr_row, curr_col):
     available_neighbors = []
-    if (curr_col > 1):               # has a left neighbor
+    if (curr_col > 1):                  # has a left neighbor
         if (maze[curr_row][curr_col-2] != 'v'):
             available_neighbors += [(curr_row, curr_col-2)]
             
-    if (curr_col < num_rows*2 - 2):         # has right neighbor
+    if (curr_col < num_rows*2 - 2):     # has right neighbor
         if (maze[curr_row][curr_col+2] != 'v'):
             available_neighbors += [(curr_row, curr_col+2)]
             
-    if (curr_row > 1):               # has upper neighbor
+    if (curr_row > 1):                  # has upper neighbor
         if (maze[curr_row-2][curr_col] != 'v'):
             available_neighbors += [(curr_row-2, curr_col)]
             
-    if (curr_row < num_cols*2 - 2):         # has below neighbor
+    if (curr_row < num_cols*2 - 2):     # has below neighbor
         if (maze[curr_row+2][curr_col] != 'v'):
             available_neighbors += [(curr_row+2, curr_col)]
             
@@ -630,8 +650,8 @@ def custom_size_screen():
     ready = False
     locked = True # if True, rows and cols change simultaneously
     redraw([background_manager, custom_size_screen_manager], 0)
+    time_delta = math.floor(time.time())
     while not ready:
-        time_delta = clock.tick(60)/1000.00
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -754,6 +774,7 @@ def custom_size_screen():
             
             custom_size_screen_manager.process_events(event)
 
+        time_delta = math.floor(time.time()) - time_delta
         redraw([background_manager, custom_size_screen_manager], time_delta)
 
 
