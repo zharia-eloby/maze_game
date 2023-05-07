@@ -980,95 +980,6 @@ def move_player(direction, player, current_position):
         current_position = (current_position[0], current_position[1] + 2)
     return current_position
 
-def show_solution(solution_manager, other_managers):
-    speed = 30
-    skip_to_end = False
-
-    start = (startpoint[0]*2+1, startpoint[1]*2+1)
-    end = (endpoint[0]*2+1, endpoint[1]*2+1)
-    global solution_stack
-    try:
-        if solution_stack:
-            pass
-        else:
-            solution_stack = solve_maze(maze, start, end)
-    except:
-        solution_stack = solve_maze(maze, start, end)
-    curr_index = 1
-
-    done = False
-    while not done:
-        time_delta = clock.tick(speed)/1000.00
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:    
-                if event.key == pygame.K_RETURN:
-                    skip_to_end = True
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == pause_button:
-                    pause_menu()
-            for m in other_managers:
-                m.process_events(event)
-        curr_cell = solution_stack[curr_index]
-        if (curr_cell[1] < solution_stack[curr_index-1][1]): # current cell is to the left of the previous one
-            solution_rect = pygame.Rect(
-                ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                CELL_WIDTH + WALL_THICKNESS,
-                WALL_THICKNESS
-            )
-            solution = pygame_gui.elements.UIPanel(
-                relative_rect=solution_rect,
-                manager=solution_manager,
-                object_id=ObjectID(object_id="#solution-path")
-            )
-        elif (curr_cell[1] > solution_stack[curr_index-1][1]): # current cell is to the right of the previous one
-            solution_rect = pygame.Rect(
-                (((curr_cell[1]-1)/2)-1)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                CELL_WIDTH+WALL_THICKNESS,
-                WALL_THICKNESS
-            )
-            solution = pygame_gui.elements.UIPanel(
-                relative_rect=solution_rect,
-                manager=solution_manager,
-                object_id=ObjectID(object_id="#solution-path")
-            )
-        elif (curr_cell[0] < solution_stack[curr_index-1][0]): # current cell is above the previous one
-            solution_rect = pygame.Rect(
-                ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                WALL_THICKNESS,
-                CELL_HEIGHT + WALL_THICKNESS
-            )
-            solution = pygame_gui.elements.UIPanel(
-                relative_rect=solution_rect,
-                manager=solution_manager,
-                object_id=ObjectID(object_id="#solution-path")
-            )
-        elif (curr_cell[0] > solution_stack[curr_index-1][0]): # current cell is below the previous one
-            solution_rect = pygame.Rect(
-                ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                (((curr_cell[0]-1)/2)-1)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                WALL_THICKNESS,
-                CELL_HEIGHT + WALL_THICKNESS
-            )
-            solution = pygame_gui.elements.UIPanel(
-                relative_rect=solution_rect,
-                manager=solution_manager,
-                object_id=ObjectID(object_id="#solution-path")
-            )
-        curr_index += 1
-        if curr_index == len(solution_stack):
-            done = True
-            redraw(other_managers+[solution_manager], time_delta)
-        if not skip_to_end and not done:
-            redraw(other_managers+[solution_manager], time_delta)
-
 def draw_maze(manager):
     global CELL_WIDTH
     global CELL_HEIGHT
@@ -1121,7 +1032,6 @@ def draw_maze(manager):
         x_pos = maze_startpoint[0]
 
 def play():
-    global solution_stack
     solution_stack = None
 
     game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
@@ -1218,10 +1128,13 @@ def play():
         manager=game_ui_manager,
         object_id=ObjectID(class_id="@small-button")
     )
+
+    # custom event for showing the maze solution
+    SHOW_SOLUTION = pygame.USEREVENT + 1
                     
+    curr_index = 1 # only used for showing the maze solution. keeps track of current index of solution_stack
+    solution_speed = 60
     done = False
-    solving = False
-    solved = False
     solving = False
     redraw([background_manager, game_ui_manager], 0)
     time_delta = math.floor(time.time())
@@ -1236,34 +1149,96 @@ def play():
             elif event.type == pygame.WINDOWRESTORED:
                 pygame.display.update()
 
-            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
                 if event.ui_element == pause_button:
+                    if solving:
+                        pygame.time.set_timer(SHOW_SOLUTION, 0)
                     pause_menu()
+                    if solving:
+                        pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                 elif event.ui_element == show_solution_button:
-                    if solved:
-                        solution_manager.clear_and_reset()
-                        solved = False
-
+                    # convert start and end points to the maze array indices
+                    start = (startpoint[0]*2+1, startpoint[1]*2+1)
+                    end = (endpoint[0]*2+1, endpoint[1]*2+1)
+                    if not solution_stack:
+                        solution_stack = solve_maze(maze, start, end)
+                    curr_index = 1
+                    solving = True
+                    pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
+                    solution_manager.clear_and_reset()
                     show_solution_button.disable()
-                    show_solution(solution_manager, [background_manager, game_ui_manager])
+
+            elif event.type == SHOW_SOLUTION:
+                curr_cell = solution_stack[curr_index]
+                if (curr_cell[1] < solution_stack[curr_index-1][1]): # current cell is to the left of the previous one
+                    solution_rect = pygame.Rect(
+                        ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                        ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                        CELL_WIDTH + WALL_THICKNESS,
+                        WALL_THICKNESS
+                    )
+                    solution = pygame_gui.elements.UIPanel(
+                        relative_rect=solution_rect,
+                        manager=solution_manager,
+                        object_id=ObjectID(object_id="#solution-path")
+                    )
+                elif (curr_cell[1] > solution_stack[curr_index-1][1]): # current cell is to the right of the previous one
+                    solution_rect = pygame.Rect(
+                        (((curr_cell[1]-1)/2)-1)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                        ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                        CELL_WIDTH+WALL_THICKNESS,
+                        WALL_THICKNESS
+                    )
+                    solution = pygame_gui.elements.UIPanel(
+                        relative_rect=solution_rect,
+                        manager=solution_manager,
+                        object_id=ObjectID(object_id="#solution-path")
+                    )
+                elif (curr_cell[0] < solution_stack[curr_index-1][0]): # current cell is above the previous one
+                    solution_rect = pygame.Rect(
+                        ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                        ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                        WALL_THICKNESS,
+                        CELL_HEIGHT + WALL_THICKNESS
+                    )
+                    solution = pygame_gui.elements.UIPanel(
+                        relative_rect=solution_rect,
+                        manager=solution_manager,
+                        object_id=ObjectID(object_id="#solution-path")
+                    )
+                elif (curr_cell[0] > solution_stack[curr_index-1][0]): # current cell is below the previous one
+                    solution_rect = pygame.Rect(
+                        ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
+                        (((curr_cell[0]-1)/2)-1)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
+                        WALL_THICKNESS,
+                        CELL_HEIGHT + WALL_THICKNESS
+                    )
+                    solution = pygame_gui.elements.UIPanel(
+                        relative_rect=solution_rect,
+                        manager=solution_manager,
+                        object_id=ObjectID(object_id="#solution-path")
+                    )
+                curr_index += 1
+                if curr_index == len(solution_stack):
+                    solving = False
+                    pygame.time.set_timer(SHOW_SOLUTION, 0)
                     show_solution_button.enable()
-                    solved = True
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pause_menu()
 
-                elif event.key == pygame.K_UP and not solving:
+                elif event.key == pygame.K_UP:
                     current_position = move_player("up", player, current_position)
 
-                elif event.key == pygame.K_DOWN and not solving:
+                elif event.key == pygame.K_DOWN:
                     current_position = move_player("down", player, current_position)
 
-                elif event.key == pygame.K_LEFT and not solving:
+                elif event.key == pygame.K_LEFT:
                     current_position = move_player("left", player, current_position)
                 
-                elif event.key == pygame.K_RIGHT and not solving:
+                elif event.key == pygame.K_RIGHT:
                     current_position = move_player("right", player, current_position)
                 
                 if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
