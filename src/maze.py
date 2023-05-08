@@ -853,7 +853,7 @@ def pause_menu():
                 pygame.quit()
                 sys.exit()
 
-            elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+            elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
                 if event.ui_element == exit_button:
                     paused = False
                     title_screen()
@@ -1131,9 +1131,10 @@ def play():
 
     # custom event for showing the maze solution
     SHOW_SOLUTION = pygame.USEREVENT + 1
-                    
-    curr_index = 1 # only used for showing the maze solution. keeps track of current index of solution_stack
-    solution_speed = 60
+
+    solution_speed = 10
+    increment = 2
+
     done = False
     solving = False
     redraw([background_manager, game_ui_manager], 0)
@@ -1163,67 +1164,64 @@ def play():
                     end = (endpoint[0]*2+1, endpoint[1]*2+1)
                     if not solution_stack:
                         solution_stack = solve_maze(maze, start, end)
-                    curr_index = 1
+                    curr_index = 0
+                    new_line = True
                     solving = True
                     pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                     solution_manager.clear_and_reset()
                     show_solution_button.disable()
 
             elif event.type == SHOW_SOLUTION:
-                curr_cell = solution_stack[curr_index]
-                if (curr_cell[1] < solution_stack[curr_index-1][1]): # current cell is to the left of the previous one
-                    solution_rect = pygame.Rect(
-                        ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                        ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                        CELL_WIDTH + WALL_THICKNESS,
-                        WALL_THICKNESS
-                    )
-                    solution = pygame_gui.elements.UIPanel(
-                        relative_rect=solution_rect,
-                        manager=solution_manager,
-                        object_id=ObjectID(object_id="#solution-path")
-                    )
-                elif (curr_cell[1] > solution_stack[curr_index-1][1]): # current cell is to the right of the previous one
-                    solution_rect = pygame.Rect(
-                        (((curr_cell[1]-1)/2)-1)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                        ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                        CELL_WIDTH+WALL_THICKNESS,
-                        WALL_THICKNESS
-                    )
-                    solution = pygame_gui.elements.UIPanel(
-                        relative_rect=solution_rect,
-                        manager=solution_manager,
-                        object_id=ObjectID(object_id="#solution-path")
-                    )
-                elif (curr_cell[0] < solution_stack[curr_index-1][0]): # current cell is above the previous one
-                    solution_rect = pygame.Rect(
-                        ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                        ((curr_cell[0]-1)/2)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                        WALL_THICKNESS,
-                        CELL_HEIGHT + WALL_THICKNESS
-                    )
-                    solution = pygame_gui.elements.UIPanel(
-                        relative_rect=solution_rect,
-                        manager=solution_manager,
-                        object_id=ObjectID(object_id="#solution-path")
-                    )
-                elif (curr_cell[0] > solution_stack[curr_index-1][0]): # current cell is below the previous one
-                    solution_rect = pygame.Rect(
-                        ((curr_cell[1]-1)/2)*CELL_WIDTH+(CELL_WIDTH/2)+maze_startpoint[0],
-                        (((curr_cell[0]-1)/2)-1)*CELL_HEIGHT+(CELL_HEIGHT/2)+maze_startpoint[1],
-                        WALL_THICKNESS,
-                        CELL_HEIGHT + WALL_THICKNESS
-                    )
-                    solution = pygame_gui.elements.UIPanel(
-                        relative_rect=solution_rect,
-                        manager=solution_manager,
-                        object_id=ObjectID(object_id="#solution-path")
-                    )
-                curr_index += 1
-                if curr_index == len(solution_stack):
-                    solving = False
-                    pygame.time.set_timer(SHOW_SOLUTION, 0)
-                    show_solution_button.enable()
+                if new_line:
+                    if (curr_index == len(solution_stack) - 1):
+                        solving = False
+                        pygame.time.set_timer(SHOW_SOLUTION, 0)
+                        show_solution_button.enable()
+                    else:
+                        curr_cell = solution_stack[curr_index]
+                        next_cell = solution_stack[curr_index + 1]
+                        line_rect = pygame.Rect(
+                            (curr_cell[1]-1)/2 * CELL_WIDTH + (CELL_WIDTH/2) + maze_startpoint[0],
+                            (curr_cell[0]-1)/2 * CELL_HEIGHT + (CELL_HEIGHT/2) + maze_startpoint[1],
+                            WALL_THICKNESS,
+                            WALL_THICKNESS
+                        )
+                        line = pygame_gui.elements.UIPanel(
+                            relative_rect=line_rect,
+                            manager=solution_manager,
+                            object_id=ObjectID(object_id="#solution-path")
+                        )
+
+                        if (curr_cell[1] < next_cell[1]) or (curr_cell[1] > next_cell[1]):   # horizontal
+                            target_width = CELL_WIDTH + WALL_THICKNESS
+                            target_height = WALL_THICKNESS
+
+                        elif (curr_cell[0] < next_cell[0]) or (curr_cell[0] > next_cell[0]): # vertical
+                            target_width = WALL_THICKNESS
+                            target_height = CELL_HEIGHT + WALL_THICKNESS
+
+                        new_line = False
+                        curr_index += 1
+                else:
+                    if (curr_cell[1] < next_cell[1]):   # going right
+                        line.set_dimensions((line.get_relative_rect().width + increment, line.get_relative_rect().height))
+
+                    elif (curr_cell[1] > next_cell[1]): # going left
+                        left = line.get_relative_rect().left
+                        line.set_dimensions((line.get_relative_rect().width + increment, line.get_relative_rect().height))
+                        line.set_relative_position((left - increment, line.get_relative_rect().top))
+
+                    elif (curr_cell[0] < next_cell[0]): # going down
+                        line.set_dimensions((line.get_relative_rect().width, line.get_relative_rect().height + increment))
+
+                    elif (curr_cell[0] > next_cell[0]): # going up
+                        top = line.relative_rect.top
+                        line.set_dimensions((line.get_relative_rect().width, line.get_relative_rect().height + increment))
+                        line.set_relative_position((line.get_relative_rect().left, top - increment))
+                    
+                    if (line.get_relative_rect().width >= target_width) and (line.get_relative_rect().height >= target_height):
+                        line.set_dimensions((target_width, target_height))
+                        new_line = True
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -1244,6 +1242,9 @@ def play():
                 if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
                     message = "YOU DID IT!"
                     done = True
+                    if solving:
+                        pygame.time.set_timer(SHOW_SOLUTION, 0)
+                        solving = False
 
             game_ui_manager.process_events(event)
 
