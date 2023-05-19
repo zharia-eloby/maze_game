@@ -8,7 +8,7 @@
             "regular_resource": 
             {
                 "package": "assets.fonts",
-                "resource": "PottaOne-Regular.ttf"
+                "resource": "ChelseaMarket-Regular.ttf"
             }
         }
     },
@@ -48,12 +48,52 @@
             "text_vert_alignment": "center"
         }
     },
+    "#medium-regular-text": {
+        "prototype": "#regular-text",
+        "font":
+        {
+            "name": "roboto",
+            "size": "28"
+        }
+    },
+    "@medium-text-bottom": 
+    {
+        "prototype": "#medium-regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "bottom"
+        }
+    },
+    "@medium-text-center": 
+    {
+        "prototype": "#medium-regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "center"
+        }
+    },
     "#large-regular-text": {
         "prototype": "#regular-text",
         "font":
         {
             "name": "roboto",
             "size": "64"
+        }
+    },
+    "@large-text-center": 
+    {
+        "prototype": "#large-regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "@large-text-bottom": 
+    {
+        "prototype": "#large-regular-text",
+        "misc":
+        {
+            "text_vert_alignment": "bottom"
         }
     },
     "button":
@@ -145,7 +185,7 @@
             "disabled_image":
             {
                 "package": "assets.images",
-                "resource": "bg-waves-1.jpg"
+                "resource": "bg-abstract-1.jpg"
             }
         }
         
@@ -200,22 +240,6 @@
             "text_vert_alignment": "bottom"
         }
     },
-    "@large-text-center": 
-    {
-        "prototype": "#large-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "center"
-        }
-    },
-    "@large-text-bottom": 
-    {
-        "prototype": "#large-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "bottom"
-        }
-    },
     "@small-button": 
     {
         "font": 
@@ -248,7 +272,7 @@
         },
         "misc": 
         {
-            "border_width": "0",
+            "border_width": "7",
             "shadow_width": "0",
             "shape_corner_radius": "6",
             "shape": "rounded_rectangle"

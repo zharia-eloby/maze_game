@@ -46,14 +46,11 @@ else:
     MAZE_HEIGHT = UI_AREA.width
     MAZE_WIDTH = MAZE_HEIGHT
 
-maze_startpoint = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2) 
+maze_topleft = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2) 
 
 CELL_WIDTH = 0
 CELL_HEIGHT = 0
 WALL_THICKNESS = 0
-
-rows = 0
-columns = 0
 
 easy_dim = (10, 10)
 medium_dim = (20, 20)
@@ -89,25 +86,32 @@ background.disable()
 clock = pygame.time.Clock()
 
 """
+for debugging purposes
+"""
+def print_maze():
+    for i in maze:
+        print(i)
+
+"""
 only used when creating the maze. returns a list of unvisited neighbors
 """
-def check_neighbors(maze, num_rows, num_cols, curr_row, curr_col):
+def check_neighbors(maze, curr_cell):
     available_neighbors = []
-    if (curr_col > 1):                  # has a left neighbor
-        if (maze[curr_row][curr_col-2] != 'v'):
-            available_neighbors += [(curr_row, curr_col-2)]
+    if (curr_cell[1] > 1):                  # check that it CAN have a left neighbor, then check if it has an unvisited left neighbor
+        if (maze[curr_cell[0]][curr_cell[1]-2] != 'v'):
+            available_neighbors += [(curr_cell[0], curr_cell[1]-2)]
             
-    if (curr_col < num_rows*2 - 2):     # has right neighbor
-        if (maze[curr_row][curr_col+2] != 'v'):
-            available_neighbors += [(curr_row, curr_col+2)]
+    if (curr_cell[1] < len(maze) - 2):     # if CAN have right neighbor, check that the right neighbor is unvisited
+        if (maze[curr_cell[0]][curr_cell[1]+2] != 'v'):
+            available_neighbors += [(curr_cell[0], curr_cell[1]+2)]
             
-    if (curr_row > 1):                  # has upper neighbor
-        if (maze[curr_row-2][curr_col] != 'v'):
-            available_neighbors += [(curr_row-2, curr_col)]
+    if (curr_cell[0] > 1):                  # if CAN have upper neighbor, check that the upper neighbor is unvisited
+        if (maze[curr_cell[0]-2][curr_cell[1]] != 'v'):
+            available_neighbors += [(curr_cell[0]-2, curr_cell[1])]
             
-    if (curr_row < num_cols*2 - 2):     # has below neighbor
-        if (maze[curr_row+2][curr_col] != 'v'):
-            available_neighbors += [(curr_row+2, curr_col)]
+    if (curr_cell[0] < len(maze[0]) - 2):     # if CAN have below neighbor, check that the below neighbor is unvisited
+        if (maze[curr_cell[0]+2][curr_cell[1]] != 'v'):
+            available_neighbors += [(curr_cell[0]+2, curr_cell[1])]
             
     return available_neighbors
 
@@ -139,7 +143,7 @@ def create_maze(num_rows, num_cols):
         curr_cell = stack.pop()
         stack.append(curr_cell)
         
-        neighbors = check_neighbors(maze, num_cols, num_rows, curr_cell[0], curr_cell[1])
+        neighbors = check_neighbors(maze, curr_cell)
         
         if (len(neighbors) > 0):
             chosen = random.choice(neighbors)
@@ -231,6 +235,22 @@ def redraw(managers, time_delta):
         m.update(time_delta)
         m.draw_ui(screen)
     pygame.display.update()
+
+"""
+get the left position of the cell based on the column index in the 'maze' array
+"""
+def get_cell_x_position(column_index):
+    grid_index = ((column_index-1)/2)
+    x_position = grid_index * CELL_WIDTH + maze_topleft[0] + WALL_THICKNESS
+    return x_position
+
+"""
+get the top position of the cell based on the row index in the 'maze' array
+"""
+def get_cell_y_position(row_index):
+    grid_index = ((row_index-1)/2)
+    y_position = grid_index * CELL_HEIGHT + maze_topleft[1] + WALL_THICKNESS
+    return y_position
     
 """
 home screen
@@ -262,7 +282,7 @@ def title_screen():
         UI_AREA.width, 
         play_rect.top - UI_AREA.top
     )
-    title = pygame_gui.elements.UILabel(
+    pygame_gui.elements.UILabel(
         relative_rect=title_rect, 
         text="MAZE",
         manager=title_screen_manager,
@@ -277,7 +297,7 @@ def title_screen():
         UI_AREA.width, 
         UI_AREA.bottom - play_rect.bottom
     )
-    credits = pygame_gui.elements.UILabel(
+    pygame_gui.elements.UILabel(
         relative_rect=credits_rect, 
         text="code by Zharia Eloby",
         manager=title_screen_manager,
@@ -390,9 +410,6 @@ def pick_size_screen():
     )
 
     redraw([background_manager, pick_size_screen_manager], 0)
-    
-    global rows
-    global columns
 
     ready = False
     time_delta = math.floor(time.time())
@@ -415,19 +432,19 @@ def pick_size_screen():
                     ready = True
                     rows = easy_dim[0]
                     columns = easy_dim[1]
-                    play()
+                    play(rows, columns)
 
                 elif event.ui_element == medium_button:
                     ready = True
                     rows = medium_dim[0]
                     columns = medium_dim[1]
-                    play()
+                    play(rows, columns)
 
                 elif event.ui_element == hard_button:
                     ready = True
                     rows = hard_dim[0]
                     columns = hard_dim[1]
-                    play()
+                    play(rows, columns)
 
                 elif event.ui_element == custom_button:
                     ready = True
@@ -453,8 +470,6 @@ custom size screen
 def custom_size_screen():
     custom_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
-    global rows
-    global columns
     rows = 15
     columns = 15
     
@@ -479,7 +494,7 @@ def custom_size_screen():
         UI_AREA.width,
         70
     )
-    select_text = pygame_gui.elements.UILabel(
+    pygame_gui.elements.UILabel(
         relative_rect=select_text_rect,
         text="Select your Dimensions",
         manager=custom_size_screen_manager,
@@ -493,7 +508,7 @@ def custom_size_screen():
         UI_AREA.width,
         20
     )
-    warning_text = pygame_gui.elements.UILabel(
+    pygame_gui.elements.UILabel(
         relative_rect=warning_text_rect,
         text="* dimensions must be within 10 units of each other *",
         manager=custom_size_screen_manager,
@@ -509,7 +524,7 @@ def custom_size_screen():
         x_width,
         x_height
     )
-    x_text = pygame_gui.elements.UILabel(
+    pygame_gui.elements.UILabel(
         relative_rect=x_text_rect,
         text="x",
         manager=custom_size_screen_manager,
@@ -535,7 +550,7 @@ def custom_size_screen():
     col_text_rect = pygame.Rect(
         x_text_rect.right,
         UI_AREA.centery - text_height/2,
-        UI_AREA.width - x_text_rect.right,
+        UI_AREA.right - x_text_rect.right,
         text_height
     )
     col_text = pygame_gui.elements.UILabel(
@@ -681,7 +696,7 @@ def custom_size_screen():
 
                 elif event.ui_element == play_button:
                     ready = True
-                    play()
+                    play(rows, columns)
                     break
 
                 elif locked:
@@ -787,7 +802,7 @@ def pause_menu():
     margin = 20
     
     # background rectangle
-    menu_width = UI_AREA.width * 0.5
+    menu_width = UI_AREA.width * 0.75
     menu_height = UI_AREA.height * 0.3
     background_rect = pygame.Rect(
         UI_AREA.centerx - menu_width/2, 
@@ -795,7 +810,7 @@ def pause_menu():
         menu_width, 
         menu_height
     )
-    background = pygame_gui.elements.UIPanel(
+    pygame_gui.elements.UIPanel(
         relative_rect = background_rect,
         manager=menu_background_manager,
         object_id=ObjectID(class_id="@menu-background")
@@ -837,11 +852,11 @@ def pause_menu():
         menu_width - margin*2, 
         exit_button_rect.top - close_button_rect.bottom
     )
-    paused_text = pygame_gui.elements.UILabel(
+    pygame_gui.elements.UILabel(
         relative_rect=paused_text_rect,
         text="paused",
         manager=interactive_manager,
-        object_id=ObjectID(class_id="@small-text-center")
+        object_id=ObjectID(class_id="@medium-text-center")
     )
     
     paused = True
@@ -871,18 +886,18 @@ def finished_menu(message):
     menu_background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     margin = 35
-    line_spacing = 5
+    line_spacing = 10
     
     # background surface
-    menu_width = UI_AREA.width * 0.5
-    menu_height = UI_AREA.height * 0.3
+    menu_width = UI_AREA.width * 0.75
+    menu_height = UI_AREA.height * 0.35
     background_rect = pygame.Rect(
         UI_AREA.centerx - menu_width/2,
         UI_AREA.centery - menu_height/2,
         menu_width,
         menu_height
     )
-    background = pygame_gui.elements.UIPanel(
+    pygame_gui.elements.UIPanel(
         relative_rect=background_rect,
         manager=menu_background_manager,
         object_id=ObjectID(class_id="@menu-background")
@@ -926,11 +941,11 @@ def finished_menu(message):
         background_rect.width - margin*2,
         play_button_rect.top - (background_rect.top+margin)
     )
-    finished_message = pygame_gui.elements.UILabel (
+    pygame_gui.elements.UILabel (
         relative_rect=finished_message_rect,
         text=message,
         manager=menu_background_manager,
-        object_id=ObjectID(class_id="@small-text-center")
+        object_id=ObjectID(class_id="@medium-text-center")
     )
 
     redraw([menu_background_manager, interactive_manager], 0)
@@ -944,9 +959,9 @@ def finished_menu(message):
                 sys.exit()
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == exit_button:
-                    title_screen()
+                    return False
                 if event.ui_element == play_button:
-                    play()
+                    return True
             interactive_manager.process_events(event)
         
         time_delta = math.floor(time.time()) - time_delta
@@ -980,10 +995,20 @@ def move_player(direction, player, current_position):
         current_position = (current_position[0], current_position[1] + 2)
     return current_position
 
-def draw_maze(manager):
+"""
+This function:
+1. sets the measurements for CELL_WIDTH, CELL_HEIGHT, and WALL_THICKNESS.
+2. resets the maze_topleft to ensure it's centered.
+3. MAZE_WIDTH and MAZE_HEIGHT reference the intended width and height,
+however, the actual dimensions may be smaller. reset these variables as well
+"""
+def set_measurements(rows, columns):
     global CELL_WIDTH
     global CELL_HEIGHT
+    global MAZE_WIDTH
+    global MAZE_HEIGHT
     global WALL_THICKNESS
+    global maze_topleft
 
     CELL_WIDTH = math.floor(MAZE_WIDTH/columns)
     CELL_WIDTH -= CELL_WIDTH%2
@@ -995,8 +1020,16 @@ def draw_maze(manager):
     if (WALL_THICKNESS < 2):
         WALL_THICKNESS = 2
 
-    x_pos = maze_startpoint[0]
-    y_pos = maze_startpoint[1]
+    # set startpoint so the maze is centered
+    MAZE_WIDTH = CELL_WIDTH * columns + WALL_THICKNESS
+    MAZE_HEIGHT = CELL_HEIGHT * rows + WALL_THICKNESS
+    maze_topleft = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2)
+
+def draw_maze(manager, rows, columns):
+    set_measurements(rows, columns)
+
+    x_pos = maze_topleft[0]
+    y_pos = maze_topleft[1]
     for i in range(0, rows*2+1):
         for j in range(0, columns*2+1):
             if (i % 2 == 0 and j % 2 == 1): # horizontal
@@ -1007,7 +1040,7 @@ def draw_maze(manager):
                         CELL_WIDTH,
                         WALL_THICKNESS
                     )
-                    wall = pygame_gui.elements.UIPanel(
+                    pygame_gui.elements.UIPanel(
                         relative_rect=wall_rect,
                         manager=manager,
                         object_id=ObjectID(object_id="#wall")
@@ -1021,7 +1054,7 @@ def draw_maze(manager):
                         WALL_THICKNESS,
                         CELL_HEIGHT + WALL_THICKNESS
                     )
-                    wall = pygame_gui.elements.UIPanel(
+                    pygame_gui.elements.UIPanel(
                         relative_rect=wall_rect,
                         manager=manager,
                         object_id=ObjectID(object_id="#wall")
@@ -1029,9 +1062,9 @@ def draw_maze(manager):
                 x_pos += CELL_WIDTH
         if (i % 2 == 1):
             y_pos += CELL_HEIGHT
-        x_pos = maze_startpoint[0]
+        x_pos = maze_topleft[0]
 
-def play():
+def play(rows, columns):
     solution_stack = None
 
     game_ui_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
@@ -1040,20 +1073,23 @@ def play():
     global maze
     maze = create_maze(rows, columns)
 
-    draw_maze(game_ui_manager)
+    draw_maze(game_ui_manager, rows, columns)
 
     # define starting and ending points
-    global startpoint
     startpoint = (random.randrange(0, rows), random.randrange(0, columns))
     while (startpoint == endpoint):
         startpoint = (random.randrange(0, rows), random.randrange(0, columns))
 
-    maze[int(startpoint[0]*2+1)][int(startpoint[1]*2+1)] = "p"
-    current_position = (int(startpoint[0]*2+1), int(startpoint[1]*2+1))
+    # convert startpoint values from grid indices to maze array indices
+    startpoint_row_index = int(startpoint[0]*2+1)
+    startpoint_column_index = int(startpoint[1]*2+1)
+
+    maze[startpoint_row_index][startpoint_column_index] = "p"
+    current_position = (startpoint_row_index, startpoint_column_index)
     
     start_rect = pygame.Rect(
-        CELL_WIDTH * startpoint[1] + maze_startpoint[0] + WALL_THICKNESS,
-        CELL_HEIGHT * startpoint[0] + maze_startpoint[1] + WALL_THICKNESS,
+        CELL_WIDTH * startpoint[1] + maze_topleft[0] + WALL_THICKNESS,
+        CELL_HEIGHT * startpoint[0] + maze_topleft[1] + WALL_THICKNESS,
         CELL_WIDTH - WALL_THICKNESS,
         CELL_HEIGHT - WALL_THICKNESS
     )
@@ -1064,8 +1100,8 @@ def play():
     )
 
     end_rect = pygame.Rect(
-        CELL_WIDTH * endpoint[1] + maze_startpoint[0] + WALL_THICKNESS,
-        CELL_HEIGHT * endpoint[0] + maze_startpoint[1] + WALL_THICKNESS,
+        CELL_WIDTH * endpoint[1] + maze_topleft[0] + WALL_THICKNESS,
+        CELL_HEIGHT * endpoint[0] + maze_topleft[1] + WALL_THICKNESS,
         CELL_WIDTH - WALL_THICKNESS,
         CELL_HEIGHT - WALL_THICKNESS
     )
@@ -1075,7 +1111,7 @@ def play():
         object_id=ObjectID(object_id="#endpoint")
     )
 
-    player_margin = WALL_THICKNESS
+    player_margin = WALL_THICKNESS*2
     # set player width to be the smaller of CELL_WIDTH and CELL_HEIGHT. defaults to CELL_WIDTH
     if (start_rect.width > start_rect.height):
         player_width = CELL_HEIGHT - player_margin*2
@@ -1133,7 +1169,7 @@ def play():
     SHOW_SOLUTION = pygame.USEREVENT + 1
 
     solution_speed = 10
-    increment = 2
+    increment = 1
 
     done = False
     solving = False
@@ -1181,8 +1217,8 @@ def play():
                         curr_cell = solution_stack[curr_index]
                         next_cell = solution_stack[curr_index + 1]
                         line_rect = pygame.Rect(
-                            (curr_cell[1]-1)/2 * CELL_WIDTH + (CELL_WIDTH/2) + maze_startpoint[0],
-                            (curr_cell[0]-1)/2 * CELL_HEIGHT + (CELL_HEIGHT/2) + maze_startpoint[1],
+                            get_cell_x_position(curr_cell[1]) + CELL_WIDTH/2 - WALL_THICKNESS,
+                            get_cell_y_position(curr_cell[0]) + CELL_HEIGHT/2 - WALL_THICKNESS,
                             WALL_THICKNESS,
                             WALL_THICKNESS
                         )
@@ -1227,16 +1263,16 @@ def play():
                 if event.key == pygame.K_ESCAPE:
                     pause_menu()
 
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP or event.key == pygame.K_w:
                     current_position = move_player("up", player, current_position)
 
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     current_position = move_player("down", player, current_position)
 
-                elif event.key == pygame.K_LEFT:
+                elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
                     current_position = move_player("left", player, current_position)
                 
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     current_position = move_player("right", player, current_position)
                 
                 if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
@@ -1253,7 +1289,7 @@ def play():
         
     restart = finished_menu(message)
     if restart:
-        play()
+        play(rows, columns)
     else:
         title_screen()
 
