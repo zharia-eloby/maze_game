@@ -19,9 +19,9 @@ src_path = sys.path[0]
 theme_file = os.path.join(src_path, "./assets/themes/" + theme + "/theme.json")
 images_folder = os.path.join(src_path, "assets/images/")
 
-SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 750
 SCREEN_MARGIN = 50
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = SCREEN_WIDTH + SCREEN_MARGIN*2
 
 # resize background image
 file = open(theme_file, "r")
@@ -51,10 +51,6 @@ maze_topleft = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2)
 CELL_WIDTH = 0
 CELL_HEIGHT = 0
 WALL_THICKNESS = 0
-
-easy_dim = (10, 10)
-medium_dim = (20, 20)
-hard_dim = (30, 30)
 
 pygame.init()
 pygame.font.init()
@@ -165,7 +161,7 @@ def create_maze(num_rows, num_cols):
             cells_to_go -= 1
             if (cells_to_go == 0):
                 global endpoint
-                endpoint = ((chosen[0]-1)/2, (chosen[1]-1)/2)
+                endpoint = chosen
                 maze[chosen[0]][chosen[1]] = 'e'
             stack.append(chosen)
             
@@ -430,20 +426,20 @@ def pick_size_screen():
             elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == easy_button:
                     ready = True
-                    rows = easy_dim[0]
-                    columns = easy_dim[1]
+                    rows = 10
+                    columns = 10
                     play(rows, columns)
 
                 elif event.ui_element == medium_button:
                     ready = True
-                    rows = medium_dim[0]
-                    columns = medium_dim[1]
+                    rows = 20
+                    columns = 20
                     play(rows, columns)
 
                 elif event.ui_element == hard_button:
                     ready = True
-                    rows = hard_dim[0]
-                    columns = hard_dim[1]
+                    rows = 30
+                    columns = 30
                     play(rows, columns)
 
                 elif event.ui_element == custom_button:
@@ -1075,21 +1071,19 @@ def play(rows, columns):
 
     draw_maze(game_ui_manager, rows, columns)
 
-    # define starting and ending points
-    startpoint = (random.randrange(0, rows), random.randrange(0, columns))
+    # define starting point
+    startpoint = (random.randrange(0, rows) * 2 + 1, random.randrange(0, columns) * 2 + 1)
     while (startpoint == endpoint):
-        startpoint = (random.randrange(0, rows), random.randrange(0, columns))
+        startpoint = (random.randrange(0, rows) * 2 + 1, random.randrange(0, columns) * 2 + 1)
 
     # convert startpoint values from grid indices to maze array indices
-    startpoint_row_index = int(startpoint[0]*2+1)
-    startpoint_column_index = int(startpoint[1]*2+1)
 
-    maze[startpoint_row_index][startpoint_column_index] = "p"
-    current_position = (startpoint_row_index, startpoint_column_index)
+    maze[startpoint[0]][startpoint[1]] = "p"
+    current_position = (startpoint[0], startpoint[1])
     
     start_rect = pygame.Rect(
-        CELL_WIDTH * startpoint[1] + maze_topleft[0] + WALL_THICKNESS,
-        CELL_HEIGHT * startpoint[0] + maze_topleft[1] + WALL_THICKNESS,
+        get_cell_x_position(startpoint[1]),
+        get_cell_y_position(startpoint[0]),
         CELL_WIDTH - WALL_THICKNESS,
         CELL_HEIGHT - WALL_THICKNESS
     )
@@ -1100,8 +1094,8 @@ def play(rows, columns):
     )
 
     end_rect = pygame.Rect(
-        CELL_WIDTH * endpoint[1] + maze_topleft[0] + WALL_THICKNESS,
-        CELL_HEIGHT * endpoint[0] + maze_topleft[1] + WALL_THICKNESS,
+        get_cell_x_position(endpoint[1]),
+        get_cell_y_position(endpoint[0]),
         CELL_WIDTH - WALL_THICKNESS,
         CELL_HEIGHT - WALL_THICKNESS
     )
@@ -1195,11 +1189,8 @@ def play(rows, columns):
                         pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                 elif event.ui_element == show_solution_button:
-                    # convert start and end points to the maze array indices
-                    start = (startpoint[0]*2+1, startpoint[1]*2+1)
-                    end = (endpoint[0]*2+1, endpoint[1]*2+1)
                     if not solution_stack:
-                        solution_stack = solve_maze(maze, start, end)
+                        solution_stack = solve_maze(maze, startpoint, endpoint)
                     curr_index = 0
                     new_line = True
                     solving = True
@@ -1275,7 +1266,7 @@ def play(rows, columns):
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                     current_position = move_player("right", player, current_position)
                 
-                if current_position == (endpoint[0]*2+1, endpoint[1]*2+1):
+                if current_position == (endpoint[0], endpoint[1]):
                     message = "YOU DID IT!"
                     done = True
                     if solving:
