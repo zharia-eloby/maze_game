@@ -19,9 +19,9 @@ src_path = sys.path[0]
 theme_file = os.path.join(src_path, "./assets/themes/" + theme + "/theme.json")
 images_folder = os.path.join(src_path, "assets/images/")
 
-SCREEN_MARGIN = 50
 SCREEN_WIDTH = 600
-SCREEN_HEIGHT = SCREEN_WIDTH + SCREEN_MARGIN*2
+SCREEN_MARGIN = math.ceil(SCREEN_WIDTH * 0.075)
+SCREEN_HEIGHT = SCREEN_WIDTH + math.ceil(SCREEN_MARGIN*2)
 
 # resize background image
 file = open(theme_file, "r")
@@ -97,7 +97,7 @@ def check_neighbors(maze, curr_cell):
         if (maze[curr_cell[0]][curr_cell[1]-2] != 'v'):
             available_neighbors += [(curr_cell[0], curr_cell[1]-2)]
             
-    if (curr_cell[1] < len(maze) - 2):     # if CAN have right neighbor, check that the right neighbor is unvisited
+    if (curr_cell[1] < len(maze[0]) - 2):     # if CAN have right neighbor, check that the right neighbor is unvisited
         if (maze[curr_cell[0]][curr_cell[1]+2] != 'v'):
             available_neighbors += [(curr_cell[0], curr_cell[1]+2)]
             
@@ -105,7 +105,7 @@ def check_neighbors(maze, curr_cell):
         if (maze[curr_cell[0]-2][curr_cell[1]] != 'v'):
             available_neighbors += [(curr_cell[0]-2, curr_cell[1])]
             
-    if (curr_cell[0] < len(maze[0]) - 2):     # if CAN have below neighbor, check that the below neighbor is unvisited
+    if (curr_cell[0] < len(maze) - 2):     # if CAN have below neighbor, check that the below neighbor is unvisited
         if (maze[curr_cell[0]+2][curr_cell[1]] != 'v'):
             available_neighbors += [(curr_cell[0]+2, curr_cell[1])]
             
@@ -295,14 +295,14 @@ def title_screen():
     )
     pygame_gui.elements.UILabel(
         relative_rect=credits_rect, 
-        text="code by Zharia Eloby",
+        text="created by Zharia Eloby",
         manager=title_screen_manager,
         object_id=ObjectID(class_id="@small-text-bottom")
     )
 
     redraw([background_manager, title_screen_manager], 0)
 
-    time_delta = math.floor(time.time())
+    time_delta = math.ceil(time.time())
     while True:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -319,7 +319,7 @@ def title_screen():
 
             title_screen_manager.process_events(event)
 
-        time_delta = math.floor(time.time()) - time_delta
+        time_delta = math.ceil(time.time()) - time_delta
         redraw([background_manager, title_screen_manager], time_delta)
 
 """
@@ -408,7 +408,7 @@ def pick_size_screen():
     redraw([background_manager, pick_size_screen_manager], 0)
 
     ready = False
-    time_delta = math.floor(time.time())
+    time_delta = math.ceil(time.time())
     while not ready:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -454,7 +454,7 @@ def pick_size_screen():
 
             pick_size_screen_manager.process_events(event)
         
-        time_delta = math.floor(time.time()) - time_delta
+        time_delta = math.ceil(time.time()) - time_delta
         redraw([background_manager, pick_size_screen_manager], time_delta)
 
 """
@@ -502,7 +502,7 @@ def custom_size_screen():
         UI_AREA.left,
         select_text_rect.bottom,
         UI_AREA.width,
-        20
+        25
     )
     pygame_gui.elements.UILabel(
         relative_rect=warning_text_rect,
@@ -513,7 +513,7 @@ def custom_size_screen():
     
     # 'x' text
     x_width = UI_AREA.width * 0.1
-    x_height = 80
+    x_height = 100
     x_text_rect = pygame.Rect(
         UI_AREA.centerx - x_width/2,
         UI_AREA.centery - x_height/2,
@@ -652,16 +652,16 @@ def custom_size_screen():
     )
 
     row_min = 5
-    row_max = 50
+    row_max = 35
     col_min = 5
-    col_max = 50
+    col_max = 35
 
     max_diff = 10
 
     ready = False
     locked = True # if True, rows and cols change simultaneously
     redraw([background_manager, custom_size_screen_manager], 0)
-    time_delta = math.floor(time.time())
+    time_delta = math.ceil(time.time())
     while not ready:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -785,7 +785,7 @@ def custom_size_screen():
             
             custom_size_screen_manager.process_events(event)
 
-        time_delta = math.floor(time.time()) - time_delta
+        time_delta = math.ceil(time.time()) - time_delta
         redraw([background_manager, custom_size_screen_manager], time_delta)
 
 
@@ -856,7 +856,7 @@ def pause_menu():
     )
     
     paused = True
-    time_delta = math.floor(time.time())
+    time_delta = math.ceil(time.time())
     redraw([menu_background_manager, interactive_manager], 0)
     while paused:
         for event in [pygame.event.wait()]+pygame.event.get():
@@ -874,7 +874,7 @@ def pause_menu():
 
             interactive_manager.process_events(event)
 
-        time_delta = math.floor(time.time()) - time_delta
+        time_delta = math.ceil(time.time()) - time_delta
         redraw([menu_background_manager, interactive_manager], time_delta)
         
 def finished_menu(message):
@@ -947,7 +947,7 @@ def finished_menu(message):
     redraw([menu_background_manager, interactive_manager], 0)
     
     done = False
-    time_delta = math.floor(time.time())
+    time_delta = math.ceil(time.time())
     while not done:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -960,7 +960,7 @@ def finished_menu(message):
                     return True
             interactive_manager.process_events(event)
         
-        time_delta = math.floor(time.time()) - time_delta
+        time_delta = math.ceil(time.time()) - time_delta
         redraw([interactive_manager], time_delta)
 
 def move_player(direction, player, current_position):
@@ -1006,9 +1006,9 @@ def set_measurements(rows, columns):
     global WALL_THICKNESS
     global maze_topleft
 
-    CELL_WIDTH = math.floor(MAZE_WIDTH/columns)
+    CELL_WIDTH = math.ceil(MAZE_WIDTH/columns)
     CELL_WIDTH -= CELL_WIDTH%2
-    CELL_HEIGHT = math.floor(MAZE_HEIGHT/rows)
+    CELL_HEIGHT = math.ceil(MAZE_HEIGHT/rows)
     CELL_HEIGHT -= CELL_HEIGHT%2
 
     WALL_THICKNESS = round(CELL_WIDTH/10)
@@ -1105,7 +1105,7 @@ def play(rows, columns):
         object_id=ObjectID(object_id="#endpoint")
     )
 
-    player_margin = WALL_THICKNESS*2
+    player_margin = math.ceil(WALL_THICKNESS * 1.5)
     # set player width to be the smaller of CELL_WIDTH and CELL_HEIGHT. defaults to CELL_WIDTH
     if (start_rect.width > start_rect.height):
         player_width = CELL_HEIGHT - player_margin*2
@@ -1128,7 +1128,7 @@ def play(rows, columns):
     
     # pause button
     pause_button_width = 30
-    pause_button_height = 30
+    pause_button_height = pause_button_width
     pause_button_rect = pygame.Rect(
         UI_AREA.right - pause_button_width,
         UI_AREA.top,
@@ -1144,7 +1144,7 @@ def play(rows, columns):
     )
     
     # show solution button
-    button_width = 150
+    button_width = math.ceil(UI_AREA.width * 0.3)
     button_height = 25
     show_solution_rect = pygame.Rect(
         UI_AREA.left,
@@ -1168,7 +1168,7 @@ def play(rows, columns):
     done = False
     solving = False
     redraw([background_manager, game_ui_manager], 0)
-    time_delta = math.floor(time.time())
+    time_delta = math.ceil(time.time())
     while not done:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1275,7 +1275,7 @@ def play(rows, columns):
 
             game_ui_manager.process_events(event)
 
-        time_delta = math.floor(time.time()) - time_delta
+        time_delta = math.ceil(time.time()) - time_delta
         redraw([background_manager, game_ui_manager, solution_manager], time_delta)
         
     restart = finished_menu(message)
