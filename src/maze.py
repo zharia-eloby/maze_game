@@ -964,6 +964,13 @@ def finished_menu(message):
         redraw([interactive_manager], time_delta)
 
 def move_player(direction, player, current_position):
+    if direction == "reset":
+        player.set_relative_position((startpoint_left, startpoint_top))
+        maze[current_position[0]][current_position[1]] = "v"
+        current_position = (startpoint[0], startpoint[1])
+        maze[current_position[0]][current_position[1]] = "p"
+        return current_position
+
     current_left = player.get_relative_rect().left
     current_top = player.get_relative_rect().top
     if direction == "up" and maze[current_position[0]-1][current_position[1]] == "o":
@@ -1006,9 +1013,9 @@ def set_measurements(rows, columns):
     global WALL_THICKNESS
     global maze_topleft
 
-    CELL_WIDTH = math.ceil(MAZE_WIDTH/columns)
+    CELL_WIDTH = math.floor(MAZE_WIDTH/columns)
     CELL_WIDTH -= CELL_WIDTH%2
-    CELL_HEIGHT = math.ceil(MAZE_HEIGHT/rows)
+    CELL_HEIGHT = math.floor(MAZE_HEIGHT/rows)
     CELL_HEIGHT -= CELL_HEIGHT%2
 
     WALL_THICKNESS = round(CELL_WIDTH/10)
@@ -1072,6 +1079,7 @@ def play(rows, columns):
     draw_maze(game_ui_manager, rows, columns)
 
     # define starting point
+    global startpoint
     startpoint = (random.randrange(0, rows) * 2 + 1, random.randrange(0, columns) * 2 + 1)
     while (startpoint == endpoint):
         startpoint = (random.randrange(0, rows) * 2 + 1, random.randrange(0, columns) * 2 + 1)
@@ -1112,6 +1120,13 @@ def play(rows, columns):
     else:
         player_width = CELL_WIDTH - player_margin*2
     player_height = player_width
+
+    global startpoint_left
+    startpoint_left = start_rect.centerx - player_width/2
+
+    global startpoint_top
+    startpoint_top = start_rect.centery - player_height/2
+
     player_rect = pygame.Rect(
         start_rect.centerx - player_width/2,
         start_rect.centery - player_height/2,
@@ -1142,10 +1157,26 @@ def play(rows, columns):
         manager=game_ui_manager,
         object_id=ObjectID(object_id="#pause-button", class_id="@small-button")
     )
-    
+
+    # reset button
+    reset_button_width = 30
+    reset_button_height = reset_button_width
+    reset_button_rect = pygame.Rect(
+        pause_button_rect.left - reset_button_width - 20,
+        UI_AREA.top,
+        reset_button_width,
+        reset_button_height
+    )
+    reset_button = pygame_gui.elements.UIButton(
+        relative_rect=reset_button_rect,
+        text="",
+        manager=game_ui_manager,
+        object_id=ObjectID(object_id="#reset-button", class_id="@small-button")
+    )
+
     # show solution button
     button_width = math.ceil(UI_AREA.width * 0.3)
-    button_height = 25
+    button_height = 30
     show_solution_rect = pygame.Rect(
         UI_AREA.left,
         UI_AREA.top,
@@ -1187,6 +1218,8 @@ def play(rows, columns):
                     pause_menu()
                     if solving:
                         pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
+                elif event.ui_element == reset_button:
+                    current_position = move_player("reset", player, current_position)
 
                 elif event.ui_element == show_solution_button:
                     if not solution_stack:
@@ -1197,6 +1230,7 @@ def play(rows, columns):
                     pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                     solution_manager.clear_and_reset()
                     show_solution_button.disable()
+                    reset_button.disable()
 
             elif event.type == SHOW_SOLUTION:
                 if new_line:
@@ -1204,6 +1238,7 @@ def play(rows, columns):
                         solving = False
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
                         show_solution_button.enable()
+                        reset_button.enable()
                     else:
                         curr_cell = solution_stack[curr_index]
                         next_cell = solution_stack[curr_index + 1]

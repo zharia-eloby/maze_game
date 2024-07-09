@@ -312,6 +312,17 @@
             }
         }
     },
+    "#reset-button": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "reset-button.png"
+            }
+        }
+    },
     "#up-arrow": 
     {
         "images": 
