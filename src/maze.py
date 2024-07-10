@@ -18,6 +18,7 @@ theme = "default"
 src_path = sys.path[0]
 theme_file = os.path.join(src_path, "./assets/themes/" + theme + "/theme.json")
 images_folder = os.path.join(src_path, "assets/images/")
+audio_folder = os.path.join(src_path, "assets/audio/")
 
 SCREEN_WIDTH = 600
 SCREEN_MARGIN = math.ceil(SCREEN_WIDTH * 0.075)
@@ -54,6 +55,7 @@ WALL_THICKNESS = 0
 
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
 
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Maze - created by Zharia Eloby")
@@ -247,6 +249,26 @@ def get_cell_y_position(row_index):
     grid_index = ((row_index-1)/2)
     y_position = grid_index * CELL_HEIGHT + maze_topleft[1] + WALL_THICKNESS
     return y_position
+
+def setAudioButton(audio_button, no_audio_button):
+    if pygame.mixer.music.get_busy():
+        audio_button.show()
+        no_audio_button.hide()
+    else:
+        no_audio_button.show()
+        audio_button.hide()
+
+def toggleAudio(audio_button, no_audio_button):
+    if pygame.mixer.music.get_busy():
+        pygame.mixer.music.fadeout(500)
+        pygame.mixer.music.unload()
+        audio_button.hide()
+        no_audio_button.show()
+    else:
+        pygame.mixer.music.load(audio_folder + "wrong-place-129242.mp3")
+        pygame.mixer.music.play()
+        no_audio_button.hide()
+        audio_button.show()
     
 """
 home screen
@@ -254,6 +276,29 @@ home screen
 """
 def title_screen():
     title_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+
+    # audio buttons
+    button_width = 30
+    button_height = button_width
+    audio_button_rect = pygame.Rect(
+        UI_AREA.right - button_width,   # x
+        UI_AREA.top,                    # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=title_screen_manager,
+        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+    )
+    no_audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=title_screen_manager,
+        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+    )
+    setAudioButton(audio_button, no_audio_button)
 
     # play button
     button_width = UI_AREA.width/2
@@ -312,6 +357,8 @@ def title_screen():
             elif event.type == pygame_gui.UI_BUTTON_PRESSED :
                 if event.ui_element == play_button:
                     pick_size_screen()
+                elif event.ui_element == audio_button or event.ui_element == no_audio_button:
+                    toggleAudio(audio_button, no_audio_button)
 
             # redraw window upon reopening after minimizing
             elif event.type == pygame.WINDOWRESTORED:
@@ -328,6 +375,29 @@ preset sizes are easy, medium, and hard, or they can customize the size in anoth
 """
 def pick_size_screen():
     pick_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+
+    # audio buttons
+    button_width = 30
+    button_height = button_width
+    audio_button_rect = pygame.Rect(
+        UI_AREA.right - button_width,   # x
+        UI_AREA.top,                    # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=pick_size_screen_manager,
+        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+    )
+    no_audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=pick_size_screen_manager,
+        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+    )
+    setAudioButton(audio_button, no_audio_button)
 
     # back button
     back_button_rect = pygame.Rect(
@@ -448,6 +518,9 @@ def pick_size_screen():
 
                 elif event.ui_element == back_button:
                     title_screen()
+                
+                elif event.ui_element == audio_button or event.ui_element == no_audio_button:
+                    toggleAudio(audio_button, no_audio_button)
 
             elif event.type == pygame.WINDOWRESTORED: # redraw window upon reopening after minimizing
                 pygame.display.update()
@@ -468,6 +541,29 @@ def custom_size_screen():
 
     rows = 15
     columns = 15
+
+    # audio buttons
+    button_width = 30
+    button_height = button_width
+    audio_button_rect = pygame.Rect(
+        UI_AREA.right - button_width,   # x
+        UI_AREA.top,                    # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=custom_size_screen_manager,
+        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+    )
+    no_audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=custom_size_screen_manager,
+        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+    )
+    setAudioButton(audio_button, no_audio_button)
     
     # back button
     back_button_rect = pygame.Rect(
@@ -679,6 +775,9 @@ def custom_size_screen():
             elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == back_button:
                     pick_size_screen()
+
+                elif event.ui_element == audio_button or event.ui_element == no_audio_button:
+                    toggleAudio(audio_button, no_audio_button)
 
                 elif (event.ui_element == locked_button) or (event.ui_element == unlocked_button):
                     if locked:
@@ -1140,12 +1239,35 @@ def play(rows, columns):
         object_id=ObjectID(object_id="#player")
     )
     player.disable()
+
+    # audio buttons
+    button_width = 30
+    button_height = button_width
+    audio_button_rect = pygame.Rect(
+        UI_AREA.right - button_width,   # x
+        UI_AREA.top,                    # y
+        button_width,                   # width
+        button_height                   # height
+    )
+    audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=game_ui_manager,
+        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+    )
+    no_audio_button = pygame_gui.elements.UIButton(
+        relative_rect=audio_button_rect, 
+        text="",
+        manager=game_ui_manager,
+        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+    )
+    setAudioButton(audio_button, no_audio_button)
     
     # pause button
     pause_button_width = 30
     pause_button_height = pause_button_width
     pause_button_rect = pygame.Rect(
-        UI_AREA.right - pause_button_width,
+        audio_button_rect.left - pause_button_width - 20,
         UI_AREA.top,
         pause_button_width,
         pause_button_height
@@ -1220,6 +1342,8 @@ def play(rows, columns):
                         pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                 elif event.ui_element == reset_button:
                     current_position = move_player("reset", player, current_position)
+                elif event.ui_element == audio_button or event.ui_element == no_audio_button:
+                    toggleAudio(audio_button, no_audio_button)
 
                 elif event.ui_element == show_solution_button:
                     if not solution_stack:
@@ -1319,6 +1443,8 @@ def play(rows, columns):
     else:
         title_screen()
 
+pygame.mixer.music.load(audio_folder + "wrong-place-129242.mp3")
+pygame.mixer.music.play(loops=-1)
 title_screen()
 
 pygame.quit()

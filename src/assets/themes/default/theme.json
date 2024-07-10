@@ -290,6 +290,28 @@
             "text_vert_alignment": "center"
         }
     },
+    "#audio-button": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio-button.png"
+            }
+        }
+    },
+    "#no-audio-button": 
+    {
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "no-audio-button.png"
+            }
+        }
+    },
     "#close-button": 
     {
         "images": 
