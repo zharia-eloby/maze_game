@@ -18,6 +18,8 @@ from helpers.settings import get_settings
 from helpers.initialize import initialize_pygame
 from helpers.redraw import redraw_elements
 from helpers.create_maze import create_maze
+from helpers.solve_maze import solve_maze
+from helpers.audio import set_audio_buttons, toggle_audio
 
 resize_images = False
 
@@ -95,57 +97,6 @@ def resize_image(image_id, width, height, normal=True, hovered=True):
             img.save(images_folder + image_file)
 
 """
-only used for solving a maze. checks available paths for the current cell
-"""
-def check_paths(curr_cell):
-    available_paths = []
-
-    # can go right from curr_cell, and hasn't visited the right neighbor
-    if (maze[curr_cell[0]+1][curr_cell[1]] != 'w' and maze[curr_cell[0]+2][curr_cell[1]] != 'x'):
-        available_paths += [(curr_cell[0]+2, curr_cell[1])]
-
-    # can go left from curr_cell, and hasn't visited the left neighbor
-    if (maze[curr_cell[0]-1][curr_cell[1]] != 'w' and maze[curr_cell[0]-2][curr_cell[1]] != 'x'):
-        available_paths += [(curr_cell[0]-2, curr_cell[1])]
-
-    # can go down from curr_cell, and hasn't visited the neighbor below
-    if (maze[curr_cell[0]][curr_cell[1]+1] != 'w' and maze[curr_cell[0]][curr_cell[1]+2] != 'x'):
-        available_paths += [(curr_cell[0], curr_cell[1]+2)]
-
-    # can go up from curr_cell, and hasn't visited the neighbor above
-    if (maze[curr_cell[0]][curr_cell[1]-1] != 'w' and maze[curr_cell[0]][curr_cell[1]-2] != 'x'):
-        available_paths += [(curr_cell[0], curr_cell[1]-2)]
-
-    return available_paths
-
-"""
-solves the maze by picking a random path and backtracking until the end is found
-"""
-def solve_maze(maze, start, end):
-    solution_path = [start]
-    curr_cell = start
-    
-    # mark the cell with 'x' in the maze array when visited
-    maze[curr_cell[0]][curr_cell[1]] = 'x' 
-
-    available_paths = []
-    while (curr_cell != end):
-        available_paths = check_paths(curr_cell)
-
-        # if all available neighbors have been visited, 
-        # remove cells from the stack until there is an available neighbor
-        while not available_paths:
-            solution_path.pop()
-            curr_cell = solution_path[len(solution_path)-1]
-            available_paths = check_paths(curr_cell)
-
-        curr_cell = random.choice(available_paths)
-        solution_path += [curr_cell]
-        maze[curr_cell[0]][curr_cell[1]] = 'x'
-
-    return solution_path
-
-"""
 get the left position of the cell based on the column index in the 'maze' array
 """
 def get_cell_x_position(column_index):
@@ -160,26 +111,6 @@ def get_cell_y_position(row_index):
     grid_index = ((row_index-1)/2)
     y_position = grid_index * CELL_HEIGHT + maze_topleft[1] + WALL_THICKNESS
     return y_position
-
-def setAudioButton(audio_button, no_audio_button):
-    if pygame.mixer.music.get_busy():
-        audio_button.show()
-        no_audio_button.hide()
-    else:
-        no_audio_button.show()
-        audio_button.hide()
-
-def toggleAudio(audio_button, no_audio_button):
-    if pygame.mixer.music.get_busy():
-        pygame.mixer.music.fadeout(500)
-        pygame.mixer.music.unload()
-        audio_button.hide()
-        no_audio_button.show()
-    else:
-        pygame.mixer.music.load(audio_file)
-        pygame.mixer.music.play()
-        no_audio_button.hide()
-        audio_button.show()
     
 """
 home screen
@@ -209,7 +140,7 @@ def title_screen():
         manager=title_screen_manager,
         object_id=ObjectID(object_id="#no-audio-button")
     )
-    setAudioButton(audio_button, no_audio_button)
+    set_audio_buttons(audio_button, no_audio_button)
     resize_image('#audio-button', button_width, button_height)
     resize_image('#no-audio-button', button_width, button_height)
 
@@ -272,7 +203,7 @@ def title_screen():
                 if event.ui_element == play_button:
                     pick_size_screen()
                 elif event.ui_element == audio_button or event.ui_element == no_audio_button:
-                    toggleAudio(audio_button, no_audio_button)
+                    toggle_audio(audio_file, audio_button, no_audio_button)
 
             # redraw window upon reopening after minimizing
             elif event.type == pygame.WINDOWRESTORED:
@@ -311,7 +242,7 @@ def pick_size_screen():
         manager=pick_size_screen_manager,
         object_id=ObjectID(object_id="#no-audio-button")
     )
-    setAudioButton(audio_button, no_audio_button)
+    set_audio_buttons(audio_button, no_audio_button)
     resize_image('#audio-button', button_width, button_height)
     resize_image('#no-audio-button', button_width, button_height)
 
@@ -438,7 +369,7 @@ def pick_size_screen():
                     title_screen()
                 
                 elif event.ui_element == audio_button or event.ui_element == no_audio_button:
-                    toggleAudio(audio_button, no_audio_button)
+                    toggle_audio(audio_file, audio_button, no_audio_button)
 
             elif event.type == pygame.WINDOWRESTORED: # redraw window upon reopening after minimizing
                 pygame.display.update()
@@ -481,7 +412,7 @@ def custom_size_screen():
         manager=custom_size_screen_manager,
         object_id=ObjectID(object_id="#no-audio-button")
     )
-    setAudioButton(audio_button, no_audio_button)
+    set_audio_buttons(audio_button, no_audio_button)
     
     # back button
     back_button_rect = pygame.Rect(
@@ -699,7 +630,7 @@ def custom_size_screen():
                     pick_size_screen()
 
                 elif event.ui_element == audio_button or event.ui_element == no_audio_button:
-                    toggleAudio(audio_button, no_audio_button)
+                    toggle_audio(audio_file, audio_button, no_audio_button)
 
                 elif (event.ui_element == locked_button) or (event.ui_element == unlocked_button):
                     if locked:
@@ -1216,7 +1147,7 @@ def play(rows, columns):
         manager=game_ui_manager,
         object_id=ObjectID(object_id="#no-audio-button")
     )
-    setAudioButton(audio_button, no_audio_button)
+    set_audio_buttons(audio_button, no_audio_button)
     
     # pause button
     pause_button_width = 45
@@ -1299,7 +1230,7 @@ def play(rows, columns):
                 elif event.ui_element == reset_button:
                     current_position = move_player("reset", player, current_position)
                 elif event.ui_element == audio_button or event.ui_element == no_audio_button:
-                    toggleAudio(audio_button, no_audio_button)
+                    toggle_audio(audio_file, audio_button, no_audio_button)
 
                 elif event.ui_element == show_solution_button:
                     if not solution_stack:
