@@ -20,8 +20,7 @@ from helpers.redraw import redraw_elements
 from helpers.create_maze import create_maze
 from helpers.solve_maze import solve_maze
 from helpers.audio import set_audio_buttons, toggle_audio
-
-resize_images = False
+from helpers.debugging import resize_image
 
 settings = get_settings()
 SCREEN_WIDTH = settings['screen_width']
@@ -59,10 +58,9 @@ background_rect = pygame.Rect(
     SCREEN_HEIGHT
 )
 img_file = Path(__file__).parent / "assets/images/background/pixelart_starfield.png"
-if resize_images:
-    img = Image.open(img_file)
-    img = img.resize((SCREEN_WIDTH, SCREEN_HEIGHT))
-    img.save(img_file)
+img = Image.open(img_file)
+img = img.resize((SCREEN_WIDTH, SCREEN_HEIGHT))
+img.save(img_file)
 background = pygame_gui.elements.UIImage(
     relative_rect=background_rect,
     image_surface=pygame.image.load(img_file).convert(),
@@ -71,30 +69,6 @@ background = pygame_gui.elements.UIImage(
 background.disable()
 
 clock = pygame.time.Clock()
-
-"""
-for debugging purposes
-"""
-def print_maze():
-    for i in maze:
-        print(i)
-
-def resize_image(image_id, width, height, normal=True, hovered=True):
-    if resize_images:
-        file = open(theme_file, "r")
-        contents = json.loads(file.read())
-        file.close()
-        images_folder = os.path.join(src_path, "assets/images/")
-        if (normal):
-            image_file = contents[image_id]['images']['normal_image']['resource']
-            img = Image.open(images_folder + image_file)
-            img = img.resize((width, height))
-            img = img.save(images_folder + image_file)
-        if (hovered):
-            image_file = contents[image_id]['images']['hovered_image']['resource']
-            img = Image.open(images_folder + image_file)
-            img = img.resize((width, height))
-            img.save(images_folder + image_file)
 
 """
 get the left position of the cell based on the column index in the 'maze' array
