@@ -1,0 +1,13 @@
+{
+    "screen_width": 600,
+    "screen_height": 700,
+    "margin": 50,
+    "theme": {
+        "name": "default",
+        "path": "assets\\themes\\default\\theme.json",
+        "audio": {
+            "name": "wrong-place-129242.mp3",
+            "path": "assets\\audio\\wrong-place-129242.mp3"
+        }
+    }
+}

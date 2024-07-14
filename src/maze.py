@@ -14,17 +14,24 @@ import time
 from PIL import Image
 import json
 from pathlib import Path
+from helpers.settings import get_settings
+from helpers.initialize import initialize_pygame
+from helpers.redraw import redraw_elements
+from helpers.create_maze import create_maze
 
 resize_images = False
-theme = "default"
-src_path = sys.path[0]
-theme_file = os.path.join(src_path, "./assets/themes/" + theme + "/theme.json")
-images_folder = os.path.join(src_path, "assets/images/")
-audio_folder = os.path.join(src_path, "assets/audio/")
 
-SCREEN_WIDTH = 600
-SCREEN_MARGIN = math.ceil(SCREEN_WIDTH * 0.075)
-SCREEN_HEIGHT = SCREEN_WIDTH + math.ceil(SCREEN_MARGIN*2)
+settings = get_settings()
+SCREEN_WIDTH = settings['screen_width']
+SCREEN_MARGIN = settings['margin']
+SCREEN_HEIGHT = settings['screen_height']
+src_path = sys.path[0]
+theme_file = os.path.join(src_path, settings['theme']['path'])
+audio_file = os.path.join(src_path, settings['theme']['audio']['path'])
+
+initialize_pygame()
+
+screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 UI_AREA = pygame.Rect(
     SCREEN_MARGIN,
@@ -41,17 +48,6 @@ else:
     MAZE_WIDTH = MAZE_HEIGHT
 
 maze_topleft = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2) 
-
-CELL_WIDTH = 0
-CELL_HEIGHT = 0
-WALL_THICKNESS = 0
-
-pygame.init()
-pygame.font.init()
-pygame.mixer.init()
-
-screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-pygame.display.set_caption("Maze - created by Zharia Eloby")
 
 background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 background_rect = pygame.Rect(
@@ -86,6 +82,7 @@ def resize_image(image_id, width, height, normal=True, hovered=True):
         file = open(theme_file, "r")
         contents = json.loads(file.read())
         file.close()
+        images_folder = os.path.join(src_path, "assets/images/")
         if (normal):
             image_file = contents[image_id]['images']['normal_image']['resource']
             img = Image.open(images_folder + image_file)
@@ -96,88 +93,6 @@ def resize_image(image_id, width, height, normal=True, hovered=True):
             img = Image.open(images_folder + image_file)
             img = img.resize((width, height))
             img.save(images_folder + image_file)
-
-"""
-only used when creating the maze. returns a list of unvisited neighbors
-"""
-def check_neighbors(maze, curr_cell):
-    available_neighbors = []
-    if (curr_cell[1] > 1):                  # check that it CAN have a left neighbor, then check if it has an unvisited left neighbor
-        if (maze[curr_cell[0]][curr_cell[1]-2] != 'v'):
-            available_neighbors += [(curr_cell[0], curr_cell[1]-2)]
-            
-    if (curr_cell[1] < len(maze[0]) - 2):     # if CAN have right neighbor, check that the right neighbor is unvisited
-        if (maze[curr_cell[0]][curr_cell[1]+2] != 'v'):
-            available_neighbors += [(curr_cell[0], curr_cell[1]+2)]
-            
-    if (curr_cell[0] > 1):                  # if CAN have upper neighbor, check that the upper neighbor is unvisited
-        if (maze[curr_cell[0]-2][curr_cell[1]] != 'v'):
-            available_neighbors += [(curr_cell[0]-2, curr_cell[1])]
-            
-    if (curr_cell[0] < len(maze) - 2):     # if CAN have below neighbor, check that the below neighbor is unvisited
-        if (maze[curr_cell[0]+2][curr_cell[1]] != 'v'):
-            available_neighbors += [(curr_cell[0]+2, curr_cell[1])]
-            
-    return available_neighbors
-
-"""
-creates a maze of the specified dimensions using the backtracking algorithm
-"""
-def create_maze(num_rows, num_cols):
-    # create grid. erase walls as maze is created
-    maze = []
-    for i in range(0, num_rows*2+1):
-        row = []
-        for j in range(0, num_cols*2+1):
-            if (i % 2 == 0):
-                row += ['w']
-            else:
-                if (j % 2 == 0):
-                    row += ['w']
-                else:
-                    row += ['c']
-        maze.append(row)
-    
-    cells_to_go = (num_rows*num_cols)-1 # when this gets to 0, it's done
-    
-    stack = []
-    stack.append((1,1))
-    maze[1][1] = 'v'
-    
-    while (cells_to_go > 0):
-        curr_cell = stack.pop()
-        stack.append(curr_cell)
-        
-        neighbors = check_neighbors(maze, curr_cell)
-        
-        if (len(neighbors) > 0):
-            chosen = random.choice(neighbors)
-            
-            # remove the wall in between the current cell and its chosen neighbor
-            if (chosen[0] == curr_cell[0]):         # same row
-                if (chosen[1] > curr_cell[1]):      # neighbor is on the right
-                    maze[curr_cell[0]][curr_cell[1]+1] = 'o'
-                else:
-                    maze[curr_cell[0]][curr_cell[1]-1] = 'o'
-                    
-            else:                                   # same column
-                if (chosen[0] > curr_cell[0]):      # neighbor is below
-                    maze[curr_cell[0]+1][curr_cell[1]] = 'o'
-                else:
-                    maze[curr_cell[0]-1][curr_cell[1]] = 'o'
-
-            maze[chosen[0]][chosen[1]] = 'v'
-            cells_to_go -= 1
-            if (cells_to_go == 0):
-                global endpoint
-                endpoint = chosen
-                maze[chosen[0]][chosen[1]] = 'e'
-            stack.append(chosen)
-            
-        else:
-            stack.pop()
-
-    return maze
 
 """
 only used for solving a maze. checks available paths for the current cell
@@ -231,17 +146,6 @@ def solve_maze(maze, start, end):
     return solution_path
 
 """
-redraws all ui elements on the screen
-managers - array of managers that need to draw ui
-time_delta - time in seconds since last call to update (as defined by pygame_gui)
-"""
-def redraw(managers, time_delta):
-    for m in managers:
-        m.update(time_delta)
-        m.draw_ui(screen)
-    pygame.display.update()
-
-"""
 get the left position of the cell based on the column index in the 'maze' array
 """
 def get_cell_x_position(column_index):
@@ -272,7 +176,7 @@ def toggleAudio(audio_button, no_audio_button):
         audio_button.hide()
         no_audio_button.show()
     else:
-        pygame.mixer.music.load(audio_folder + "wrong-place-129242.mp3")
+        pygame.mixer.music.load(audio_file)
         pygame.mixer.music.play()
         no_audio_button.hide()
         audio_button.show()
@@ -355,7 +259,7 @@ def title_screen():
         object_id=ObjectID(class_id="@small-text")
     )
 
-    redraw([background_manager, title_screen_manager], 0)
+    redraw_elements(screen, [background_manager, title_screen_manager], 0)
 
     time_delta = math.ceil(time.time())
     while True:
@@ -377,7 +281,7 @@ def title_screen():
             title_screen_manager.process_events(event)
 
         time_delta = math.ceil(time.time()) - time_delta
-        redraw([background_manager, title_screen_manager], time_delta)
+        redraw_elements(screen, [background_manager, title_screen_manager], time_delta)
 
 """
 the user can pick the size of their maze
@@ -489,7 +393,7 @@ def pick_size_screen():
     )
     resize_image('@large-button', custom_button_rect.width, custom_button_rect.height)
 
-    redraw([background_manager, pick_size_screen_manager], 0)
+    redraw_elements(screen, [background_manager, pick_size_screen_manager], 0)
 
     ready = False
     time_delta = math.ceil(time.time())
@@ -542,7 +446,7 @@ def pick_size_screen():
             pick_size_screen_manager.process_events(event)
         
         time_delta = math.ceil(time.time()) - time_delta
-        redraw([background_manager, pick_size_screen_manager], time_delta)
+        redraw_elements(screen, [background_manager, pick_size_screen_manager], time_delta)
 
 """
 custom size screen
@@ -774,7 +678,7 @@ def custom_size_screen():
 
     ready = False
     locked = True # if True, rows and cols change simultaneously
-    redraw([background_manager, custom_size_screen_manager], 0)
+    redraw_elements(screen, [background_manager, custom_size_screen_manager], 0)
     time_delta = math.ceil(time.time())
     while not ready:
         for event in [pygame.event.wait()]+pygame.event.get():
@@ -903,7 +807,7 @@ def custom_size_screen():
             custom_size_screen_manager.process_events(event)
 
         time_delta = math.ceil(time.time()) - time_delta
-        redraw([background_manager, custom_size_screen_manager], time_delta)
+        redraw_elements(screen, [background_manager, custom_size_screen_manager], time_delta)
 
 
 def pause_menu():
@@ -990,7 +894,7 @@ def pause_menu():
     
     paused = True
     time_delta = math.ceil(time.time())
-    redraw([overlay_manager, menu_background_manager, interactive_manager], 0)
+    redraw_elements(screen, [overlay_manager, menu_background_manager, interactive_manager], 0)
     while paused:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -1008,7 +912,7 @@ def pause_menu():
             interactive_manager.process_events(event)
 
         time_delta = math.ceil(time.time()) - time_delta
-        redraw([menu_background_manager, interactive_manager], time_delta)
+        redraw_elements(screen, [menu_background_manager, interactive_manager], time_delta)
         
 def finished_menu(message):
     interactive_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
@@ -1092,7 +996,7 @@ def finished_menu(message):
         object_id=ObjectID(class_id="@medium-text")
     )
 
-    redraw([overlay_manager, menu_background_manager, interactive_manager], 0)
+    redraw_elements(screen, [overlay_manager, menu_background_manager, interactive_manager], 0)
     
     done = False
     time_delta = math.ceil(time.time())
@@ -1109,7 +1013,7 @@ def finished_menu(message):
             interactive_manager.process_events(event)
         
         time_delta = math.ceil(time.time()) - time_delta
-        redraw([menu_background_manager, interactive_manager], time_delta)
+        redraw_elements(screen, [menu_background_manager, interactive_manager], time_delta)
 
 def move_player(direction, player, current_position):
     if direction == "reset":
@@ -1222,7 +1126,9 @@ def play(rows, columns):
     solution_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     global maze
-    maze = create_maze(rows, columns)
+    mazeInfo = create_maze(rows, columns)
+    maze = mazeInfo['maze']
+    endpoint = mazeInfo['endpoint']
 
     draw_maze(game_ui_manager, rows, columns)
 
@@ -1370,7 +1276,7 @@ def play(rows, columns):
 
     done = False
     solving = False
-    redraw([background_manager, game_ui_manager], 0)
+    redraw_elements(screen, [background_manager, game_ui_manager], 0)
     time_delta = math.ceil(time.time())
     while not done:
         for event in [pygame.event.wait()]+pygame.event.get():
@@ -1485,7 +1391,7 @@ def play(rows, columns):
             game_ui_manager.process_events(event)
 
         time_delta = math.ceil(time.time()) - time_delta
-        redraw([background_manager, game_ui_manager, solution_manager], time_delta)
+        redraw_elements(screen, [background_manager, game_ui_manager, solution_manager], time_delta)
         
     restart = finished_menu(message)
     if restart:
@@ -1493,7 +1399,7 @@ def play(rows, columns):
     else:
         title_screen()
 
-pygame.mixer.music.load(audio_folder + "wrong-place-129242.mp3")
+pygame.mixer.music.load(audio_file)
 pygame.mixer.music.play(loops=-1)
 title_screen()
 
