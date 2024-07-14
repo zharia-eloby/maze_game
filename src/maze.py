@@ -21,6 +21,7 @@ from helpers.create_maze import create_maze
 from helpers.solve_maze import solve_maze
 from helpers.audio import set_audio_buttons, toggle_audio
 from helpers.debugging import resize_image
+from helpers.background import get_background
 
 settings = get_settings()
 SCREEN_WIDTH = settings['screen_width']
@@ -50,23 +51,8 @@ else:
 
 maze_topleft = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2) 
 
-background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-background_rect = pygame.Rect(
-    0,
-    0,
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT
-)
-img_file = Path(__file__).parent / "assets/images/background/pixelart_starfield.png"
-img = Image.open(img_file)
-img = img.resize((SCREEN_WIDTH, SCREEN_HEIGHT))
-img.save(img_file)
-background = pygame_gui.elements.UIImage(
-    relative_rect=background_rect,
-    image_surface=pygame.image.load(img_file).convert(),
-    manager=background_manager
-)
-background.disable()
+background_info = get_background()
+background_manager = background_info['background_manager']
 
 clock = pygame.time.Clock()
 
