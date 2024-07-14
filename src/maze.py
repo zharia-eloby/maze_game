@@ -22,6 +22,7 @@ from helpers.solve_maze import solve_maze
 from helpers.audio import set_audio_buttons, toggle_audio
 from helpers.debugging import resize_image
 from helpers.background import get_background
+from helpers.ui_area import get_ui_area
 
 settings = get_settings()
 SCREEN_WIDTH = settings['screen_width']
@@ -35,12 +36,7 @@ initialize_pygame()
 
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
-UI_AREA = pygame.Rect(
-    SCREEN_MARGIN,
-    SCREEN_MARGIN,
-    SCREEN_WIDTH - SCREEN_MARGIN*2,
-    SCREEN_HEIGHT - SCREEN_MARGIN*2
-)
+UI_AREA = get_ui_area()
 
 if (UI_AREA.width > UI_AREA.height):
     MAZE_HEIGHT = UI_AREA.height
