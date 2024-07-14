@@ -13,7 +13,9 @@ import os
 import time
 from PIL import Image
 import json
+from pathlib import Path
 
+resize_images = False
 theme = "default"
 src_path = sys.path[0]
 theme_file = os.path.join(src_path, "./assets/themes/" + theme + "/theme.json")
@@ -23,15 +25,6 @@ audio_folder = os.path.join(src_path, "assets/audio/")
 SCREEN_WIDTH = 600
 SCREEN_MARGIN = math.ceil(SCREEN_WIDTH * 0.075)
 SCREEN_HEIGHT = SCREEN_WIDTH + math.ceil(SCREEN_MARGIN*2)
-
-# resize background image
-file = open(theme_file, "r")
-contents = json.loads(file.read())
-file.close()
-bg_file = contents['#background']['images']['disabled_image']['resource']
-bg = Image.open(images_folder + bg_file)
-bg = bg.resize((SCREEN_WIDTH, SCREEN_HEIGHT))
-bg = bg.save(images_folder + bg_file)
 
 UI_AREA = pygame.Rect(
     SCREEN_MARGIN,
@@ -61,23 +54,21 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 pygame.display.set_caption("Maze - created by Zharia Eloby")
 
 background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-
-"""
-this is a UIButton instead of a UIPanel because I
-couldn't figure out how to get an image to show 
-for a UIPanel
-"""
 background_rect = pygame.Rect(
     0,
     0,
     SCREEN_WIDTH,
     SCREEN_HEIGHT
 )
-background = pygame_gui.elements.UIButton(
+img_file = Path(__file__).parent / "assets/images/background/pixelart_starfield.png"
+if resize_images:
+    img = Image.open(img_file)
+    img = img.resize((SCREEN_WIDTH, SCREEN_HEIGHT))
+    img.save(img_file)
+background = pygame_gui.elements.UIImage(
     relative_rect=background_rect,
-    manager=background_manager,
-    text="",
-    object_id=ObjectID(object_id="#background")
+    image_surface=pygame.image.load(img_file).convert(),
+    manager=background_manager
 )
 background.disable()
 
@@ -89,6 +80,22 @@ for debugging purposes
 def print_maze():
     for i in maze:
         print(i)
+
+def resize_image(image_id, width, height, normal=True, hovered=True):
+    if resize_images:
+        file = open(theme_file, "r")
+        contents = json.loads(file.read())
+        file.close()
+        if (normal):
+            image_file = contents[image_id]['images']['normal_image']['resource']
+            img = Image.open(images_folder + image_file)
+            img = img.resize((width, height))
+            img = img.save(images_folder + image_file)
+        if (hovered):
+            image_file = contents[image_id]['images']['hovered_image']['resource']
+            img = Image.open(images_folder + image_file)
+            img = img.resize((width, height))
+            img.save(images_folder + image_file)
 
 """
 only used when creating the maze. returns a list of unvisited neighbors
@@ -278,7 +285,7 @@ def title_screen():
     title_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     # audio buttons
-    button_width = 30
+    button_width = 45
     button_height = button_width
     audio_button_rect = pygame.Rect(
         UI_AREA.right - button_width,   # x
@@ -290,19 +297,21 @@ def title_screen():
         relative_rect=audio_button_rect, 
         text="",
         manager=title_screen_manager,
-        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#audio-button")
     )
     no_audio_button = pygame_gui.elements.UIButton(
         relative_rect=audio_button_rect, 
         text="",
         manager=title_screen_manager,
-        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#no-audio-button")
     )
     setAudioButton(audio_button, no_audio_button)
+    resize_image('#audio-button', button_width, button_height)
+    resize_image('#no-audio-button', button_width, button_height)
 
     # play button
-    button_width = UI_AREA.width/2
-    button_height = 50
+    button_width = math.floor(UI_AREA.width/2)
+    button_height = 100
     play_rect = pygame.Rect(
         UI_AREA.centerx - button_width/2,  # x
         UI_AREA.centery + button_height/2, # y
@@ -311,10 +320,11 @@ def title_screen():
     )
     play_button = pygame_gui.elements.UIButton(
         relative_rect=play_rect, 
-        text="play",
+        text="",
         manager=title_screen_manager,
-        object_id=ObjectID(class_id="@large-button")
+        object_id=ObjectID(class_id="#play-button")
     )
+    resize_image('#play-button', button_width, button_height)
     
     # game title
     title_rect = pygame.Rect(
@@ -342,7 +352,7 @@ def title_screen():
         relative_rect=credits_rect, 
         text="created by Zharia Eloby",
         manager=title_screen_manager,
-        object_id=ObjectID(class_id="@small-text-bottom")
+        object_id=ObjectID(class_id="@small-text")
     )
 
     redraw([background_manager, title_screen_manager], 0)
@@ -377,7 +387,7 @@ def pick_size_screen():
     pick_size_screen_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     # audio buttons
-    button_width = 30
+    button_width = 45
     button_height = button_width
     audio_button_rect = pygame.Rect(
         UI_AREA.right - button_width,   # x
@@ -389,32 +399,35 @@ def pick_size_screen():
         relative_rect=audio_button_rect, 
         text="",
         manager=pick_size_screen_manager,
-        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#audio-button")
     )
     no_audio_button = pygame_gui.elements.UIButton(
         relative_rect=audio_button_rect, 
         text="",
         manager=pick_size_screen_manager,
-        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#no-audio-button")
     )
     setAudioButton(audio_button, no_audio_button)
+    resize_image('#audio-button', button_width, button_height)
+    resize_image('#no-audio-button', button_width, button_height)
 
     # back button
     back_button_rect = pygame.Rect(
         UI_AREA.left, # x
         UI_AREA.top, # y
-        50, # width
-        35  # height
+        45, # width
+        45  # height
     )
     back_button = pygame_gui.elements.UIButton(
         relative_rect=back_button_rect, 
-        text="<",
+        text="",
         manager=pick_size_screen_manager,
-        object_id=ObjectID(class_id="@small-button")
+        object_id=ObjectID(class_id="#back-button")
     )
+    resize_image('#back-button', back_button_rect.width, back_button_rect.height)
     
     num_buttons = 4
-    space_between_buttons = 75
+    space_between_buttons = 50
     button_width = UI_AREA.width * 0.6
     all_buttons_height = UI_AREA.height - back_button_rect.height
     button_height = (all_buttons_height + space_between_buttons)/num_buttons - space_between_buttons
@@ -474,6 +487,7 @@ def pick_size_screen():
         manager=pick_size_screen_manager,
         object_id=ObjectID(class_id="@large-button")
     )
+    resize_image('@large-button', custom_button_rect.width, custom_button_rect.height)
 
     redraw([background_manager, pick_size_screen_manager], 0)
 
@@ -543,7 +557,7 @@ def custom_size_screen():
     columns = 15
 
     # audio buttons
-    button_width = 30
+    button_width = 45
     button_height = button_width
     audio_button_rect = pygame.Rect(
         UI_AREA.right - button_width,   # x
@@ -555,13 +569,13 @@ def custom_size_screen():
         relative_rect=audio_button_rect, 
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#audio-button")
     )
     no_audio_button = pygame_gui.elements.UIButton(
         relative_rect=audio_button_rect, 
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#no-audio-button")
     )
     setAudioButton(audio_button, no_audio_button)
     
@@ -569,14 +583,14 @@ def custom_size_screen():
     back_button_rect = pygame.Rect(
         UI_AREA.left, # x
         UI_AREA.top, # y
-        50, # width
-        35  # height
+        45, # width
+        45  # height
     )
     back_button = pygame_gui.elements.UIButton(
         relative_rect=back_button_rect, 
-        text="<",
+        text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@small-button")
+        object_id=ObjectID(class_id="#back-button")
     )
     
     # select dimensions text
@@ -590,7 +604,7 @@ def custom_size_screen():
         relative_rect=select_text_rect,
         text="Select your Dimensions",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@heading")
+        object_id=ObjectID(class_id="@medium-text")
     )
 
     # warning text
@@ -604,7 +618,7 @@ def custom_size_screen():
         relative_rect=warning_text_rect,
         text="* dimensions must be within 10 units of each other *",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(object_id="@small-text-center")
+        object_id=ObjectID(object_id="@small-text")
     )
     
     # 'x' text
@@ -620,7 +634,7 @@ def custom_size_screen():
         relative_rect=x_text_rect,
         text="x",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-text-center")
+        object_id=ObjectID(class_id="@medium-text")
     )
     
     # row text
@@ -635,7 +649,7 @@ def custom_size_screen():
         relative_rect=row_text_rect,
         text=str(rows),
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-text-center")
+        object_id=ObjectID(class_id="@medium-text")
     )
 
     # column text
@@ -649,12 +663,12 @@ def custom_size_screen():
         relative_rect=col_text_rect,
         text=str(columns),
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-text-center")
+        object_id=ObjectID(class_id="@medium-text")
     )
 
     # arrows
-    arrow_width = 75
-    arrow_height = 75
+    arrow_width = 50
+    arrow_height = 50
 
     row_up_arrow_rect = pygame.Rect(
         row_text_rect.centerx - arrow_width/2,
@@ -666,8 +680,9 @@ def custom_size_screen():
         relative_rect=row_up_arrow_rect,
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-button", object_id="#up-arrow")
+        object_id=ObjectID(object_id="#up-arrow")
     )
+    resize_image('#up-arrow', arrow_width, arrow_height)
 
     row_down_arrow_rect = pygame.Rect(
         row_text_rect.centerx - arrow_width/2,
@@ -679,8 +694,9 @@ def custom_size_screen():
         relative_rect=row_down_arrow_rect,
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-button", object_id="#down-arrow")
+        object_id=ObjectID(object_id="#down-arrow")
     )
+    resize_image('#down-arrow', arrow_width, arrow_height)
 
     column_up_arrow_rect = pygame.Rect(
         col_text_rect.centerx - arrow_width/2,
@@ -692,7 +708,7 @@ def custom_size_screen():
         relative_rect=column_up_arrow_rect,
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-button", object_id="#up-arrow")
+        object_id=ObjectID(object_id="#up-arrow")
     )
 
     column_down_arrow_rect = pygame.Rect(
@@ -705,7 +721,7 @@ def custom_size_screen():
         relative_rect=column_down_arrow_rect,
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-button", object_id="#down-arrow")
+        object_id=ObjectID(object_id="#down-arrow")
     )
 
     # ratio lock
@@ -721,19 +737,21 @@ def custom_size_screen():
         relative_rect=lock_button_rect,
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-button", object_id="#locked-button")
+        object_id=ObjectID(object_id="#locked-button")
     )
     unlocked_button = pygame_gui.elements.UIButton(
         relative_rect=lock_button_rect,
         text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-button", object_id="#unlocked-button")
+        object_id=ObjectID(object_id="#unlocked-button")
     )
+    resize_image('#locked-button', lock_button_width, lock_button_height)
+    resize_image('#unlocked-button', lock_button_width, lock_button_height)
     unlocked_button.hide()
     
     # play button
-    button_width = UI_AREA.width/2
-    button_height = 50
+    button_width = math.floor(UI_AREA.width/2)
+    button_height = 100
     play_button_rect = pygame.Rect(
         UI_AREA.centerx- button_width/2, # x
         UI_AREA.bottom - button_height - 50, # y
@@ -742,9 +760,9 @@ def custom_size_screen():
     )
     play_button = pygame_gui.elements.UIButton(
         relative_rect=play_button_rect, 
-        text="play",
+        text="",
         manager=custom_size_screen_manager,
-        object_id=ObjectID(class_id="@large-button")
+        object_id=ObjectID(class_id="#play-button")
     )
 
     row_min = 5
@@ -894,11 +912,27 @@ def pause_menu():
 
     # all non-interactive elements will have this manager
     menu_background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
-    margin = 20
+
+    overlay_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+    margin = 40
+
+    # overlay
+    overlay_rect = pygame.Rect(
+        0,
+        0,
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT
+    )
+    pygame_gui.elements.UIPanel(
+        relative_rect=overlay_rect,
+        manager=overlay_manager,
+        object_id=ObjectID(object_id="#screen-overlay")
+    )
     
     # background rectangle
-    menu_width = UI_AREA.width * 0.75
-    menu_height = UI_AREA.height * 0.3
+    menu_width = math.floor(UI_AREA.width * 0.66)
+    menu_height = math.floor(UI_AREA.height * 0.5)
+
     background_rect = pygame.Rect(
         UI_AREA.centerx - menu_width/2, 
         UI_AREA.centery - menu_height/2, 
@@ -908,55 +942,55 @@ def pause_menu():
     pygame_gui.elements.UIPanel(
         relative_rect = background_rect,
         manager=menu_background_manager,
-        object_id=ObjectID(class_id="@menu-background")
+        object_id=ObjectID(class_id="#modal-background")
     )
 
-    exit_button_height = 30
-    exit_button_width = menu_width - margin*2
+    line_spacing = 10
+    button_height = 70
+    button_width = background_rect.width-margin*2
     exit_button_rect = pygame.Rect(
-        UI_AREA.centerx - exit_button_width/2,
-        background_rect.bottom - margin - exit_button_height,
-        exit_button_width,
-        exit_button_height
+        UI_AREA.centerx - button_width/2,
+        background_rect.bottom - margin - button_height,
+        button_width,
+        button_height
     )
     exit_button = pygame_gui.elements.UIButton(
         relative_rect=exit_button_rect,
         text="exit to home screen",
         manager=interactive_manager,
-        object_id=ObjectID(class_id="@small-button")
+        object_id=ObjectID(class_id="@modal-large-button")
     )
+    resize_image('@modal-large-button', button_width, button_height)
 
-    close_button_height = 30
-    close_button_width = 30
-    close_button_rect = pygame.Rect(
-        background_rect.right - close_button_width - margin,
-        background_rect.top + margin,
-        close_button_width,
-        close_button_height
+    unpause_button_rect = pygame.Rect(
+        background_rect.left + margin,
+        exit_button_rect.top - button_height - line_spacing,
+        button_width,
+        button_height
     )
-    close_button = pygame_gui.elements.UIButton(
-        relative_rect=close_button_rect,
-        text="",
+    unpause_button = pygame_gui.elements.UIButton(
+        relative_rect=unpause_button_rect,
+        text="resume",
         manager=interactive_manager,
-        object_id=ObjectID(object_id="#close-button", class_id="@small-button")
+        object_id=ObjectID(class_id="@modal-large-button")
     )
 
     paused_text_rect = pygame.Rect(
         background_rect.left + margin, 
-        close_button_rect.bottom,
+        background_rect.top + margin,
         menu_width - margin*2, 
-        exit_button_rect.top - close_button_rect.bottom
+        unpause_button_rect.top - background_rect.top - margin
     )
     pygame_gui.elements.UILabel(
         relative_rect=paused_text_rect,
         text="paused",
-        manager=interactive_manager,
-        object_id=ObjectID(class_id="@medium-text-center")
+        manager=menu_background_manager,
+        object_id=ObjectID(class_id="@medium-text")
     )
     
     paused = True
     time_delta = math.ceil(time.time())
-    redraw([menu_background_manager, interactive_manager], 0)
+    redraw([overlay_manager, menu_background_manager, interactive_manager], 0)
     while paused:
         for event in [pygame.event.wait()]+pygame.event.get():
             if event.type == pygame.QUIT:
@@ -968,7 +1002,7 @@ def pause_menu():
                     paused = False
                     title_screen()
 
-                elif event.ui_element == close_button:
+                elif event.ui_element == unpause_button:
                     paused = False
 
             interactive_manager.process_events(event)
@@ -980,12 +1014,27 @@ def finished_menu(message):
     interactive_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
     menu_background_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
-    margin = 35
+    margin = 40
     line_spacing = 10
+
+    overlay_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
+
+    # overlay
+    overlay_rect = pygame.Rect(
+        0,
+        0,
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT
+    )
+    pygame_gui.elements.UIPanel(
+        relative_rect=overlay_rect,
+        manager=overlay_manager,
+        object_id=ObjectID(object_id="#screen-overlay")
+    )
     
     # background surface
-    menu_width = UI_AREA.width * 0.75
-    menu_height = UI_AREA.height * 0.35
+    menu_width = math.floor(UI_AREA.width * 0.66)
+    menu_height = math.floor(UI_AREA.height * 0.5)
     background_rect = pygame.Rect(
         UI_AREA.centerx - menu_width/2,
         UI_AREA.centery - menu_height/2,
@@ -995,10 +1044,10 @@ def finished_menu(message):
     pygame_gui.elements.UIPanel(
         relative_rect=background_rect,
         manager=menu_background_manager,
-        object_id=ObjectID(class_id="@menu-background")
+        object_id=ObjectID(class_id="#modal-background")
     )
     
-    button_height = 40
+    button_height = 70
     button_width = background_rect.width-margin*2
     
     # exit to home screen button
@@ -1012,7 +1061,7 @@ def finished_menu(message):
         relative_rect=exit_button_rect,
         text="exit to home screen",
         manager=interactive_manager,
-        object_id=ObjectID(class_id="@small-button")
+        object_id=ObjectID(class_id="@modal-large-button")
     )
 
     # play again button
@@ -1026,7 +1075,7 @@ def finished_menu(message):
         relative_rect=play_button_rect,
         text="play again",
         manager=interactive_manager,
-        object_id=ObjectID(class_id="@small-button")
+        object_id=ObjectID(class_id="@modal-large-button")
     )
 
     # congrats message
@@ -1040,10 +1089,10 @@ def finished_menu(message):
         relative_rect=finished_message_rect,
         text=message,
         manager=menu_background_manager,
-        object_id=ObjectID(class_id="@medium-text-center")
+        object_id=ObjectID(class_id="@medium-text")
     )
 
-    redraw([menu_background_manager, interactive_manager], 0)
+    redraw([overlay_manager, menu_background_manager, interactive_manager], 0)
     
     done = False
     time_delta = math.ceil(time.time())
@@ -1060,7 +1109,7 @@ def finished_menu(message):
             interactive_manager.process_events(event)
         
         time_delta = math.ceil(time.time()) - time_delta
-        redraw([interactive_manager], time_delta)
+        redraw([menu_background_manager, interactive_manager], time_delta)
 
 def move_player(direction, player, current_position):
     if direction == "reset":
@@ -1241,7 +1290,7 @@ def play(rows, columns):
     player.disable()
 
     # audio buttons
-    button_width = 30
+    button_width = 45
     button_height = button_width
     audio_button_rect = pygame.Rect(
         UI_AREA.right - button_width,   # x
@@ -1253,18 +1302,18 @@ def play(rows, columns):
         relative_rect=audio_button_rect, 
         text="",
         manager=game_ui_manager,
-        object_id=ObjectID(object_id="#audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#audio-button")
     )
     no_audio_button = pygame_gui.elements.UIButton(
         relative_rect=audio_button_rect, 
         text="",
         manager=game_ui_manager,
-        object_id=ObjectID(object_id="#no-audio-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#no-audio-button")
     )
     setAudioButton(audio_button, no_audio_button)
     
     # pause button
-    pause_button_width = 30
+    pause_button_width = 45
     pause_button_height = pause_button_width
     pause_button_rect = pygame.Rect(
         audio_button_rect.left - pause_button_width - 20,
@@ -1277,11 +1326,11 @@ def play(rows, columns):
         relative_rect=pause_button_rect,
         text="",
         manager=game_ui_manager,
-        object_id=ObjectID(object_id="#pause-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#pause-button")
     )
 
     # reset button
-    reset_button_width = 30
+    reset_button_width = 45
     reset_button_height = reset_button_width
     reset_button_rect = pygame.Rect(
         pause_button_rect.left - reset_button_width - 20,
@@ -1293,12 +1342,12 @@ def play(rows, columns):
         relative_rect=reset_button_rect,
         text="",
         manager=game_ui_manager,
-        object_id=ObjectID(object_id="#reset-button", class_id="@small-button")
+        object_id=ObjectID(object_id="#reset-button")
     )
 
     # show solution button
     button_width = math.ceil(UI_AREA.width * 0.3)
-    button_height = 30
+    button_height = 45
     show_solution_rect = pygame.Rect(
         UI_AREA.left,
         UI_AREA.top,
@@ -1309,8 +1358,9 @@ def play(rows, columns):
         relative_rect=show_solution_rect,
         text="show solution",
         manager=game_ui_manager,
-        object_id=ObjectID(class_id="@small-button")
+        object_id=ObjectID(class_id="#show-solution-button")
     )
+    resize_image('#show-solution-button', button_width, button_height)
 
     # custom event for showing the maze solution
     SHOW_SOLUTION = pygame.USEREVENT + 1

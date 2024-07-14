@@ -1,6 +1,10 @@
 {
-    "#font-prototype":
+    "#general-font":
     {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
         "font":
         {
             "name": "roboto",
@@ -12,131 +16,52 @@
             }
         }
     },
-    "#regular-text":
+    "@small-text":
     {
-        "colours":
-        {
-            "normal_text": "#ffffff"
-        },
-        "prototype": "#font-prototype",
-        "misc":
-        {
-            "text_shadow_size": "0"
-        }
-    },
-    "#small-regular-text": {
-        "prototype": "#regular-text",
+        "prototype": "#general-font",
         "font":
         {
             "name": "roboto",
-            "size": "16"
+            "size": 16
         }
     },
-    "@small-text-bottom": 
+    "@medium-text":
     {
-        "prototype": "#small-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "bottom"
-        }
-    },
-    "@small-text-center": 
-    {
-        "prototype": "#small-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "center"
-        }
-    },
-    "#medium-regular-text": {
-        "prototype": "#regular-text",
+        "prototype": "#general-font",
         "font":
         {
             "name": "roboto",
-            "size": "28"
+            "size": 36
         }
     },
-    "@medium-text-bottom": 
+    "#ui-button":
     {
-        "prototype": "#medium-regular-text",
-        "misc":
+        "colours": 
         {
-            "text_vert_alignment": "bottom"
+            "normal_bg": "#00000000",
+            "hovered_bg": "#00000000",
+            "disabled_bg": "#00000000",
+            "active_bg": "#00000000",
+            "selected_bg": "#00000000",
+            "normal_border": "#00000000",
+            "hovered_border": "#00000000",
+            "disabled_border": "#00000000",
+            "active_border": "#00000000",
+            "selected_border": "#00000000",
+            "normal_text": "#ffffff",
+            "hovered_text": "#5e5e5e"
         }
     },
-    "@medium-text-center": 
+    "#title": 
     {
-        "prototype": "#medium-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "center"
-        }
-    },
-    "#large-regular-text": {
-        "prototype": "#regular-text",
+        "prototype": "#general-font",
         "font":
         {
             "name": "roboto",
-            "size": "64"
-        }
-    },
-    "@large-text-center": 
-    {
-        "prototype": "#large-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "center"
-        }
-    },
-    "@large-text-bottom": 
-    {
-        "prototype": "#large-regular-text",
-        "misc":
-        {
-            "text_vert_alignment": "bottom"
-        }
-    },
-    "button":
-    {
-        "colours":
-        {
-            "normal_bg": "#efefef",
-            "hovered_bg": "#d1d1d1",
-            "active_bg": "#c0c0c0",
-            "disabled_bg": "#909090",
-            "normal_text": "#000000",
-            "hovered_text": "#000000",
-            "active_text": "#000000"
-        },
-        "prototype": "#font-prototype",
-        "font":
-        {
-            "name": "roboto",
-            "size": "24"
+            "size": "72"
         },
         "misc":
         {
-            "shape": "rounded_rectangle",
-            "border_width" : "0",
-            "shadow_width": "0"
-        }
-    },
-    "label":
-    {
-        "colours":
-        {
-            "normal_text": "#ffffff"
-        },
-        "prototype": "#font-prototype",
-        "font":
-        {
-            "name": "roboto",
-            "size": "64"
-        },
-        "misc":
-        {
-            "text_shadow_size": "0",
-            "text_shadow_offset": "0,0",
             "text_vert_alignment": "bottom"
         }
     },
@@ -161,7 +86,7 @@
     {
         "colours":
         {
-            "dark_bg": "#000000"
+            "dark_bg": "#ffffff"
         },
         "misc" :
         {
@@ -171,37 +96,27 @@
     },
     "#background": 
     {
-        "colours":
+        "background_image": 
         {
-            "dark_bg": "#d8bac6"
-        },
-        "misc":
-        {
-            "border_width" : "0",
-            "shadow_width" : "0"
-        },
+            "dark_bg":
+            {
+                "package": "assets.images",
+                "resource": "background/pixelart_starfield.png"
+            }
+        }
+        
+    },
+    "#background-2": 
+    {
         "images": 
         {
             "disabled_image":
             {
                 "package": "assets.images",
-                "resource": "bg-abstract-1.jpg"
+                "resource": "background/pixelart_starfield.png"
             }
         }
         
-    },
-    "#title": 
-    {
-        "prototype": "#regular-text",
-        "font":
-        {
-            "name": "roboto",
-            "size": "72"
-        },
-        "misc":
-        {
-            "text_vert_alignment": "bottom"
-        }
     },
     "#startpoint":
     {
@@ -227,169 +142,263 @@
             "border_width": "0"
         }
     },
-    "@heading": 
-    {
-        "prototype": "#regular-text",
-        "font":
-        {
-            "name": "roboto",
-            "size": "36"
-        },
-        "misc":
-        {
-            "text_vert_alignment": "bottom"
-        }
-    },
-    "@small-button": 
-    {
-        "font": 
-        {
-            "name": "roboto",
-            "size": "16"
-        },
-        "misc":
-        {
-            "shape_corner_radius": "6"
-        }
-    },
     "@large-button": 
     {
         "font": 
         {
             "name": "roboto",
-            "size": "24"
+            "size": "36"
         },
-        "misc":
+        "prototype": "#ui-button",
+        "images": 
         {
-            "shape_corner_radius": "15"
-        }
-    },
-    "@menu-background": 
-    {
-        "colours": 
-        {
-            "dark_bg": "#9c9c9c"
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-button-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-button-hover.png"
+            }
         },
         "misc": 
         {
-            "border_width": "7",
-            "shadow_width": "0",
-            "shape_corner_radius": "6",
-            "shape": "rounded_rectangle"
+            "text_vert_alignment": "center"
         }
     },
-    "#paused": 
+    "#modal-background": 
+    {
+        "colours": 
+        {
+            "dark_bg": "#000000",
+            "normal_border": "#ffffff"
+        },
+        "misc": 
+        {
+            "shadow_width": "0",
+            "shape_corner_radius": "6",
+            "shape": "rounded_rectangle",
+            "border_width": "3"
+        }
+    },
+    "#play-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "play/play-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "play/play-hover.png"
+            }
+        }
+    },
+    "#back-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "navigation/back-arrow-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "navigation/back-arrow-hover.png"
+            }
+        }
+    },
+    "#audio-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-on-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-on-hover.png"
+            }
+        }
+    },
+    "#no-audio-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-off-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-off-hover.png"
+            }
+        }
+    },
+    "#pause-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "pause/pause-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "pause/pause-hover.png"
+            }
+        }
+    },
+    "#reset-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "reset/reset-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "reset/reset-hover.png"
+            }
+        }
+    },
+    "#up-arrow": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/up-arrow-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/up-arrow-hover.png"
+            }
+        }
+    },
+    "#down-arrow": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/down-arrow-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/down-arrow-hover.png"
+            }
+        }
+    },
+    "#locked-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/locked-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/locked-hover.png"
+            }
+            
+        }
+    },
+    "#unlocked-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/unlocked-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/unlocked-hover.png"
+            }
+        }
+    },
+    "@modal-large-button": 
     {
         "font": 
         {
             "name": "roboto",
             "size": "20"
         },
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "modal/modal-large-button-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "modal/modal-large-button-hover.png"
+            }
+        },
         "misc":
         {
             "text_vert_alignment": "center"
         }
     },
-    "#audio-button": 
+    "#show-solution-button": 
     {
-        "images": 
+        "font": 
         {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "audio-button.png"
-            }
-        }
-    },
-    "#no-audio-button": 
-    {
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "no-audio-button.png"
-            }
-        }
-    },
-    "#close-button": 
-    {
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "close-button.png"
-            }
-        }
-    },
-    "#pause-button": 
-    {
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "pause-button.png"
-            }
-        }
-    },
-    "#reset-button": 
-    {
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "reset-button.png"
-            }
-        }
-    },
-    "#up-arrow": 
-    {
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "up-arrow.png"
-            }
-        }
-    },
-    "#down-arrow": 
-    {
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "down-arrow.png"
-            }
-        }
-    },
-    "#locked-button": 
-    {
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "ratio-lock.png"
-            }
-        }
-    },
-    "#unlocked-button": 
-    {
-        "colours": 
-        {
-            "normal_bg": "#787878"
+            "name": "roboto",
+            "size": "16"
         },
+        "prototype": "#ui-button",
         "images": 
         {
             "normal_image": 
             {
                 "package": "assets.images",
-                "resource": "ratio-lock.png"
+                "resource": "solution/show-solution-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "solution/show-solution-hover.png"
             }
         }
     },
@@ -397,12 +406,21 @@
     {
         "colours":
         {
-            "dark_bg": "#570082"
+            "dark_bg": "#e18cff"
         },
-        "misc":{
+        "misc":
+        {
             "shadow_width":"0",
             "border_width":"0",
             "shape": "rectangle"
+        }
+    },
+    "#screen-overlay": 
+    {
+        "colours":
+        {
+            "dark_bg": "rgba(0,0,0,100)",
+            "normal_border":"rgba(0,0,0,100)"
         }
     }
 }
