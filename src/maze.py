@@ -6,23 +6,18 @@ Maze Game with Pygame
 import pygame
 import pygame_gui
 from pygame_gui.core import ObjectID
-import random
 import math
 import sys
 import os
 import time
-from PIL import Image
-import json
-from pathlib import Path
 from helpers.settings import get_settings
 from helpers.initialize import initialize_pygame
 from helpers.redraw import redraw_elements
-from helpers.create_maze import create_maze
-from helpers.solve_maze import solve_maze
 from helpers.audio import set_audio_buttons, toggle_audio
 from helpers.debugging import resize_image
 from helpers.background import get_background
 from helpers.ui_area import get_ui_area
+from classes.maze import Maze
 
 settings = get_settings()
 SCREEN_WIDTH = settings['screen_width']
@@ -38,35 +33,10 @@ screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 
 UI_AREA = get_ui_area()
 
-if (UI_AREA.width > UI_AREA.height):
-    MAZE_HEIGHT = UI_AREA.height
-    MAZE_WIDTH = MAZE_HEIGHT
-else:
-    MAZE_HEIGHT = UI_AREA.width
-    MAZE_WIDTH = MAZE_HEIGHT
-
-maze_topleft = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2) 
-
 background_info = get_background()
 background_manager = background_info['background_manager']
 
 clock = pygame.time.Clock()
-
-"""
-get the left position of the cell based on the column index in the 'maze' array
-"""
-def get_cell_x_position(column_index):
-    grid_index = ((column_index-1)/2)
-    x_position = grid_index * CELL_WIDTH + maze_topleft[0] + WALL_THICKNESS
-    return x_position
-
-"""
-get the top position of the cell based on the row index in the 'maze' array
-"""
-def get_cell_y_position(row_index):
-    grid_index = ((row_index-1)/2)
-    y_position = grid_index * CELL_HEIGHT + maze_topleft[1] + WALL_THICKNESS
-    return y_position
     
 """
 home screen
@@ -902,110 +872,6 @@ def finished_menu(message):
         time_delta = math.ceil(time.time()) - time_delta
         redraw_elements(screen, [menu_background_manager, interactive_manager], time_delta)
 
-def move_player(direction, player, current_position):
-    if direction == "reset":
-        player.set_relative_position((startpoint_left, startpoint_top))
-        maze[current_position[0]][current_position[1]] = "v"
-        current_position = (startpoint[0], startpoint[1])
-        maze[current_position[0]][current_position[1]] = "p"
-        return current_position
-
-    current_left = player.get_relative_rect().left
-    current_top = player.get_relative_rect().top
-    if direction == "up" and maze[current_position[0]-1][current_position[1]] == "o":
-        player.set_relative_position((current_left, current_top - CELL_HEIGHT))
-        maze[current_position[0]][current_position[1]] = "v"
-        maze[current_position[0]-2][current_position[1]] = "p"
-        current_position = (current_position[0] - 2, current_position[1])
-
-    elif direction == "down" and maze[current_position[0]+1][current_position[1]] == "o":
-        player.set_relative_position((current_left, current_top + CELL_HEIGHT))
-        maze[current_position[0]][current_position[1]] = "v"
-        maze[current_position[0]+2][current_position[1]] = "p"
-        current_position = (current_position[0] + 2, current_position[1])
-
-    elif direction == "left" and maze[current_position[0]][current_position[1]-1] == "o":
-        player.set_relative_position((current_left - CELL_WIDTH, current_top))
-        maze[current_position[0]][current_position[1]] = "v"
-        maze[current_position[0]][current_position[1]-2] = "p"
-        current_position = (current_position[0], current_position[1] - 2)
-
-    elif direction == "right" and maze[current_position[0]][current_position[1]+1] == "o":
-        player.set_relative_position((current_left + CELL_WIDTH, current_top))
-        maze[current_position[0]][current_position[1]] = "v"
-        maze[current_position[0]][current_position[1]+2] = "p"
-        current_position = (current_position[0], current_position[1] + 2)
-    return current_position
-
-"""
-This function:
-1. sets the measurements for CELL_WIDTH, CELL_HEIGHT, and WALL_THICKNESS.
-2. resets the maze_topleft to ensure it's centered.
-3. MAZE_WIDTH and MAZE_HEIGHT reference the intended width and height,
-however, the actual dimensions may be smaller. reset these variables as well
-"""
-def set_measurements(rows, columns):
-    global CELL_WIDTH
-    global CELL_HEIGHT
-    global MAZE_WIDTH
-    global MAZE_HEIGHT
-    global WALL_THICKNESS
-    global maze_topleft
-
-    CELL_WIDTH = math.floor(MAZE_WIDTH/columns)
-    CELL_WIDTH -= CELL_WIDTH%2
-    CELL_HEIGHT = math.floor(MAZE_HEIGHT/rows)
-    CELL_HEIGHT -= CELL_HEIGHT%2
-
-    WALL_THICKNESS = round(CELL_WIDTH/10)
-    WALL_THICKNESS -= WALL_THICKNESS%2
-    if (WALL_THICKNESS < 2):
-        WALL_THICKNESS = 2
-
-    # set startpoint so the maze is centered
-    MAZE_WIDTH = CELL_WIDTH * columns + WALL_THICKNESS
-    MAZE_HEIGHT = CELL_HEIGHT * rows + WALL_THICKNESS
-    maze_topleft = (UI_AREA.centerx - MAZE_WIDTH/2, UI_AREA.centery - MAZE_HEIGHT/2)
-
-def draw_maze(manager, rows, columns):
-    set_measurements(rows, columns)
-
-    x_pos = maze_topleft[0]
-    y_pos = maze_topleft[1]
-    for i in range(0, rows*2+1):
-        for j in range(0, columns*2+1):
-            if (i % 2 == 0 and j % 2 == 1): # horizontal
-                if (maze[i][j] == 'w'):
-                    wall_rect = pygame.Rect(
-                        x_pos,
-                        y_pos,
-                        CELL_WIDTH,
-                        WALL_THICKNESS
-                    )
-                    pygame_gui.elements.UIPanel(
-                        relative_rect=wall_rect,
-                        manager=manager,
-                        object_id=ObjectID(object_id="#wall")
-                    )
-                x_pos += CELL_WIDTH
-            elif (i % 2 == 1 and j % 2 == 0): # vertical
-                if (maze[i][j] == 'w'):
-                    wall_rect = pygame.Rect(
-                        x_pos,
-                        y_pos,
-                        WALL_THICKNESS,
-                        CELL_HEIGHT + WALL_THICKNESS
-                    )
-                    pygame_gui.elements.UIPanel(
-                        relative_rect=wall_rect,
-                        manager=manager,
-                        object_id=ObjectID(object_id="#wall")
-                    )
-                x_pos += CELL_WIDTH
-        if (i % 2 == 1):
-            y_pos += CELL_HEIGHT
-        x_pos = maze_topleft[0]
-
 def play(rows, columns):
     solution_stack = None
 
@@ -1013,28 +879,29 @@ def play(rows, columns):
     solution_manager = pygame_gui.UIManager((SCREEN_WIDTH, SCREEN_HEIGHT), theme_file)
 
     global maze
-    mazeInfo = create_maze(rows, columns)
-    maze = mazeInfo['maze']
-    endpoint = mazeInfo['endpoint']
+    maze = Maze(rows, columns)
+    maze.create_maze()
+    endpoint = maze.get_endpoint()
 
-    draw_maze(game_ui_manager, rows, columns)
+    maze.set_maze_dimensions()
+    maze.draw_maze(game_ui_manager)
 
     # define starting point
     global startpoint
-    startpoint = (random.randrange(0, rows) * 2 + 1, random.randrange(0, columns) * 2 + 1)
-    while (startpoint == endpoint):
-        startpoint = (random.randrange(0, rows) * 2 + 1, random.randrange(0, columns) * 2 + 1)
+    startpoint = maze.get_startpoint()
 
     # convert startpoint values from grid indices to maze array indices
 
-    maze[startpoint[0]][startpoint[1]] = "p"
-    current_position = (startpoint[0], startpoint[1])
+    m = maze.get_maze()
+    m[startpoint[0]][startpoint[1]] = "p"
+    maze.set_player_position((startpoint[0], startpoint[1]))
     
+    ui_position = maze.get_cell_ui_position(startpoint)
     start_rect = pygame.Rect(
-        get_cell_x_position(startpoint[1]),
-        get_cell_y_position(startpoint[0]),
-        CELL_WIDTH - WALL_THICKNESS,
-        CELL_HEIGHT - WALL_THICKNESS
+        ui_position[0],
+        ui_position[1],
+        maze.get_cell_width() - maze.get_wall_thickness(),
+        maze.get_cell_height() - maze.get_wall_thickness()
     )
     start = pygame_gui.elements.UIPanel(
         relative_rect=start_rect,
@@ -1042,11 +909,12 @@ def play(rows, columns):
         object_id=ObjectID(object_id="#startpoint")
     )
 
+    ui_position = maze.get_cell_ui_position(endpoint)
     end_rect = pygame.Rect(
-        get_cell_x_position(endpoint[1]),
-        get_cell_y_position(endpoint[0]),
-        CELL_WIDTH - WALL_THICKNESS,
-        CELL_HEIGHT - WALL_THICKNESS
+        ui_position[0],
+        ui_position[1],
+        maze.get_cell_width() - maze.get_wall_thickness(),
+        maze.get_cell_height() - maze.get_wall_thickness()
     )
     end = pygame_gui.elements.UIPanel(
         relative_rect=end_rect,
@@ -1054,19 +922,13 @@ def play(rows, columns):
         object_id=ObjectID(object_id="#endpoint")
     )
 
-    player_margin = math.ceil(WALL_THICKNESS * 1.5)
-    # set player width to be the smaller of CELL_WIDTH and CELL_HEIGHT. defaults to CELL_WIDTH
+    player_margin = math.ceil(maze.get_wall_thickness() * 1.5)
+    # set player width to be the smaller of cell width and cell height. defaults to cell width
     if (start_rect.width > start_rect.height):
-        player_width = CELL_HEIGHT - player_margin*2
+        player_width = maze.get_cell_height() - player_margin*2
     else:
-        player_width = CELL_WIDTH - player_margin*2
+        player_width = maze.get_cell_width() - player_margin*2
     player_height = player_width
-
-    global startpoint_left
-    startpoint_left = start_rect.centerx - player_width/2
-
-    global startpoint_top
-    startpoint_top = start_rect.centery - player_height/2
 
     player_rect = pygame.Rect(
         start_rect.centerx - player_width/2,
@@ -1184,13 +1046,13 @@ def play(rows, columns):
                     if solving:
                         pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                 elif event.ui_element == reset_button:
-                    current_position = move_player("reset", player, current_position)
+                    maze.move_player("reset", player)
                 elif event.ui_element == audio_button or event.ui_element == no_audio_button:
                     toggle_audio(audio_file, audio_button, no_audio_button)
 
                 elif event.ui_element == show_solution_button:
                     if not solution_stack:
-                        solution_stack = solve_maze(maze, startpoint, endpoint)
+                        solution_stack = maze.solve_maze()
                     curr_index = 0
                     new_line = True
                     solving = True
@@ -1209,11 +1071,13 @@ def play(rows, columns):
                     else:
                         curr_cell = solution_stack[curr_index]
                         next_cell = solution_stack[curr_index + 1]
+
+                        ui_position = maze.get_cell_ui_position(curr_cell)
                         line_rect = pygame.Rect(
-                            get_cell_x_position(curr_cell[1]) + CELL_WIDTH/2 - WALL_THICKNESS,
-                            get_cell_y_position(curr_cell[0]) + CELL_HEIGHT/2 - WALL_THICKNESS,
-                            WALL_THICKNESS,
-                            WALL_THICKNESS
+                            ui_position[0] + maze.get_cell_width()/2 - maze.get_wall_thickness(),
+                            ui_position[1] + maze.get_cell_height()/2 - maze.get_wall_thickness(),
+                            maze.get_wall_thickness(),
+                            maze.get_wall_thickness()
                         )
                         line = pygame_gui.elements.UIPanel(
                             relative_rect=line_rect,
@@ -1222,12 +1086,12 @@ def play(rows, columns):
                         )
 
                         if (curr_cell[1] < next_cell[1]) or (curr_cell[1] > next_cell[1]):   # horizontal
-                            target_width = CELL_WIDTH + WALL_THICKNESS
-                            target_height = WALL_THICKNESS
+                            target_width = maze.get_cell_width() + maze.get_wall_thickness()
+                            target_height = maze.get_wall_thickness()
 
                         elif (curr_cell[0] < next_cell[0]) or (curr_cell[0] > next_cell[0]): # vertical
-                            target_width = WALL_THICKNESS
-                            target_height = CELL_HEIGHT + WALL_THICKNESS
+                            target_width = maze.get_wall_thickness()
+                            target_height = maze.get_cell_height() + maze.get_wall_thickness()
 
                         new_line = False
                         curr_index += 1
@@ -1257,18 +1121,18 @@ def play(rows, columns):
                     pause_menu()
 
                 elif event.key == pygame.K_UP or event.key == pygame.K_w:
-                    current_position = move_player("up", player, current_position)
+                    maze.move_player("up", player)
 
                 elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    current_position = move_player("down", player, current_position)
+                    maze.move_player("down", player)
 
                 elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    current_position = move_player("left", player, current_position)
+                    maze.move_player("left", player)
                 
                 elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    current_position = move_player("right", player, current_position)
+                    maze.move_player("right", player)
                 
-                if current_position == (endpoint[0], endpoint[1]):
+                if maze.get_player_position() == (endpoint[0], endpoint[1]):
                     message = "YOU DID IT!"
                     done = True
                     if solving:

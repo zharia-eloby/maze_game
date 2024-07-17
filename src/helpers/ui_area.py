@@ -11,5 +11,5 @@ def get_ui_area():
     margin,
     margin,
     screen_width - margin*2,
-    screen_width - margin*2
+    screen_height - margin*2
 )
