@@ -195,7 +195,7 @@ class Maze:
                         pygame_gui.elements.UIPanel(
                             relative_rect=wall_rect,
                             manager=manager,
-                            object_id=ObjectID(object_id="#wall")
+                            object_id=ObjectID(class_id="@wall")
                         )
                     x_pos += self.cell_width
                 elif (i % 2 == 1 and j % 2 == 0): # vertical
@@ -209,7 +209,7 @@ class Maze:
                         pygame_gui.elements.UIPanel(
                             relative_rect=wall_rect,
                             manager=manager,
-                            object_id=ObjectID(object_id="#wall")
+                            object_id=ObjectID(class_id="@wall")
                         )
                     x_pos += self.cell_width
             if (i % 2 == 1):
@@ -224,6 +224,7 @@ class Maze:
             startpoint_top = start_rect[1] + self.cell_height/2 - player.get_relative_rect().height/2 - self.wall_thickness/2
             player.set_relative_position((startpoint_left, startpoint_top))
             current_position = (self.startpoint[0], self.startpoint[1])
+            self.set_player_position(current_position)
             return
 
         current_left = player.get_relative_rect().left
@@ -294,3 +295,15 @@ class Maze:
             solution_path += [curr_cell]
             self.maze[curr_cell[0]][curr_cell[1]] = 'x'
         return solution_path
+    
+    def reset_maze(self):
+        self.maze = []
+        self.maze_width = None
+        self.maze_height = None
+        self.cell_width = None
+        self.cell_height = None
+        self.wall_thickness = None
+        self.startpoint = None
+        self.endpoint = None
+        self.topleft = None
+        self.player_position = None
