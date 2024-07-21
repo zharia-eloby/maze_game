@@ -4,10 +4,14 @@
     "margin": 50,
     "theme": {
         "name": "default",
-        "path": "assets\\themes\\default\\theme.json",
+        "path": "src/assets/themes/default/theme.json",
         "audio": {
             "name": "wrong-place-129242.mp3",
-            "path": "assets\\audio\\wrong-place-129242.mp3"
+            "path": "src/assets/audio/wrong-place-129242.mp3"
         }
+    },
+    "audio": {
+        "on": false,
+        "volume": 0.5
     }
 }

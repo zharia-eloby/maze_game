@@ -82,7 +82,7 @@
             "shape": "ellipse"
         }
     },
-    "#wall" :
+    "@wall" :
     {
         "colours":
         {
@@ -285,7 +285,7 @@
             }
         }
     },
-    "#up-arrow": 
+    "@up-arrow": 
     {
         "prototype": "#ui-button",
         "images": 
@@ -302,7 +302,7 @@
             }
         }
     },
-    "#down-arrow": 
+    "@down-arrow": 
     {
         "prototype": "#ui-button",
         "images": 
