@@ -86,7 +86,7 @@ class PlayScreen(Screen):
 
         player_margin = math.ceil(self.maze.get_wall_thickness() * 1.5)
         # set player width to be the smaller of cell width and cell height
-        if (start_rect.width > start_rect.height):
+        if start_rect.width > start_rect.height:
             player_width = self.maze.get_cell_height() - player_margin*2
         else:
             player_width = self.maze.get_cell_width() - player_margin*2
@@ -191,7 +191,7 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                     elif event.ui_object_id == "#reset-button":
                         self.maze.move_player("reset", self.player)
-                    elif event.ui_object_id == "#audio-button" or event.ui_object_id == "#no-audio-button":
+                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 
                     elif event.ui_element == self.show_solution_button:
@@ -207,7 +207,7 @@ class PlayScreen(Screen):
 
                 elif event.type == SHOW_SOLUTION:
                     if new_line:
-                        if (curr_index == len(self.solution_stack) - 1):
+                        if curr_index == len(self.solution_stack) - 1:
                             solving = False
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                             self.show_solution_button.enable()
@@ -240,18 +240,18 @@ class PlayScreen(Screen):
                             new_line = False
                             curr_index += 1
                     else:
-                        if (curr_cell[1] < next_cell[1]):   # going right
+                        if curr_cell[1] < next_cell[1]:   # going right
                             line.set_dimensions((line.get_relative_rect().width + increment, line.get_relative_rect().height))
 
-                        elif (curr_cell[1] > next_cell[1]): # going left
+                        elif curr_cell[1] > next_cell[1]: # going left
                             left = line.get_relative_rect().left
                             line.set_dimensions((line.get_relative_rect().width + increment, line.get_relative_rect().height))
                             line.set_relative_position((left - increment, line.get_relative_rect().top))
 
-                        elif (curr_cell[0] < next_cell[0]): # going down
+                        elif curr_cell[0] < next_cell[0]: # going down
                             line.set_dimensions((line.get_relative_rect().width, line.get_relative_rect().height + increment))
 
-                        elif (curr_cell[0] > next_cell[0]): # going up
+                        elif curr_cell[0] > next_cell[0]: # going up
                             top = line.relative_rect.top
                             line.set_dimensions((line.get_relative_rect().width, line.get_relative_rect().height + increment))
                             line.set_relative_position((line.get_relative_rect().left, top - increment))
@@ -264,16 +264,16 @@ class PlayScreen(Screen):
                     if event.key == pygame.K_ESCAPE:
                         self.pause_menu.show()
 
-                    elif event.key == pygame.K_UP or event.key == pygame.K_w:
+                    elif (event.key == pygame.K_UP) or (event.key == pygame.K_w):
                         self.maze.move_player("up", self.player)
 
-                    elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    elif (event.key == pygame.K_DOWN) or (event.key == pygame.K_s):
                         self.maze.move_player("down", self.player)
 
-                    elif event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    elif (event.key == pygame.K_LEFT) or (event.key == pygame.K_a):
                         self.maze.move_player("left", self.player)
                     
-                    elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    elif (event.key == pygame.K_RIGHT) or (event.key == pygame.K_d):
                         self.maze.move_player("right", self.player)
                     
                     if self.maze.get_player_position() == self.maze.get_endpoint():

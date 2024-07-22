@@ -20,12 +20,12 @@ def resize_image(image_id, width, height, normal=True, hovered=True):
         contents = json.loads(file.read())
         file.close()
         images_folder = os.path.join(sys.path[0], os.path.relpath("src/assets/images/", sys.path[0]))
-        if (normal):
+        if normal:
             image_file = contents[image_id]['images']['normal_image']['resource']
             img = Image.open(os.path.join(images_folder, image_file))
             img = img.resize((width, height))
             img = img.save(os.path.join(images_folder, image_file))
-        if (hovered):
+        if hovered:
             image_file = contents[image_id]['images']['hovered_image']['resource']
             img = Image.open(os.path.join(images_folder, image_file))
             img = img.resize((width, height))

@@ -78,7 +78,7 @@ class TitleScreen(Screen):
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED :
                     if event.ui_object_id == "#play-button":
                         return self.game_window.pick_size_screen
-                    elif event.ui_object_id == "#audio-button" or event.ui_object_id == "#no-audio-button":
+                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 
                 elif event.type == pygame.WINDOWRESTORED:

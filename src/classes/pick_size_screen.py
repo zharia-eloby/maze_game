@@ -144,7 +144,7 @@ class PickSizeScreen(Screen):
                     elif event.ui_object_id == "#back-button":
                         return self.game_window.title_screen
                     
-                    elif event.ui_object_id == "#audio-button" or event.ui_object_id == "#no-audio-button":
+                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 
                 elif event.type == pygame.WINDOWRESTORED: # redraw window upon reopening after minimizing

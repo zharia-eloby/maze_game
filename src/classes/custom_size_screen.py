@@ -250,7 +250,7 @@ class CustomSizeScreen(Screen):
                     if event.ui_object_id == "#back-button":
                         return self.game_window.pick_size_screen
 
-                    elif event.ui_object_id == "#audio-button" or event.ui_object_id == "#no-audio-button":
+                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 
                     elif (event.ui_object_id == "#locked-button") or (event.ui_object_id == "#unlocked-button"):
@@ -271,84 +271,84 @@ class CustomSizeScreen(Screen):
 
                     elif locked:
                         if (event.ui_object_id == "#row-up-arrow") or (event.ui_object_id == "#column-up-arrow"):
-                            if (rows < row_max and columns < col_max):
+                            if (rows < row_max) and (columns < col_max):
                                 rows += 1
                                 columns += 1
-                                if (rows == row_max):
+                                if rows == row_max:
                                     self.row_up_arrow_button.disable()
 
-                                if (columns == col_max):
+                                if columns == col_max:
                                     self.column_up_arrow_button.disable()
 
-                                if not (self.row_down_arrow_button.is_enabled):
+                                if not self.row_down_arrow_button.is_enabled:
                                     self.row_down_arrow_button.enable()
 
-                                if not (self.column_down_arrow_button.is_enabled):
+                                if not self.column_down_arrow_button.is_enabled:
                                     self.column_down_arrow_button.enable()
 
                         if (event.ui_object_id == "#row-down-arrow") or (event.ui_object_id == "#column-down-arrow"):
-                            if (rows > row_min and columns > col_min):
+                            if (rows > row_min) and (columns > col_min):
                                 rows -= 1
                                 columns -= 1
-                                if (rows == row_min):
+                                if rows == row_min:
                                     self.row_down_arrow_button.disable()
 
-                                if (columns == col_min):
+                                if columns == col_min:
                                     self.column_down_arrow_button.disable()
 
-                                if not (self.row_up_arrow_button.is_enabled):
+                                if not self.row_up_arrow_button.is_enabled:
                                     self.row_up_arrow_button.enable()
 
-                                if not (self.column_up_arrow_button.is_enabled):
+                                if not self.column_up_arrow_button.is_enabled:
                                     self.column_up_arrow_button.enable()
                     else:
-                        if (event.ui_object_id == "#row-up-arrow"):
+                        if event.ui_object_id == "#row-up-arrow":
                             rows += 1
-                            if (abs(rows-columns) > max_diff):
+                            if abs(rows-columns) > max_diff:
                                 columns += 1
                                 if not (self.column_down_arrow_button.is_enabled):
                                     self.column_down_arrow_button.enable()
 
-                            if (rows == row_max):
+                            if rows == row_max:
                                 self.row_up_arrow_button.disable()
 
                             if not self.row_down_arrow_button.is_enabled:
                                 self.row_down_arrow_button.enable()
 
-                        elif (event.ui_object_id == "#row-down-arrow"):
+                        elif event.ui_object_id == "#row-down-arrow":
                             rows -= 1
-                            if (abs(rows-columns) > max_diff):
+                            if abs(rows-columns) > max_diff:
                                 columns -= 1
                                 if not (self.column_up_arrow_button.is_enabled):
                                     self.column_up_arrow_button.enable()
 
-                            if (rows == row_min):
+                            if rows == row_min:
                                 self.row_down_arrow_button.disable()
 
                             if not self.row_up_arrow_button.is_enabled:
                                 self.row_up_arrow_button.enable()
 
-                        elif (event.ui_object_id == "#column-up-arrow"):
+                        elif event.ui_object_id == "#column-up-arrow":
                             columns += 1
-                            if (abs(rows-columns) > max_diff):
+                            if abs(rows-columns) > max_diff:
                                 rows += 1
                                 if not (self.row_down_arrow_button.is_enabled):
                                     self.row_down_arrow_button.enable()
 
-                            if (columns == col_max):
+                            if columns == col_max:
                                 self.column_up_arrow_button.disable()
 
                             if not self.column_down_arrow_button.is_enabled:
                                 self.column_down_arrow_button.enable()
 
-                        elif (event.ui_object_id == "#column-down-arrow"):
+                        elif event.ui_object_id == "#column-down-arrow":
                             columns -= 1
-                            if (abs(rows-columns) > max_diff):
+                            if abs(rows-columns) > max_diff:
                                 rows -= 1
                                 if not (self.row_up_arrow_button.is_enabled):
                                     self.row_up_arrow_button.enable()
                                     
-                            if (columns == col_min):
+                            if columns == col_min:
                                 self.column_down_arrow_button.disable()
 
                             if not self.column_up_arrow_button.is_enabled:

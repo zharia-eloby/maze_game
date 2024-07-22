@@ -66,20 +66,20 @@ class Maze:
     
     def check_neighbors(self, current_position):
         available_neighbors = []
-        if (current_position[1] > 1):                  # check that it CAN have a left neighbor, then check if it has an unvisited left neighbor
-            if (self.maze[current_position[0]][current_position[1]-2] != 'v'):
+        if current_position[1] > 1:                  # check that it CAN have a left neighbor, then check if it has an unvisited left neighbor
+            if self.maze[current_position[0]][current_position[1]-2] != 'v':
                 available_neighbors += [(current_position[0], current_position[1]-2)]
                 
-        if (current_position[1] < len(self.maze[0]) - 2):     # if CAN have right neighbor, check that the right neighbor is unvisited
-            if (self.maze[current_position[0]][current_position[1]+2] != 'v'):
+        if current_position[1] < len(self.maze[0]) - 2:     # if CAN have right neighbor, check that the right neighbor is unvisited
+            if self.maze[current_position[0]][current_position[1]+2] != 'v':
                 available_neighbors += [(current_position[0], current_position[1]+2)]
                 
-        if (current_position[0] > 1):                  # if CAN have upper neighbor, check that the upper neighbor is unvisited
-            if (self.maze[current_position[0]-2][current_position[1]] != 'v'):
+        if current_position[0] > 1:                  # if CAN have upper neighbor, check that the upper neighbor is unvisited
+            if self.maze[current_position[0]-2][current_position[1]] != 'v':
                 available_neighbors += [(current_position[0]-2, current_position[1])]
                 
-        if (current_position[0] < len(self.maze) - 2):     # if CAN have below neighbor, check that the below neighbor is unvisited
-            if (self.maze[current_position[0]+2][current_position[1]] != 'v'):
+        if current_position[0] < len(self.maze) - 2:     # if CAN have below neighbor, check that the below neighbor is unvisited
+            if self.maze[current_position[0]+2][current_position[1]] != 'v':
                 available_neighbors += [(current_position[0]+2, current_position[1])]
                 
         return available_neighbors
@@ -92,10 +92,10 @@ class Maze:
         for i in range(0, self.rows*2+1):
             row = []
             for j in range(0, self.columns*2+1):
-                if (i % 2 == 0):
+                if i % 2 == 0:
                     row += ['w']
                 else:
-                    if (j % 2 == 0):
+                    if j % 2 == 0:
                         row += ['w']
                     else:
                         row += ['c']
@@ -113,25 +113,25 @@ class Maze:
             
             neighbors = self.check_neighbors(curr_cell)
             
-            if (len(neighbors) > 0):
+            if len(neighbors) > 0:
                 chosen = random.choice(neighbors)
                 
                 # remove the wall in between the current cell and its chosen neighbor
-                if (chosen[0] == curr_cell[0]):         # current cell & chosen neighbor are in the same row
-                    if (chosen[1] > curr_cell[1]):      # neighbor is on the right
+                if chosen[0] == curr_cell[0]:         # current cell & chosen neighbor are in the same row
+                    if chosen[1] > curr_cell[1]:      # neighbor is on the right
                         self.maze[curr_cell[0]][curr_cell[1]+1] = 'o'
                     else:
                         self.maze[curr_cell[0]][curr_cell[1]-1] = 'o'
                         
                 else:                                   # current cell & chosen neighbor are in the same column
-                    if (chosen[0] > curr_cell[0]):      # neighbor is below
+                    if chosen[0] > curr_cell[0]:      # neighbor is below
                         self.maze[curr_cell[0]+1][curr_cell[1]] = 'o'
                     else:
                         self.maze[curr_cell[0]-1][curr_cell[1]] = 'o'
 
                 self.maze[chosen[0]][chosen[1]] = 'v'
                 cells_to_go -= 1
-                if (cells_to_go == 0):
+                if cells_to_go == 0:
                     self.set_endpoint(chosen)
                     startpoint = None
                     while (startpoint is None) or (self.endpoint == startpoint):
@@ -143,7 +143,7 @@ class Maze:
         return
     
     def set_maze_ui_measurements(self, ui_area):
-        if (ui_area.width > ui_area.height):
+        if ui_area.width > ui_area.height:
             maze_height = ui_area.height
             maze_width = maze_height
         else:
@@ -160,7 +160,7 @@ class Maze:
 
         wall_thickness = round(self.cell_width/10)
         wall_thickness -= wall_thickness%2
-        if (wall_thickness < 2):
+        if wall_thickness < 2:
             wall_thickness = 2
         self.wall_thickness = wall_thickness
 
@@ -182,8 +182,8 @@ class Maze:
         y_pos = self.topleft[1]
         for i in range(0, self.rows*2+1):
             for j in range(0, self.columns*2+1):
-                if (i % 2 == 0 and j % 2 == 1): # horizontal
-                    if (self.maze[i][j] == 'w'):
+                if (i % 2 == 0) and (j % 2 == 1): # horizontal
+                    if self.maze[i][j] == 'w':
                         wall_rect = pygame.Rect(
                             x_pos,
                             y_pos,
@@ -196,8 +196,8 @@ class Maze:
                             object_id=ObjectID(class_id="@wall")
                         )
                     x_pos += self.cell_width
-                elif (i % 2 == 1 and j % 2 == 0): # vertical
-                    if (self.maze[i][j] == 'w'):
+                elif (i % 2 == 1) and (j % 2 == 0): # vertical
+                    if self.maze[i][j] == 'w':
                         wall_rect = pygame.Rect(
                             x_pos,
                             y_pos,
@@ -210,7 +210,7 @@ class Maze:
                             object_id=ObjectID(class_id="@wall")
                         )
                     x_pos += self.cell_width
-            if (i % 2 == 1):
+            if i % 2 == 1:
                 y_pos += self.cell_height
             x_pos = self.topleft[0]
 
@@ -251,19 +251,19 @@ class Maze:
         available_paths = []
 
         # can go right from curr_cell, and hasn't visited the right neighbor
-        if (self.maze[curr_cell[0]+1][curr_cell[1]] != 'w' and self.maze[curr_cell[0]+2][curr_cell[1]] != 'x'):
+        if (self.maze[curr_cell[0]+1][curr_cell[1]] != 'w') and (self.maze[curr_cell[0]+2][curr_cell[1]] != 'x'):
             available_paths += [(curr_cell[0]+2, curr_cell[1])]
 
         # can go left from curr_cell, and hasn't visited the left neighbor
-        if (self.maze[curr_cell[0]-1][curr_cell[1]] != 'w' and self.maze[curr_cell[0]-2][curr_cell[1]] != 'x'):
+        if (self.maze[curr_cell[0]-1][curr_cell[1]] != 'w') and (self.maze[curr_cell[0]-2][curr_cell[1]] != 'x'):
             available_paths += [(curr_cell[0]-2, curr_cell[1])]
 
         # can go down from curr_cell, and hasn't visited the neighbor below
-        if (self.maze[curr_cell[0]][curr_cell[1]+1] != 'w' and self.maze[curr_cell[0]][curr_cell[1]+2] != 'x'):
+        if (self.maze[curr_cell[0]][curr_cell[1]+1] != 'w') and (self.maze[curr_cell[0]][curr_cell[1]+2] != 'x'):
             available_paths += [(curr_cell[0], curr_cell[1]+2)]
 
         # can go up from curr_cell, and hasn't visited the neighbor above
-        if (self.maze[curr_cell[0]][curr_cell[1]-1] != 'w' and self.maze[curr_cell[0]][curr_cell[1]-2] != 'x'):
+        if (self.maze[curr_cell[0]][curr_cell[1]-1] != 'w') and (self.maze[curr_cell[0]][curr_cell[1]-2] != 'x'):
             available_paths += [(curr_cell[0], curr_cell[1]-2)]
 
         return available_paths
