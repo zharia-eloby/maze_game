@@ -1,8 +1,6 @@
 """
 Zharia Eloby
 Maze Game with Pygame
-
-USING CLASSES VERSION
 """
 
 import pygame, sys

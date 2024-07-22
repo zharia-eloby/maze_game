@@ -10,8 +10,6 @@ class FinishedMenu(Modal):
         self.interactive_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         # all non-interactive elements will have this manager
         self.menu_background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        self.overlay_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-
 
     def setup(self):
         overlay_rect = pygame.Rect(
