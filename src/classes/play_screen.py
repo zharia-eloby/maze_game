@@ -293,6 +293,6 @@ class PlayScreen(Screen):
             self.maze.reset_maze()
             self.reset()
             self.setup()
-            self.show()
+            return self.show()
         else:
             return self.game_window.title_screen
