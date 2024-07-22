@@ -10,7 +10,6 @@ from classes.finished_menu import FinishedMenu
 class PlayScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
-        self.ui_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.audio = audio
         self.rows = None
         self.columns = None
@@ -107,7 +106,6 @@ class PlayScreen(Screen):
 
         self.setup_maze()
         
-        # pause button
         pause_button_width = 45
         pause_button_height = pause_button_width
         pause_button_rect = pygame.Rect(
@@ -123,7 +121,6 @@ class PlayScreen(Screen):
             object_id=ObjectID(object_id="#pause-button")
         )
 
-        # reset button
         reset_button_width = 45
         reset_button_height = reset_button_width
         reset_button_rect = pygame.Rect(
@@ -139,7 +136,6 @@ class PlayScreen(Screen):
             object_id=ObjectID(object_id="#reset-button")
         )
 
-        # show solution button
         button_width = math.ceil(self.drawable_area.width * 0.3)
         button_height = 45
         show_solution_rect = pygame.Rect(
@@ -157,7 +153,6 @@ class PlayScreen(Screen):
         resize_image('#show-solution-button', button_width, button_height)
 
     def show(self):
-        # custom event for showing the maze solution
         SHOW_SOLUTION = pygame.USEREVENT + 1
 
         solution_speed = 10
@@ -174,7 +169,6 @@ class PlayScreen(Screen):
                     pygame.quit()
                     sys.exit()
 
-                # redraw window upon reopening after minimizing
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 

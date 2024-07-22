@@ -164,7 +164,7 @@ class Maze:
             wall_thickness = 2
         self.wall_thickness = wall_thickness
 
-        # set startpoint so the maze is centered
+        # set startpoint so the maze is horizontally centered
         self.maze_width = self.cell_width * self.columns + self.wall_thickness
         self.maze_height = self.cell_height * self.rows + self.wall_thickness
         self.topleft = (ui_area.centerx - self.maze_width/2, ui_area.bottom - self.maze_height)
@@ -282,8 +282,7 @@ class Maze:
         while (curr_cell != self.endpoint):
             available_paths = self.check_paths(curr_cell)
 
-            # if all available neighbors have been visited, 
-            # remove cells from the stack until there is an available neighbor
+            # if all neighbors have been visited, pop from the stack until there is an available neighbor
             while not available_paths:
                 solution_path.pop()
                 curr_cell = solution_path[len(solution_path)-1]

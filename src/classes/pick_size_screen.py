@@ -7,7 +7,6 @@ from helpers.debugging import resize_image
 class PickSizeScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
-        self.ui_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.audio = audio
         self.managers = [self.ui_manager]
 
@@ -17,7 +16,6 @@ class PickSizeScreen(Screen):
 
         self.audio.create_audio_buttons(self, self.ui_manager)
 
-        # back button
         button_width = 45
         button_height = 45
         back_button_rect = pygame.Rect(
@@ -41,10 +39,10 @@ class PickSizeScreen(Screen):
         button_height = (all_buttons_height + space_between_buttons)/num_buttons - space_between_buttons
         
         easy_button_rect = pygame.Rect(
-            self.drawable_area.centerx - button_width/2,  # x
-            back_button_rect.bottom,        # y
-            button_width,                   # width
-            button_height                   # height
+            self.drawable_area.centerx - button_width/2,
+            back_button_rect.bottom,
+            button_width,
+            button_height
         )
         easy_button = pygame_gui.elements.UIButton(
             relative_rect=easy_button_rect, 
@@ -104,7 +102,6 @@ class PickSizeScreen(Screen):
                     pygame.quit()
                     sys.exit() 
                 
-                # redraw window upon reopening after minimizing
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
@@ -147,7 +144,7 @@ class PickSizeScreen(Screen):
                     elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 
-                elif event.type == pygame.WINDOWRESTORED: # redraw window upon reopening after minimizing
+                elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
                 self.ui_manager.process_events(event)

@@ -6,9 +6,6 @@ from helpers.redraw import redraw_elements
 class FinishedMenu(Modal):
     def __init__(self, game_window):
         super().__init__(game_window)
-        # all interactive elements will have this manager
-        self.interactive_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        # all non-interactive elements will have this manager
         self.menu_background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
 
     def setup(self):
@@ -24,7 +21,6 @@ class FinishedMenu(Modal):
             object_id=ObjectID(object_id="#screen-overlay")
         )
         
-        # background surface
         background_rect = pygame.Rect(
             self.drawable_area.centerx - self.width/2,
             self.drawable_area.centery - self.height/2,
@@ -40,7 +36,6 @@ class FinishedMenu(Modal):
         button_height = 70
         button_width = background_rect.width-self.margin*2
         
-        # exit to home screen button
         exit_button_rect = pygame.Rect(
             background_rect.left + self.margin,
             background_rect.bottom - self.margin - button_height,
@@ -50,11 +45,10 @@ class FinishedMenu(Modal):
         exit_button = pygame_gui.elements.UIButton(
             relative_rect=exit_button_rect,
             text="exit to home screen",
-            manager=self.interactive_manager,
+            manager=self.ui_manager,
             object_id=ObjectID(object_id="#exit-button", class_id="@modal-large-button")
         )
 
-        # play again button
         play_button_rect = pygame.Rect(
             background_rect.left + self.margin,
             exit_button_rect.top - button_height - self.line_spacing,
@@ -64,11 +58,10 @@ class FinishedMenu(Modal):
         play_button = pygame_gui.elements.UIButton(
             relative_rect=play_button_rect,
             text="play again",
-            manager=self.interactive_manager,
+            manager=self.ui_manager,
             object_id=ObjectID(object_id="#play-again", class_id="@modal-large-button")
         )
 
-        # congrats message
         finished_message_rect = pygame.Rect(
             background_rect.left + self.margin,
             background_rect.top + self.margin,
@@ -83,7 +76,7 @@ class FinishedMenu(Modal):
         )
 
     def show(self):
-        redraw_elements(self.game_window.window, [self.overlay_manager, self.menu_background_manager, self.interactive_manager], 0)
+        redraw_elements(self.game_window.window, [self.overlay_manager, self.menu_background_manager, self.ui_manager], 0)
     
         done = False
         restart = False
@@ -99,9 +92,9 @@ class FinishedMenu(Modal):
                     elif event.ui_object_id == "#play-again":
                         done = True
                         restart = True
-                self.interactive_manager.process_events(event)
+                self.ui_manager.process_events(event)
             
             time_delta = math.ceil(time.time()) - time_delta
-            redraw_elements(self.game_window.window, [self.menu_background_manager, self.interactive_manager], time_delta)
+            redraw_elements(self.game_window.window, [self.menu_background_manager, self.ui_manager], time_delta)
         
         return restart

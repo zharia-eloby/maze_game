@@ -7,7 +7,6 @@ from helpers.debugging import resize_image
 class CustomSizeScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
-        self.ui_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.audio = audio
         self.managers = [self.ui_manager]
         self.locked_button = None
@@ -27,7 +26,6 @@ class CustomSizeScreen(Screen):
 
         self.audio.create_audio_buttons(self, self.ui_manager)
         
-        # back button
         button_width = 45
         button_height = 45
         back_button_rect = pygame.Rect(
@@ -43,7 +41,6 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(object_id="#back-button")
         )
         
-        # select dimensions text
         select_text_rect = pygame.Rect(
             self.drawable_area.left,
             back_button_rect.bottom,
@@ -57,7 +54,6 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(class_id="@medium-text")
         )
 
-        # warning text
         warning_text_rect = pygame.Rect(
             self.drawable_area.left,
             select_text_rect.bottom,
@@ -71,7 +67,6 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(object_id="@small-text")
         )
         
-        # 'x' text
         x_width = self.drawable_area.width * 0.1
         x_height = 100
         x_text_rect = pygame.Rect(
@@ -87,7 +82,6 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(class_id="@medium-text")
         )
         
-        # row text
         text_height = 100
         row_text_rect = pygame.Rect(
             self.drawable_area.left,
@@ -102,7 +96,6 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(class_id="@medium-text")
         )
 
-        # column text
         col_text_rect = pygame.Rect(
             x_text_rect.right,
             self.drawable_area.centery - text_height/2,
@@ -116,7 +109,6 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(class_id="@medium-text")
         )
 
-        # arrows
         arrow_width = 50
         arrow_height = 50
 
@@ -174,7 +166,6 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(object_id="#column-down-arrow", class_id="@down-arrow")
         )
 
-        # ratio lock
         lock_button_width = 50
         lock_button_height = 50
         lock_button_rect = pygame.Rect(
@@ -199,7 +190,6 @@ class CustomSizeScreen(Screen):
         resize_image('#unlocked-button', lock_button_width, lock_button_height)
         self.unlocked_button.hide()
         
-        # play button
         button_width = math.floor(self.drawable_area.width/2)
         button_height = 100
         play_button_rect = pygame.Rect(
@@ -238,7 +228,6 @@ class CustomSizeScreen(Screen):
                     pygame.quit()
                     sys.exit()
                 
-                # redraw window upon reopening after minimizing
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 

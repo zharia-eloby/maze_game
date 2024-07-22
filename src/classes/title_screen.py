@@ -7,7 +7,6 @@ from helpers.debugging import resize_image
 class TitleScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
-        self.ui_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.audio = audio
         self.managers = [self.ui_manager]
 
@@ -19,14 +18,13 @@ class TitleScreen(Screen):
         resize_image('#audio-button', self.audio.button_width, self.audio.button_height)
         resize_image('#no-audio-button', self.audio.button_width, self.audio.button_height)
 
-        # play button
         button_width = math.floor(self.drawable_area.width/2)
         button_height = 100
         play_rect = pygame.Rect(
-            self.drawable_area.centerx - button_width/2,  # x
-            self.drawable_area.centery + button_height/2, # y
-            button_width,                   # width
-            button_height                   # height
+            self.drawable_area.centerx - button_width/2,
+            self.drawable_area.centery + button_height/2,
+            button_width,
+            button_height
         )
         play_button = pygame_gui.elements.UIButton(
             relative_rect=play_rect, 
@@ -36,7 +34,6 @@ class TitleScreen(Screen):
         )
         resize_image('#play-button', button_width, button_height)
         
-        # game title
         title_rect = pygame.Rect(
             self.drawable_area.left, 
             self.drawable_area.top,
@@ -50,8 +47,6 @@ class TitleScreen(Screen):
             object_id=ObjectID(object_id="#title")
         )
 
-        # credits
-        credits_height = 210
         credits_rect = pygame.Rect(
             self.drawable_area.left,
             play_rect.bottom, 
