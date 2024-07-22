@@ -266,6 +266,7 @@ class CustomSizeScreen(Screen):
                     elif event.ui_object_id == "#play-button":
                         ready = True
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
+                        self.game_window.play_screen.setup()
                         return self.game_window.play_screen
 
                     elif locked:

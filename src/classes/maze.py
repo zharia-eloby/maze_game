@@ -1,6 +1,5 @@
 import random, math, pygame, pygame_gui
 from pygame_gui.core import ObjectID
-from helpers.ui_area import get_ui_area
 
 class Maze:
     def __init__(self, rows, columns):
@@ -143,13 +142,12 @@ class Maze:
                 stack.pop()
         return
     
-    def set_maze_dimensions(self):
-        UI_AREA = get_ui_area()
-        if (UI_AREA.width > UI_AREA.height):
-            maze_height = UI_AREA.height
+    def set_maze_ui_measurements(self, ui_area):
+        if (ui_area.width > ui_area.height):
+            maze_height = ui_area.height
             maze_width = maze_height
         else:
-            maze_height = UI_AREA.width
+            maze_height = ui_area.width
             maze_width = maze_height
 
         self.maze_width = maze_width
@@ -169,7 +167,7 @@ class Maze:
         # set startpoint so the maze is centered
         self.maze_width = self.cell_width * self.columns + self.wall_thickness
         self.maze_height = self.cell_height * self.rows + self.wall_thickness
-        self.topleft = (UI_AREA.centerx - self.maze_width/2, UI_AREA.bottom - self.maze_height)
+        self.topleft = (ui_area.centerx - self.maze_width/2, ui_area.bottom - self.maze_height)
 
     """
     get the ui position of the cell based on index in the maze grid

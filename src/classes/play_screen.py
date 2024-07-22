@@ -6,7 +6,6 @@ from helpers.debugging import resize_image
 from classes.maze import Maze
 from classes.pause_menu import PauseMenu
 from classes.finished_menu import FinishedMenu
-from classes.title_screen import TitleScreen
 
 class PlayScreen(Screen):
     def __init__(self, game_window, audio):
@@ -56,7 +55,7 @@ class PlayScreen(Screen):
         startpoint = self.maze.get_startpoint()
         self.maze.set_player_position(startpoint)
 
-        self.maze.set_maze_dimensions()
+        self.maze.set_maze_ui_measurements(self.drawable_area)
         self.maze.draw_maze(self.ui_manager)
         
         ui_position = self.maze.get_cell_ui_position(startpoint)
