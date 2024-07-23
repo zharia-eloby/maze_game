@@ -64,15 +64,17 @@ class TitleScreen(Screen):
         redraw_elements(self.game_window.window, self.managers, 0)
 
         time_delta = math.ceil(time.time())
-        while True:
+        done = False
+        next_page = None
+        while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    done = True
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED :
                     if event.ui_object_id == "#play-button":
-                        return self.game_window.pick_size_screen
+                        done = True
+                        next_page = self.game_window.pick_size_screen
                     elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 
@@ -83,3 +85,4 @@ class TitleScreen(Screen):
 
             time_delta = math.ceil(time.time()) - time_delta
             redraw_elements(self.game_window.window, self.managers, time_delta)
+        return next_page

@@ -16,6 +16,8 @@ next_page = gw.title_screen
 done = False
 while not done:
     next_page = next_page.show()
+    if not next_page:
+        done = True
 
 pygame.quit()
 sys.exit()

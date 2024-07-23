@@ -159,15 +159,15 @@ class PlayScreen(Screen):
         increment = 1
 
         done = False
+        next_page = None
         solving = False
+        completed = False
         redraw_elements(self.game_window.window, self.managers, 0)
         time_delta = math.ceil(time.time())
         while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
-                    pygame.quit()
-                    sys.exit()
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
@@ -179,7 +179,8 @@ class PlayScreen(Screen):
                         resume = self.pause_menu.show()
                         if not resume: 
                             self.reset()
-                            return self.game_window.title_screen
+                            done = True
+                            next_page = self.game_window.title_screen
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                     elif event.ui_object_id == "#reset-button":
@@ -270,6 +271,7 @@ class PlayScreen(Screen):
                         self.maze.move_player("right", self.player)
                     
                     if self.maze.get_player_position() == self.maze.get_endpoint():
+                        completed = True
                         done = True
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
@@ -280,11 +282,13 @@ class PlayScreen(Screen):
             time_delta = math.ceil(time.time()) - time_delta
             redraw_elements(self.game_window.window, self.managers, time_delta)
             
-        restart = self.finished_menu.show()
-        if restart:
-            self.reset()
-            self.setup_maze()
-            return self.show()
-        else:
-            self.reset()
-            return self.game_window.title_screen
+        if completed:
+            restart = self.finished_menu.show()
+            if restart:
+                self.reset()
+                self.setup_maze()
+                next_page = self
+            else:
+                self.reset()
+                next_page = self.game_window.title_screen
+        return next_page

@@ -94,52 +94,49 @@ class PickSizeScreen(Screen):
     def show(self):
         redraw_elements(self.game_window.window, self.managers, 0)
 
-        ready = False
+        next_page = None
+        done = False
         time_delta = math.ceil(time.time())
-        while not ready:
+        while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit() 
+                    done = True
                 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return self.game_window.title_screen
-
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#easy-button":
-                        ready = True
+                        done = True
                         rows = 10
                         columns = 10
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
                         self.game_window.play_screen.setup()
-                        return self.game_window.play_screen
+                        next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#medium-button":
-                        ready = True
+                        done = True
                         rows = 20
                         columns = 20
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
                         self.game_window.play_screen.setup()
-                        return self.game_window.play_screen
+                        next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#hard-button":
-                        ready = True
+                        done = True
                         rows = 30
                         columns = 30
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
                         self.game_window.play_screen.setup()
-                        return self.game_window.play_screen
+                        next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#custom-button":
-                        ready = True
-                        return self.game_window.custom_size_screen
+                        done = True
+                        next_page = self.game_window.custom_size_screen
 
                     elif event.ui_object_id == "#back-button":
-                        return self.game_window.title_screen
+                        done = True
+                        next_page = self.game_window.title_screen
                     
                     elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
@@ -151,3 +148,5 @@ class PickSizeScreen(Screen):
             
             time_delta = math.ceil(time.time()) - time_delta
             redraw_elements(self.game_window.window, self.managers, time_delta)
+
+        return next_page

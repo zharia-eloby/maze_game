@@ -218,26 +218,23 @@ class CustomSizeScreen(Screen):
 
         max_diff = 10
 
-        ready = False
+        done = False
+        next_page = None
         locked = True # if True, rows and cols change simultaneously
         redraw_elements(self.game_window.window, self.managers, 0)
         time_delta = math.ceil(time.time())
-        while not ready:
+        while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    done = True
                 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        return self.game_window.title_screen
-
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#back-button":
-                        return self.game_window.pick_size_screen
+                        done = True
+                        next_page = self.game_window.pick_size_screen
 
                     elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
@@ -253,10 +250,10 @@ class CustomSizeScreen(Screen):
                             self.locked_button.show()
 
                     elif event.ui_object_id == "#play-button":
-                        ready = True
+                        done = True
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
                         self.game_window.play_screen.setup()
-                        return self.game_window.play_screen
+                        next_page = self.game_window.play_screen
 
                     elif locked:
                         if (event.ui_object_id == "#row-up-arrow") or (event.ui_object_id == "#column-up-arrow"):
@@ -346,7 +343,10 @@ class CustomSizeScreen(Screen):
                     self.col_text.set_text(str(columns))
                     self.row_text.set_text(str(rows))
                 
-                self.ui_manager.process_events(event)
+                if not done: self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            redraw_elements(self.game_window.window, self.managers, time_delta)
+            if not done:
+                time_delta = math.ceil(time.time()) - time_delta
+                redraw_elements(self.game_window.window, self.managers, time_delta)
+                
+        return next_page
