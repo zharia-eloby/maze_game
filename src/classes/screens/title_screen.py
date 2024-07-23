@@ -75,6 +75,7 @@ class TitleScreen(Screen):
                     if event.ui_object_id == "#play-button":
                         done = True
                         next_page = self.game_window.pick_size_screen
+                    
                     elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 

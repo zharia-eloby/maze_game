@@ -1,4 +1,4 @@
-import pygame, pygame_gui, sys, os
+import pygame, pygame_gui, os
 from pygame_gui.core import ObjectID
 
 class Audio():

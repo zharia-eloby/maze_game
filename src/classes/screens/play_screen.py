@@ -183,8 +183,10 @@ class PlayScreen(Screen):
                             next_page = self.game_window.title_screen
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
+
                     elif event.ui_object_id == "#reset-button":
                         self.maze.move_player("reset", self.player)
+                        
                     elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
                         self.audio.toggle_audio()
 

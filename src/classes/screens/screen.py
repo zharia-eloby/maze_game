@@ -1,4 +1,4 @@
-import pygame, pygame_gui, os, sys
+import pygame, pygame_gui, os
 from PIL import Image
 
 class Screen():
