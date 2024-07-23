@@ -1,6 +1,6 @@
 import pygame, pygame_gui, math, time, sys
 from pygame_gui.core import ObjectID
-from classes.modal import Modal
+from classes.modals.modal import Modal
 from helpers.redraw import redraw_elements
 from helpers.debugging import resize_image
 

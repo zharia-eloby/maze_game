@@ -11,7 +11,7 @@
         }
     },
     "audio": {
-        "on": false,
+        "on": true,
         "volume": 0.5
     }
 }

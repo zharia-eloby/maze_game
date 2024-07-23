@@ -1,5 +1,4 @@
-import pygame, pygame_gui
-from pathlib import Path
+import pygame, pygame_gui, os, sys
 from PIL import Image
 
 class Screen():
@@ -24,7 +23,8 @@ class Screen():
             self.game_window.screen_width,
             self.game_window.screen_height
         )
-        img_file = Path(__file__).parent / "../assets/images/background/pixelart_starfield.png"
+        
+        img_file = os.path.realpath("src/assets/images/background/pixelart_starfield.png")
         img = Image.open(img_file)
         img = img.resize((self.game_window.screen_width, self.game_window.screen_height))
         img.save(img_file)

@@ -15,11 +15,11 @@ def print_maze(maze):
 def resize_image(image_id, width, height, normal=True, hovered=True):
     if resize_images:
         settings = get_settings()
-        theme_file = os.path.join(sys.path[0], os.path.relpath(settings['theme']['path'], sys.path[0]))
+        theme_file = os.path.realpath(settings['theme']['path'])
         file = open(theme_file, "r")
         contents = json.loads(file.read())
         file.close()
-        images_folder = os.path.join(sys.path[0], os.path.relpath("src/assets/images/", sys.path[0]))
+        images_folder = os.path.realpath("src/assets/images/")
         if normal:
             image_file = contents[image_id]['images']['normal_image']['resource']
             img = Image.open(os.path.join(images_folder, image_file))

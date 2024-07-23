@@ -8,9 +8,12 @@ from classes.game_window import GameWindow
 from classes.audio import Audio
 
 gw = GameWindow()
+gw.initialize()
+
 audio = Audio(gw)
-gw.initialize(audio)
 audio.initialize()
+
+gw.initialize_screens(audio)
 
 next_page = gw.title_screen
 done = False

@@ -10,7 +10,7 @@ class Audio():
         self.no_audio_button = None
         self.audio_on = game_window.settings['audio']['on']
         self.volume = game_window.settings['audio']['volume']
-        self.audio_file = os.path.join(sys.path[0], os.path.relpath(game_window.settings['theme']['audio']['path'], sys.path[0]))
+        self.audio_file = os.path.realpath(game_window.settings['theme']['audio']['path'])
     
     def get_manager(self):
         return self.manager
@@ -42,7 +42,7 @@ class Audio():
             manager=ui_manager,
             object_id=ObjectID(object_id="#no-audio-button")
         )
-        if pygame.mixer.music.get_busy():
+        if self.audio_on:
             self.no_audio_button.hide()
         else:
             self.audio_button.hide()

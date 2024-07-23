@@ -1,6 +1,6 @@
 import pygame, pygame_gui, math, sys, time
 from pygame_gui.core import ObjectID
-from classes.screen import Screen
+from classes.screens.screen import Screen
 from helpers.redraw import redraw_elements
 from helpers.debugging import resize_image
 

@@ -1,11 +1,11 @@
-import pygame, pygame_gui, math, sys, time
+import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
-from classes.screen import Screen
+from classes.screens.screen import Screen
 from helpers.redraw import redraw_elements
 from helpers.debugging import resize_image
 from classes.maze import Maze
-from classes.pause_menu import PauseMenu
-from classes.finished_menu import FinishedMenu
+from classes.modals.pause_menu import PauseMenu
+from classes.modals.finished_menu import FinishedMenu
 
 class PlayScreen(Screen):
     def __init__(self, game_window, audio):
