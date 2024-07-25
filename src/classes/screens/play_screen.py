@@ -22,7 +22,7 @@ class PlayScreen(Screen):
         self.finished_menu = None
         self.solution_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        self.managers = [self.solution_manager, self.maze_manager, self.ui_manager]
+        self.managers = [self.get_background()['background_manager'], self.solution_manager, self.maze_manager, self.ui_manager]
 
     def set_maze_dimensions(self, rows, columns):
         self.rows = rows
@@ -36,7 +36,7 @@ class PlayScreen(Screen):
         self.solution_stack = None
         self.player = None
 
-    def setup_maze(self): 
+    def setup_maze_ui(self): 
         self.maze.create_maze()
         endpoint = self.maze.get_endpoint()
         startpoint = self.maze.get_startpoint()
@@ -93,9 +93,6 @@ class PlayScreen(Screen):
         self.player.disable()
 
     def setup(self):
-        bg = self.get_background()
-        self.managers.insert(0, bg['background_manager'])
-
         self.audio.create_audio_buttons(self, self.ui_manager)
 
         self.pause_menu = PauseMenu(self.game_window)
@@ -103,8 +100,6 @@ class PlayScreen(Screen):
 
         self.finished_menu = FinishedMenu(self.game_window)
         self.finished_menu.setup()
-
-        self.setup_maze()
         
         pause_button_width = 45
         pause_button_height = pause_button_width
@@ -153,6 +148,7 @@ class PlayScreen(Screen):
         resize_image('#show-solution-button', button_width, button_height)
 
     def show(self):
+        self.audio.set_audio_display()
         SHOW_SOLUTION = pygame.USEREVENT + 1
 
         solution_speed = 10
@@ -186,9 +182,6 @@ class PlayScreen(Screen):
 
                     elif event.ui_object_id == "#reset-button":
                         self.maze.move_player("reset", self.player)
-                        
-                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
-                        self.audio.toggle_audio()
 
                     elif event.ui_element == self.show_solution_button:
                         if not self.solution_stack:
@@ -278,6 +271,8 @@ class PlayScreen(Screen):
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                             solving = False
+                            self.show_solution_button.enable()
+                            self.reset_button.enable()
 
                 self.ui_manager.process_events(event)
 
@@ -288,7 +283,7 @@ class PlayScreen(Screen):
             restart = self.finished_menu.show()
             if restart:
                 self.reset()
-                self.setup_maze()
+                self.setup_maze_ui()
                 next_page = self
             else:
                 self.reset()

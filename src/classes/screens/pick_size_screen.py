@@ -92,6 +92,7 @@ class PickSizeScreen(Screen):
         resize_image('@large-button', custom_button_rect.width, custom_button_rect.height)
 
     def show(self):
+        self.audio.set_audio_display()
         redraw_elements(self.game_window.window, self.managers, 0)
 
         next_page = None
@@ -111,7 +112,7 @@ class PickSizeScreen(Screen):
                         rows = 10
                         columns = 10
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
-                        self.game_window.play_screen.setup()
+                        self.game_window.play_screen.setup_maze_ui()
                         next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#medium-button":
@@ -119,7 +120,7 @@ class PickSizeScreen(Screen):
                         rows = 20
                         columns = 20
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
-                        self.game_window.play_screen.setup()
+                        self.game_window.play_screen.setup_maze_ui()
                         next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#hard-button":
@@ -127,7 +128,7 @@ class PickSizeScreen(Screen):
                         rows = 30
                         columns = 30
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
-                        self.game_window.play_screen.setup()
+                        self.game_window.play_screen.setup_maze_ui()
                         next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#custom-button":
@@ -137,9 +138,6 @@ class PickSizeScreen(Screen):
                     elif event.ui_object_id == "#back-button":
                         done = True
                         next_page = self.game_window.title_screen
-                    
-                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
-                        self.audio.toggle_audio()
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()

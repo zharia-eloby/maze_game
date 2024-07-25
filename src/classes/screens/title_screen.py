@@ -61,6 +61,7 @@ class TitleScreen(Screen):
         )
 
     def show(self):
+        self.audio.set_audio_display()
         redraw_elements(self.game_window.window, self.managers, 0)
 
         time_delta = math.ceil(time.time())
@@ -71,13 +72,10 @@ class TitleScreen(Screen):
                 if event.type == pygame.QUIT:
                     done = True
 
-                elif event.type == pygame_gui.UI_BUTTON_PRESSED :
+                elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#play-button":
                         done = True
                         next_page = self.game_window.pick_size_screen
-                    
-                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
-                        self.audio.toggle_audio()
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()

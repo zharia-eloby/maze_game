@@ -5,7 +5,7 @@ Maze Game with Pygame
 
 import pygame, sys
 from classes.game_window import GameWindow
-from classes.audio import Audio
+from classes.audio import Audio, AudioDisplay
 
 gw = GameWindow()
 gw.initialize()
@@ -13,7 +13,7 @@ gw.initialize()
 audio = Audio(gw)
 audio.initialize()
 
-gw.initialize_screens(audio)
+gw.initialize_screens(audio, gw)
 
 next_page = gw.title_screen
 done = False

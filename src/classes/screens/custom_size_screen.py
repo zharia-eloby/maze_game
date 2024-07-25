@@ -206,6 +206,7 @@ class CustomSizeScreen(Screen):
         )
 
     def show(self):
+        self.audio.set_audio_display()
         redraw_elements(self.game_window.window, self.managers, 0)
 
         rows = self.default_rows
@@ -236,9 +237,6 @@ class CustomSizeScreen(Screen):
                         done = True
                         next_page = self.game_window.pick_size_screen
 
-                    elif (event.ui_object_id == "#audio-button") or (event.ui_object_id == "#no-audio-button"):
-                        self.audio.toggle_audio()
-
                     elif (event.ui_object_id == "#locked-button") or (event.ui_object_id == "#unlocked-button"):
                         if locked:
                             locked = False
@@ -252,7 +250,7 @@ class CustomSizeScreen(Screen):
                     elif event.ui_object_id == "#play-button":
                         done = True
                         self.game_window.play_screen.set_maze_dimensions(rows, columns)
-                        self.game_window.play_screen.setup()
+                        self.game_window.play_screen.setup_maze_ui()
                         next_page = self.game_window.play_screen
 
                     elif locked:
