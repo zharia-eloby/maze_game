@@ -77,8 +77,6 @@ class PlayScreen(Screen):
             player_width = self.maze.get_cell_width() - player_margin*2
         player_height = player_width
 
-        print(player_height)
-
         player_rect = pygame.Rect(
             start_rect.centerx - player_width/2,
             start_rect.centery - player_height/2,

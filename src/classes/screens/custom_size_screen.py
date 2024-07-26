@@ -340,5 +340,7 @@ class CustomSizeScreen(Screen):
             if not done:
                 time_delta = math.ceil(time.time()) - time_delta
                 self.game_window.redraw_elements(self.managers, time_delta)
-                
+        
+        self.col_text.set_text(str(self.default_columns))
+        self.row_text.set_text(str(self.default_rows))
         return next_page
