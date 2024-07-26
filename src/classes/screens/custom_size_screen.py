@@ -8,7 +8,6 @@ class CustomSizeScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
         self.audio = audio
-        self.managers = [self.ui_manager]
         self.locked_button = None
         self.unlocked_button = None
         self.row_up_arrow_button = None
@@ -19,11 +18,9 @@ class CustomSizeScreen(Screen):
         self.row_text = None
         self.default_rows = 15
         self.default_columns = 15
+        self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def setup(self):
-        bg = self.get_background()
-        self.managers.insert(0, bg['background_manager'])
-
         self.audio.create_audio_buttons(self, self.ui_manager)
         
         button_width = 45
@@ -34,7 +31,7 @@ class CustomSizeScreen(Screen):
             button_width,
             button_height
         )
-        back_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=back_button_rect, 
             text="",
             manager=self.ui_manager,
@@ -198,7 +195,7 @@ class CustomSizeScreen(Screen):
             button_width,
             button_height
         )
-        play_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=play_button_rect, 
             text="",
             manager=self.ui_manager,

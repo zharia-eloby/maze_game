@@ -5,7 +5,7 @@ Maze Game with Pygame
 
 import pygame, sys
 from classes.game_window import GameWindow
-from classes.audio import Audio, AudioDisplay
+from classes.audio import Audio
 
 gw = GameWindow()
 gw.initialize()

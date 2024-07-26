@@ -8,12 +8,9 @@ class TitleScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
         self.audio = audio
-        self.managers = [self.ui_manager]
+        self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def setup(self):
-        bg = self.get_background()
-        self.managers.insert(0, bg['background_manager'])
-
         self.audio.create_audio_buttons(self, self.ui_manager)
         resize_image('#audio-button', self.audio.button_width, self.audio.button_height)
         resize_image('#no-audio-button', self.audio.button_width, self.audio.button_height)
@@ -26,7 +23,7 @@ class TitleScreen(Screen):
             button_width,
             button_height
         )
-        play_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=play_rect, 
             text="",
             manager=self.ui_manager,

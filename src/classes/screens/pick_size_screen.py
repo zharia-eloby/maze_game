@@ -8,12 +8,9 @@ class PickSizeScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
         self.audio = audio
-        self.managers = [self.ui_manager]
+        self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def setup(self):
-        bg = self.get_background()
-        self.managers.insert(0, bg['background_manager'])
-
         self.audio.create_audio_buttons(self, self.ui_manager)
 
         button_width = 45
@@ -24,7 +21,7 @@ class PickSizeScreen(Screen):
             button_width,
             button_height
         )
-        back_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=back_button_rect, 
             text="",
             manager=self.ui_manager,
@@ -44,7 +41,7 @@ class PickSizeScreen(Screen):
             button_width,
             button_height
         )
-        easy_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=easy_button_rect, 
             text="easy",
             manager=self.ui_manager,
@@ -57,7 +54,7 @@ class PickSizeScreen(Screen):
             button_width,
             button_height
         )
-        medium_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=medium_button_rect, 
             text="medium",
             manager=self.ui_manager,
@@ -70,7 +67,7 @@ class PickSizeScreen(Screen):
             button_width,
             button_height
         )
-        hard_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=hard_button_rect, 
             text="hard",
             manager=self.ui_manager,
@@ -83,7 +80,7 @@ class PickSizeScreen(Screen):
             button_width,
             button_height
         )
-        custom_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=custom_button_rect, 
             text="custom",
             manager=self.ui_manager,
