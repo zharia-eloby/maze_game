@@ -4,6 +4,7 @@ from classes.screens.pick_size_screen import PickSizeScreen
 from classes.screens.custom_size_screen import CustomSizeScreen
 from classes.screens.play_screen import PlayScreen
 from classes.audio import AudioDisplay
+from PIL import Image
 
 class GameWindow:
     def __init__(self):
@@ -17,6 +18,7 @@ class GameWindow:
         self.pick_size_screen = None
         self.custom_size_screen = None
         self.play_screen = None
+        self.resize_images = True
 
     def initialize(self):
         pygame.init()
@@ -52,3 +54,21 @@ class GameWindow:
             m.update(time_delta)
             m.draw_ui(self.window)
         pygame.display.update()
+
+    def resize_image(self, image_id, width, height, normal=True, hovered=True):
+        if self.resize_images:
+            theme_file = os.path.realpath(self.settings['theme']['path'])
+            file = open(theme_file, "r")
+            contents = json.loads(file.read())
+            file.close()
+            images_folder = os.path.realpath("src/assets/images/")
+            if normal:
+                image_file = contents[image_id]['images']['normal_image']['resource']
+                img = Image.open(os.path.join(images_folder, image_file))
+                img = img.resize((width, height))
+                img = img.save(os.path.join(images_folder, image_file))
+            if hovered:
+                image_file = contents[image_id]['images']['hovered_image']['resource']
+                img = Image.open(os.path.join(images_folder, image_file))
+                img = img.resize((width, height))
+                img.save(os.path.join(images_folder, image_file))

@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from helpers.debugging import resize_image
 
 class TitleScreen(Screen):
     def __init__(self, game_window, audio):
@@ -11,8 +10,8 @@ class TitleScreen(Screen):
 
     def setup(self):
         self.audio.create_audio_buttons(self, self.ui_manager)
-        resize_image('#audio-button', self.audio.button_width, self.audio.button_height)
-        resize_image('#no-audio-button', self.audio.button_width, self.audio.button_height)
+        self.game_window.resize_image('#audio-button', self.audio.button_width, self.audio.button_height)
+        self.game_window.resize_image('#no-audio-button', self.audio.button_width, self.audio.button_height)
 
         button_width = math.floor(self.drawable_area.width/2)
         button_height = 100
@@ -28,7 +27,7 @@ class TitleScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#play-button")
         )
-        resize_image('#play-button', button_width, button_height)
+        self.game_window.resize_image('#play-button', button_width, button_height)
         
         title_rect = pygame.Rect(
             self.drawable_area.left, 

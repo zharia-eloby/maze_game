@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from helpers.debugging import resize_image
 
 class CustomSizeScreen(Screen):
     def __init__(self, game_window, audio):
@@ -120,7 +119,7 @@ class CustomSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#row-up-arrow", class_id="@up-arrow")
         )
-        resize_image('@up-arrow', arrow_width, arrow_height)
+        self.game_window.resize_image('@up-arrow', arrow_width, arrow_height)
 
         row_down_arrow_rect = pygame.Rect(
             row_text_rect.centerx - arrow_width/2,
@@ -134,7 +133,7 @@ class CustomSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#row-down-arrow", class_id="@down-arrow")
         )
-        resize_image('@down-arrow', arrow_width, arrow_height)
+        self.game_window.resize_image('@down-arrow', arrow_width, arrow_height)
 
         column_up_arrow_rect = pygame.Rect(
             col_text_rect.centerx - arrow_width/2,
@@ -182,8 +181,8 @@ class CustomSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#unlocked-button")
         )
-        resize_image('#locked-button', lock_button_width, lock_button_height)
-        resize_image('#unlocked-button', lock_button_width, lock_button_height)
+        self.game_window.resize_image('#locked-button', lock_button_width, lock_button_height)
+        self.game_window.resize_image('#unlocked-button', lock_button_width, lock_button_height)
         self.unlocked_button.hide()
         
         button_width = math.floor(self.drawable_area.width/2)

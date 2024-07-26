@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from helpers.debugging import resize_image
 from classes.maze import Maze
 from classes.modals.pause_menu import PauseMenu
 from classes.modals.finished_menu import FinishedMenu
@@ -145,7 +144,7 @@ class PlayScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#show-solution-button")
         )
-        resize_image('#show-solution-button', button_width, button_height)
+        self.game_window.resize_image('#show-solution-button', button_width, button_height)
 
     def show(self):
         self.audio.set_audio_display()

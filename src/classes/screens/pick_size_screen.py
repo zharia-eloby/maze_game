@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from helpers.debugging import resize_image
 
 class PickSizeScreen(Screen):
     def __init__(self, game_window, audio):
@@ -26,7 +25,7 @@ class PickSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#back-button")
         )
-        resize_image('#back-button', back_button_rect.width, back_button_rect.height)
+        self.game_window.resize_image('#back-button', back_button_rect.width, back_button_rect.height)
         
         num_buttons = 4
         space_between_buttons = 50
@@ -85,7 +84,7 @@ class PickSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#custom-button", class_id="@large-button")
         )
-        resize_image('@large-button', custom_button_rect.width, custom_button_rect.height)
+        self.game_window.resize_image('@large-button', custom_button_rect.width, custom_button_rect.height)
 
     def show(self):
         self.audio.set_audio_display()

@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time, sys
 from pygame_gui.core import ObjectID
 from classes.modals.modal import Modal
-from helpers.debugging import resize_image
 
 class PauseMenu(Modal):
     def __init__(self, game_window):
@@ -47,7 +46,7 @@ class PauseMenu(Modal):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#exit-button", class_id="@modal-large-button")
         )
-        resize_image('@modal-large-button', button_width, button_height)
+        self.game_window.resize_image('@modal-large-button', button_width, button_height)
 
         resume_button_rect = pygame.Rect(
             background_rect.left + self.margin,
