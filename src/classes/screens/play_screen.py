@@ -177,7 +177,7 @@ class PlayScreen(Screen):
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
-                        if solving:
+                        elif solving:
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif event.ui_object_id == "#reset-button":
