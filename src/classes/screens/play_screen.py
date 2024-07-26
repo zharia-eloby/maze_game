@@ -33,6 +33,7 @@ class PlayScreen(Screen):
         self.maze.reset_maze()
         self.maze_manager.clear_and_reset()
         self.solution_manager.clear_and_reset()
+        self.show_solution_button.enable()
         self.solution_stack = None
         self.player = None
 
@@ -192,7 +193,6 @@ class PlayScreen(Screen):
                         pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                         self.solution_manager.clear_and_reset()
                         self.show_solution_button.disable()
-                        self.reset_button.disable()
 
                 elif event.type == SHOW_SOLUTION:
                     if new_line:
@@ -200,7 +200,6 @@ class PlayScreen(Screen):
                             solving = False
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                             self.show_solution_button.enable()
-                            self.reset_button.enable()
                         else:
                             curr_cell = self.solution_stack[curr_index]
                             next_cell = self.solution_stack[curr_index + 1]
@@ -272,7 +271,6 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                             solving = False
                             self.show_solution_button.enable()
-                            self.reset_button.enable()
 
                 self.ui_manager.process_events(event)
 
