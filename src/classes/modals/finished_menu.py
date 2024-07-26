@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time, sys
 from pygame_gui.core import ObjectID
 from classes.modals.modal import Modal
-from helpers.redraw import redraw_elements
 
 class FinishedMenu(Modal):
     def __init__(self, game_window):
@@ -76,7 +75,7 @@ class FinishedMenu(Modal):
         )
 
     def show(self):
-        redraw_elements(self.game_window.window, [self.overlay_manager, self.menu_background_manager, self.ui_manager], 0)
+        self.game_window.redraw_elements([self.overlay_manager, self.menu_background_manager, self.ui_manager], 0)
     
         done = False
         restart = False
@@ -95,6 +94,6 @@ class FinishedMenu(Modal):
                 self.ui_manager.process_events(event)
             
             time_delta = math.ceil(time.time()) - time_delta
-            redraw_elements(self.game_window.window, [self.menu_background_manager, self.ui_manager], time_delta)
+            self.game_window.redraw_elements([self.menu_background_manager, self.ui_manager], time_delta)
         
         return restart

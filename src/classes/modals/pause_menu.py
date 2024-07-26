@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time, sys
 from pygame_gui.core import ObjectID
 from classes.modals.modal import Modal
-from helpers.redraw import redraw_elements
 from helpers.debugging import resize_image
 
 class PauseMenu(Modal):
@@ -42,7 +41,7 @@ class PauseMenu(Modal):
             button_width,
             button_height
         )
-        exit_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=exit_button_rect,
             text="exit to home screen",
             manager=self.ui_manager,
@@ -56,7 +55,7 @@ class PauseMenu(Modal):
             button_width,
             button_height
         )
-        resume_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=resume_button_rect,
             text="resume",
             manager=self.ui_manager,
@@ -80,7 +79,7 @@ class PauseMenu(Modal):
         paused = True
         resume = True
         time_delta = math.ceil(time.time())
-        redraw_elements(self.game_window.window, [self.overlay_manager, self.menu_background_manager, self.ui_manager], 0)
+        self.game_window.redraw_elements([self.overlay_manager, self.menu_background_manager, self.ui_manager], 0)
         while paused:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -98,5 +97,5 @@ class PauseMenu(Modal):
                 self.ui_manager.process_events(event)
 
             time_delta = math.ceil(time.time()) - time_delta
-            redraw_elements(self.game_window.window, [self.menu_background_manager, self.ui_manager], time_delta)
+            self.game_window.redraw_elements([self.menu_background_manager, self.ui_manager], time_delta)
         return resume

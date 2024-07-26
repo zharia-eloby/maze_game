@@ -46,3 +46,9 @@ class GameWindow:
         json.dump(updated_content, file, indent=4)
         file.truncate()
         file.close()
+
+    def redraw_elements(self, managers, time_delta):
+        for m in managers:
+            m.update(time_delta)
+            m.draw_ui(self.window)
+        pygame.display.update()

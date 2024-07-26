@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from helpers.redraw import redraw_elements
 from helpers.debugging import resize_image
 
 class PickSizeScreen(Screen):
@@ -90,7 +89,7 @@ class PickSizeScreen(Screen):
 
     def show(self):
         self.audio.set_audio_display()
-        redraw_elements(self.game_window.window, self.managers, 0)
+        self.game_window.redraw_elements(self.managers, 0)
 
         next_page = None
         done = False
@@ -142,6 +141,6 @@ class PickSizeScreen(Screen):
                 self.ui_manager.process_events(event)
             
             time_delta = math.ceil(time.time()) - time_delta
-            redraw_elements(self.game_window.window, self.managers, time_delta)
+            self.game_window.redraw_elements(self.managers, time_delta)
 
         return next_page

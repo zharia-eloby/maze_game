@@ -1,7 +1,6 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from helpers.redraw import redraw_elements
 from helpers.debugging import resize_image
 from classes.maze import Maze
 from classes.modals.pause_menu import PauseMenu
@@ -159,7 +158,7 @@ class PlayScreen(Screen):
         next_page = None
         solving = False
         completed = False
-        redraw_elements(self.game_window.window, self.managers, 0)
+        self.game_window.redraw_elements(self.managers, 0)
         time_delta = math.ceil(time.time())
         while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
@@ -275,7 +274,7 @@ class PlayScreen(Screen):
                 self.ui_manager.process_events(event)
 
             time_delta = math.ceil(time.time()) - time_delta
-            redraw_elements(self.game_window.window, self.managers, time_delta)
+            self.game_window.redraw_elements(self.managers, time_delta)
             
         if completed:
             restart = self.finished_menu.show()
