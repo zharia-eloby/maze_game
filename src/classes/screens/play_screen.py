@@ -143,7 +143,7 @@ class PlayScreen(Screen):
             relative_rect=show_solution_rect,
             text="show solution",
             manager=self.ui_manager,
-            object_id=ObjectID(class_id="#show-solution-button")
+            object_id=ObjectID(object_id="#show-solution-button")
         )
         resize_image('#show-solution-button', button_width, button_height)
 
@@ -168,12 +168,13 @@ class PlayScreen(Screen):
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
-                elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
+                elif (event.type == pygame_gui.UI_BUTTON_PRESSED) and (len(event.__dict__) > 0):
                     if event.ui_object_id == "#pause-button":
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                         resume = self.pause_menu.show()
-                        if not resume: 
+                        if not resume:
+                            pygame.event.clear()
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
@@ -183,7 +184,7 @@ class PlayScreen(Screen):
                     elif event.ui_object_id == "#reset-button":
                         self.maze.move_player("reset", self.player)
 
-                    elif event.ui_element == self.show_solution_button:
+                    elif event.ui_object_id == "#show-solution-button":
                         if not self.solution_stack:
                             self.solution_stack = self.maze.solve_maze()
                         curr_index = 0

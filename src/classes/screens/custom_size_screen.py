@@ -203,7 +203,6 @@ class CustomSizeScreen(Screen):
 
     def show(self):
         self.audio.set_audio_display()
-        self.game_window.redraw_elements(self.managers, 0)
 
         rows = self.default_rows
         columns = self.default_columns

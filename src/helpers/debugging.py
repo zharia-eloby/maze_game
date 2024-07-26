@@ -2,7 +2,7 @@
 for debugging purposes only
 """
 
-import os, json, sys
+import os, json
 from PIL import Image
 from helpers.settings import get_settings
 
