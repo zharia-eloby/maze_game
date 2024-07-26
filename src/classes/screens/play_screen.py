@@ -37,18 +37,16 @@ class PlayScreen(Screen):
 
     def setup_maze_ui(self): 
         self.maze.create_maze()
-        endpoint = self.maze.get_endpoint()
-        startpoint = self.maze.get_startpoint()
-        self.maze.set_player_position(startpoint)
+        self.maze.player_position = self.maze.startpoint
         self.maze.set_maze_ui_measurements(self.drawable_area)
         self.maze.draw_maze(self.maze_manager)
 
-        ui_position = self.maze.get_cell_ui_position(startpoint)
+        ui_position = self.maze.get_cell_ui_position(self.maze.startpoint)
         start_rect = pygame.Rect(
             ui_position[0],
             ui_position[1],
-            self.maze.get_cell_width() - self.maze.get_wall_thickness(),
-            self.maze.get_cell_height() - self.maze.get_wall_thickness()
+            self.maze.cell_width - self.maze.wall_thickness,
+            self.maze.cell_height - self.maze.wall_thickness
         )
         pygame_gui.elements.UIPanel(
             relative_rect=start_rect,
@@ -56,12 +54,12 @@ class PlayScreen(Screen):
             object_id=ObjectID(object_id="#startpoint")
         )
 
-        ui_position = self.maze.get_cell_ui_position(endpoint)
+        ui_position = self.maze.get_cell_ui_position(self.maze.endpoint)
         end_rect = pygame.Rect(
             ui_position[0],
             ui_position[1],
-            self.maze.get_cell_width() - self.maze.get_wall_thickness(),
-            self.maze.get_cell_height() - self.maze.get_wall_thickness()
+            self.maze.cell_width - self.maze.wall_thickness,
+            self.maze.cell_height - self.maze.wall_thickness
         )
         pygame_gui.elements.UIPanel(
             relative_rect=end_rect,
@@ -69,12 +67,12 @@ class PlayScreen(Screen):
             object_id=ObjectID(object_id="#endpoint")
         )
 
-        player_margin = math.ceil(self.maze.get_wall_thickness() * 1.5)
+        player_margin = math.ceil(self.maze.wall_thickness * 1.5)
         # set player width to be the smaller of cell width and cell height
         if start_rect.width > start_rect.height:
-            player_width = self.maze.get_cell_height() - player_margin*2
+            player_width = self.maze.cell_height - player_margin*2
         else:
-            player_width = self.maze.get_cell_width() - player_margin*2
+            player_width = self.maze.cell_width - player_margin*2
         player_height = player_width
 
         player_rect = pygame.Rect(
@@ -203,10 +201,10 @@ class PlayScreen(Screen):
 
                             ui_position = self.maze.get_cell_ui_position(curr_cell)
                             line_rect = pygame.Rect(
-                                ui_position[0] + self.maze.get_cell_width()/2 - self.maze.get_wall_thickness(),
-                                ui_position[1] + self.maze.get_cell_height()/2 - self.maze.get_wall_thickness(),
-                                self.maze.get_wall_thickness(),
-                                self.maze.get_wall_thickness()
+                                ui_position[0] + self.maze.cell_width/2 - self.maze.wall_thickness,
+                                ui_position[1] + self.maze.cell_height/2 - self.maze.wall_thickness,
+                                self.maze.wall_thickness,
+                                self.maze.wall_thickness
                             )
                             line = pygame_gui.elements.UIPanel(
                                 relative_rect=line_rect,
@@ -215,12 +213,12 @@ class PlayScreen(Screen):
                             )
 
                             if (curr_cell[1] < next_cell[1]) or (curr_cell[1] > next_cell[1]):   # horizontal
-                                target_width = self.maze.get_cell_width() + self.maze.get_wall_thickness()
-                                target_height = self.maze.get_wall_thickness()
+                                target_width = self.maze.cell_width + self.maze.wall_thickness
+                                target_height = self.maze.wall_thickness
 
                             elif (curr_cell[0] < next_cell[0]) or (curr_cell[0] > next_cell[0]): # vertical
-                                target_width = self.maze.get_wall_thickness()
-                                target_height = self.maze.get_cell_height() + self.maze.get_wall_thickness()
+                                target_width = self.maze.wall_thickness
+                                target_height = self.maze.cell_height + self.maze.wall_thickness
 
                             new_line = False
                             curr_index += 1
@@ -261,7 +259,7 @@ class PlayScreen(Screen):
                     elif (event.key == pygame.K_RIGHT) or (event.key == pygame.K_d):
                         self.maze.move_player("right", self.player)
                     
-                    if self.maze.get_player_position() == self.maze.get_endpoint():
+                    if self.maze.player_position == self.maze.endpoint:
                         completed = True
                         done = True
                         if solving:

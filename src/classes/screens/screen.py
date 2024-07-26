@@ -12,9 +12,6 @@ class Screen():
         )
         self.ui_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
     
-    def get_drawable_area(self):
-        return self.drawable_area
-    
     def get_background(self):
         background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         background_rect = pygame.Rect(

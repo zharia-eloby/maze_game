@@ -15,54 +15,6 @@ class Maze:
         self.endpoint = None
         self.topleft = None
         self.player_position = None
-
-    def get_maze(self):
-        return self.maze
-    
-    def get_maze_height(self):
-        return self.maze_height
-    
-    def get_maze_width(self):
-        return self.maze_width
-
-    def set_cell_width(self, new_width):
-        self.cell_width = new_width
-
-    def get_cell_width(self):
-        return self.cell_width
-    
-    def set_cell_height(self, new_height):
-        self.cell_height = new_height
-
-    def get_cell_height(self):
-        return self.cell_height
-    
-    def get_wall_thickness(self):
-        return self.wall_thickness
-    
-    def set_startpoint(self, startpoint):
-        self.startpoint = startpoint
-
-    def get_startpoint(self):
-        return self.startpoint
-    
-    def set_endpoint(self, endpoint):
-        self.endpoint = endpoint
-
-    def get_endpoint(self):
-        return self.endpoint
-    
-    def set_topleft(self, topleft):
-        self.topleft = topleft
-    
-    def get_topleft(self):
-        return self.topleft
-    
-    def get_player_position(self):
-        return self.player_position
-    
-    def set_player_position(self, player_position):
-        self.player_position = player_position
     
     def check_neighbors(self, current_position):
         available_neighbors = []
@@ -132,15 +84,12 @@ class Maze:
                 self.maze[chosen[0]][chosen[1]] = 'v'
                 cells_to_go -= 1
                 if cells_to_go == 0:
-                    self.set_endpoint(chosen)
-                    startpoint = None
-                    while (startpoint is None) or (self.endpoint == startpoint):
-                        startpoint = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
-                    self.set_startpoint(startpoint)
+                    self.endpoint = chosen
+                    while (self.startpoint is None) or (self.endpoint == self.startpoint):
+                        self.startpoint = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
                 stack.append(chosen)
             else:
                 stack.pop()
-        return
     
     def set_maze_ui_measurements(self, ui_area):
         if ui_area.width > ui_area.height:
@@ -222,7 +171,7 @@ class Maze:
             startpoint_top = start_rect[1] + self.cell_height/2 - player.get_relative_rect().height/2 - self.wall_thickness/2
             player.set_relative_position((startpoint_left, startpoint_top))
             current_position = (self.startpoint[0], self.startpoint[1])
-            self.set_player_position(current_position)
+            self.player_position = current_position
             return
 
         current_left = player.get_relative_rect().left
@@ -242,7 +191,7 @@ class Maze:
         elif direction == "right" and self.maze[current_position[0]][current_position[1]+1] == "o":
             player.set_relative_position((current_left + self.cell_width, current_top))
             current_position = (current_position[0], current_position[1] + 2)
-        self.set_player_position(current_position)
+        self.player_position = current_position
     
     """
     only used for solving a maze. checks available paths for the current cell

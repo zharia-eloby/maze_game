@@ -7,9 +7,6 @@ class Audio():
         self.volume = game_window.settings['audio']['volume']
         self.audio_file = os.path.realpath(game_window.settings['theme']['audio']['path'])
     
-    def get_manager(self):
-        return self.manager
-    
     def initialize(self):
         pygame.mixer.init()
         if self.volume > 0:
@@ -27,7 +24,7 @@ class AudioDisplay(Audio):
         self.audio = parent
 
     def create_audio_buttons(self, screen, ui_manager):
-        ui_area = screen.get_drawable_area()
+        ui_area = screen.drawable_area
         audio_button_rect = pygame.Rect(
             ui_area.right - self.button_width,
             ui_area.top,
