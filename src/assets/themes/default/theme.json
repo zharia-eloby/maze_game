@@ -69,17 +69,15 @@
     {
         "colours":
         {
-            "normal_bg": "#ffffff",
-            "active_bg": "#ffffff",
-            "hovered_bg": "#ffffff",
-            "disabled_bg": "#ffffff",
-            "selected_bg": "#ffffff"
+            "dark_bg": "#ffffff",
+            "normal_border": "#ffffff"
         },
         "misc":
         {
             "border_width": "0",
             "shadow_width": "0",
-            "shape": "ellipse"
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "100"
         }
     },
     "@wall" :
@@ -93,30 +91,6 @@
             "border_width":"0",
             "shadow_width":"0"
         }
-    },
-    "#background": 
-    {
-        "background_image": 
-        {
-            "dark_bg":
-            {
-                "package": "assets.images",
-                "resource": "background/pixelart_starfield.png"
-            }
-        }
-        
-    },
-    "#background-2": 
-    {
-        "images": 
-        {
-            "disabled_image":
-            {
-                "package": "assets.images",
-                "resource": "background/pixelart_starfield.png"
-            }
-        }
-        
     },
     "#startpoint":
     {

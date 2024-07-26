@@ -77,19 +77,19 @@ class PlayScreen(Screen):
             player_width = self.maze.get_cell_width() - player_margin*2
         player_height = player_width
 
+        print(player_height)
+
         player_rect = pygame.Rect(
             start_rect.centerx - player_width/2,
             start_rect.centery - player_height/2,
             player_width,
             player_height
         )
-        self.player = pygame_gui.elements.UIButton(
+        self.player = pygame_gui.elements.UIPanel(
             relative_rect=player_rect,
-            text="",
             manager=self.maze_manager,
             object_id=ObjectID(object_id="#player")
         )
-        self.player.disable()
 
     def setup(self):
         self.audio.create_audio_buttons(self, self.ui_manager)
