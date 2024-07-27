@@ -38,7 +38,7 @@ class PlayScreen(Screen):
     def setup_maze_ui(self): 
         self.maze.create_maze()
         self.maze.player_position = self.maze.startpoint
-        self.maze.set_maze_ui_measurements(self.drawable_area)
+        self.maze.set_maze_ui_measurements(self.game_window.drawable_area)
         self.maze.draw_maze(self.maze_manager)
 
         ui_position = self.maze.get_cell_ui_position(self.maze.startpoint)
@@ -88,7 +88,7 @@ class PlayScreen(Screen):
         )
 
     def setup(self):
-        self.audio.create_audio_buttons(self, self.ui_manager)
+        self.audio.create_audio_buttons(self.ui_manager)
 
         self.pause_menu = PauseMenu(self.game_window)
         self.pause_menu.setup()
@@ -100,7 +100,7 @@ class PlayScreen(Screen):
         pause_button_height = pause_button_width
         pause_button_rect = pygame.Rect(
             self.audio.get_audio_button_rect().left - pause_button_width - 20,
-            self.drawable_area.top,
+            self.game_window.drawable_area.top,
             pause_button_width,
             pause_button_height
         )
@@ -115,7 +115,7 @@ class PlayScreen(Screen):
         reset_button_height = reset_button_width
         reset_button_rect = pygame.Rect(
             pause_button_rect.left - reset_button_width - 20,
-            self.drawable_area.top,
+            self.game_window.drawable_area.top,
             reset_button_width,
             reset_button_height
         )
@@ -126,11 +126,11 @@ class PlayScreen(Screen):
             object_id=ObjectID(object_id="#reset-button")
         )
 
-        button_width = math.ceil(self.drawable_area.width * 0.3)
+        button_width = math.ceil(self.game_window.drawable_area.width * 0.3)
         button_height = 45
         show_solution_rect = pygame.Rect(
-            self.drawable_area.left,
-            self.drawable_area.top,
+            self.game_window.drawable_area.left,
+            self.game_window.drawable_area.top,
             button_width,
             button_height
         )

@@ -21,8 +21,8 @@ class FinishedMenu(Modal):
         )
         
         background_rect = pygame.Rect(
-            self.drawable_area.centerx - self.width/2,
-            self.drawable_area.centery - self.height/2,
+            self.game_window.drawable_area.centerx - self.width/2,
+            self.game_window.drawable_area.centery - self.height/2,
             self.width,
             self.height
         )

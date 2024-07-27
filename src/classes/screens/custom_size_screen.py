@@ -19,13 +19,13 @@ class CustomSizeScreen(Screen):
         self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def setup(self):
-        self.audio.create_audio_buttons(self, self.ui_manager)
+        self.audio.create_audio_buttons(self.ui_manager)
         
         button_width = 45
         button_height = 45
         back_button_rect = pygame.Rect(
-            self.drawable_area.left,
-            self.drawable_area.top,
+            self.game_window.drawable_area.left,
+            self.game_window.drawable_area.top,
             button_width,
             button_height
         )
@@ -37,9 +37,9 @@ class CustomSizeScreen(Screen):
         )
         
         select_text_rect = pygame.Rect(
-            self.drawable_area.left,
+            self.game_window.drawable_area.left,
             back_button_rect.bottom,
-            self.drawable_area.width,
+            self.game_window.drawable_area.width,
             70
         )
         pygame_gui.elements.UILabel(
@@ -50,9 +50,9 @@ class CustomSizeScreen(Screen):
         )
 
         warning_text_rect = pygame.Rect(
-            self.drawable_area.left,
+            self.game_window.drawable_area.left,
             select_text_rect.bottom,
-            self.drawable_area.width,
+            self.game_window.drawable_area.width,
             25
         )
         pygame_gui.elements.UILabel(
@@ -62,11 +62,11 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(object_id="@small-text")
         )
         
-        x_width = self.drawable_area.width * 0.1
+        x_width = self.game_window.drawable_area.width * 0.1
         x_height = 100
         x_text_rect = pygame.Rect(
-            self.drawable_area.centerx - x_width/2,
-            self.drawable_area.centery - x_height/2,
+            self.game_window.drawable_area.centerx - x_width/2,
+            self.game_window.drawable_area.centery - x_height/2,
             x_width,
             x_height
         )
@@ -79,9 +79,9 @@ class CustomSizeScreen(Screen):
         
         text_height = 100
         row_text_rect = pygame.Rect(
-            self.drawable_area.left,
-            self.drawable_area.centery - text_height/2,
-            x_text_rect.left - self.drawable_area.left,
+            self.game_window.drawable_area.left,
+            self.game_window.drawable_area.centery - text_height/2,
+            x_text_rect.left - self.game_window.drawable_area.left,
             text_height
         )
         self.row_text = pygame_gui.elements.UILabel(
@@ -93,8 +93,8 @@ class CustomSizeScreen(Screen):
 
         col_text_rect = pygame.Rect(
             x_text_rect.right,
-            self.drawable_area.centery - text_height/2,
-            self.drawable_area.right - x_text_rect.right,
+            self.game_window.drawable_area.centery - text_height/2,
+            self.game_window.drawable_area.right - x_text_rect.right,
             text_height
         )
         self.col_text = pygame_gui.elements.UILabel(
@@ -164,7 +164,7 @@ class CustomSizeScreen(Screen):
         lock_button_width = 50
         lock_button_height = 50
         lock_button_rect = pygame.Rect(
-            self.drawable_area.centerx - lock_button_width/2,
+            self.game_window.drawable_area.centerx - lock_button_width/2,
             row_down_arrow_rect.bottom - lock_button_height,
             lock_button_width,
             lock_button_height
@@ -185,11 +185,11 @@ class CustomSizeScreen(Screen):
         self.game_window.resize_image('#unlocked-button', lock_button_width, lock_button_height)
         self.unlocked_button.hide()
         
-        button_width = math.floor(self.drawable_area.width/2)
+        button_width = math.floor(self.game_window.drawable_area.width/2)
         button_height = 100
         play_button_rect = pygame.Rect(
-            self.drawable_area.centerx- button_width/2,
-            self.drawable_area.bottom - button_height - 50,
+            self.game_window.drawable_area.centerx- button_width/2,
+            self.game_window.drawable_area.bottom - button_height - 50,
             button_width,
             button_height
         )

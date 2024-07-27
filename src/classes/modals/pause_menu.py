@@ -21,8 +21,8 @@ class PauseMenu(Modal):
         )
 
         background_rect = pygame.Rect(
-            self.drawable_area.centerx - self.width/2, 
-            self.drawable_area.centery - self.height/2, 
+            self.game_window.drawable_area.centerx - self.width/2, 
+            self.game_window.drawable_area.centery - self.height/2, 
             self.width, 
             self.height
         )
@@ -35,7 +35,7 @@ class PauseMenu(Modal):
         button_height = 70
         button_width = background_rect.width-self.margin*2
         exit_button_rect = pygame.Rect(
-            self.drawable_area.centerx - button_width/2,
+            self.game_window.drawable_area.centerx - button_width/2,
             background_rect.bottom - self.margin - button_height,
             button_width,
             button_height

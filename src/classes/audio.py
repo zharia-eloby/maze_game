@@ -23,11 +23,10 @@ class AudioDisplay(Audio):
         self.no_audio_button = None
         self.audio = parent
 
-    def create_audio_buttons(self, screen, ui_manager):
-        ui_area = screen.drawable_area
+    def create_audio_buttons(self, ui_manager):
         audio_button_rect = pygame.Rect(
-            ui_area.right - self.button_width,
-            ui_area.top,
+            self.game_window.drawable_area.right - self.button_width,
+            self.game_window.drawable_area.top,
             self.button_width,
             self.button_height
         )

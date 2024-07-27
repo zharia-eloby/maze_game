@@ -10,8 +10,14 @@ class GameWindow:
     def __init__(self):
         self.screen_width = 600
         self.screen_height = 700
-        self.margin = 50
         self.window = pygame.display.set_mode([self.screen_width, self.screen_height])
+        self.margin = 50
+        self.drawable_area = pygame.Rect(
+            self.margin,
+            self.margin,
+            self.screen_width - self.margin*2,
+            self.screen_height - self.margin*2
+        )
         self.settings = self.load_settings()
         self.theme_file = os.path.realpath(self.settings['theme']['path'])
         self.title_screen = None

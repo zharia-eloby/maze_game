@@ -4,12 +4,6 @@ from PIL import Image
 class Screen():
     def __init__(self, game_window):
         self.game_window = game_window
-        self.drawable_area = pygame.Rect(
-            self.game_window.margin,
-            self.game_window.margin,
-            self.game_window.screen_width - self.game_window.margin*2,
-            self.game_window.screen_height - self.game_window.margin*2
-        )
         self.ui_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
     
     def get_background(self):
