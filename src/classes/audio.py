@@ -53,7 +53,11 @@ class AudioDisplay(Audio):
 
     def turn_on_audio(self):
         pygame.mixer.music.load(self.audio_file)
-        pygame.mixer.music.set_volume(self.volume)
+        if self.volume > 0:
+            pygame.mixer.music.set_volume(self.volume) 
+        else: 
+            pygame.mixer.music.set_volume(1)
+            self.volume = 1
         pygame.mixer.music.play(loops=-1)
         self.no_audio_button.hide()
         self.audio_button.show()
@@ -63,12 +67,6 @@ class AudioDisplay(Audio):
         pygame.mixer.music.unload()
         self.audio_button.hide()
         self.no_audio_button.show()
-
-    def toggle_audio(self):
-        if pygame.mixer.music.get_busy():
-            self.turn_off_audio()
-        else:
-            self.turn_on_audio()
 
     def get_audio_button_rect(self):
         return self.audio_button.get_relative_rect()
