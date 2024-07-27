@@ -9,9 +9,9 @@ class Audio():
     
     def initialize(self):
         pygame.mixer.init()
+        pygame.mixer.music.set_volume(self.volume)
         if self.volume > 0:
             pygame.mixer.music.load(self.audio_file)
-            pygame.mixer.music.set_volume(self.volume)
             pygame.mixer.music.play(loops=-1)
 
 class AudioDisplay(Audio):
@@ -64,6 +64,7 @@ class AudioDisplay(Audio):
 
     def turn_off_audio(self):
         pygame.mixer.music.fadeout(250)
+        pygame.mixer.music.set_volume(0)
         pygame.mixer.music.unload()
         self.audio_button.hide()
         self.no_audio_button.show()

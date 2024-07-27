@@ -3,6 +3,7 @@ from classes.screens.title_screen import TitleScreen
 from classes.screens.pick_size_screen import PickSizeScreen
 from classes.screens.custom_size_screen import CustomSizeScreen
 from classes.screens.play_screen import PlayScreen
+from classes.screens.settings_screen import SettingsScreen
 from classes.audio import AudioDisplay
 from PIL import Image
 
@@ -45,6 +46,8 @@ class GameWindow:
         self.custom_size_screen.setup()
         self.play_screen = PlayScreen(self, AudioDisplay(audio, game_window))
         self.play_screen.setup()
+        self.settings_screen = SettingsScreen(self, AudioDisplay(audio, game_window))
+        self.settings_screen.setup()
 
     def load_settings(self):
         path = os.path.realpath("src/assets/settings.json")

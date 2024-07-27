@@ -13,6 +13,20 @@ class TitleScreen(Screen):
         self.game_window.resize_image('#audio-button', self.audio.get_audio_button_rect().width, self.audio.get_audio_button_rect().height)
         self.game_window.resize_image('#no-audio-button', self.audio.get_audio_button_rect().width, self.audio.get_audio_button_rect().height)
 
+        settings_button_rect = pygame.Rect(
+            self.game_window.drawable_area.left,
+            self.game_window.drawable_area.top,
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=settings_button_rect, 
+            text="",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#settings-cog-button")
+        )
+        self.game_window.resize_image('#settings-cog-button', settings_button_rect.width, settings_button_rect.height)
+        
         play_rect = pygame.Rect(
             self.game_window.drawable_area.centerx - self.game_window.large_rect_button_width/2,
             self.game_window.drawable_area.centery + self.game_window.large_rect_button_height/2,
@@ -69,6 +83,10 @@ class TitleScreen(Screen):
                     if event.ui_object_id == "#play-button":
                         done = True
                         next_page = self.game_window.pick_size_screen
+
+                    elif event.ui_object_id == "#settings-cog-button":
+                        done = True
+                        next_page = self.game_window.settings_screen
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
