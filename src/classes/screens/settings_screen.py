@@ -7,6 +7,7 @@ class SettingsScreen(Screen):
         super().__init__(game_window)
         self.audio = audio
         self.volume_slider = None
+        self.line_spacing = 25
         self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def setup(self):
@@ -45,9 +46,9 @@ class SettingsScreen(Screen):
 
         volume_label_rect = pygame.Rect(
             content_area_rect.left, 
-            settings_title_rect.bottom,
-            content_area_rect.width * 0.3, 
-            25
+            settings_title_rect.bottom + self.line_spacing,
+            content_area_rect.width * 0.5, 
+            30
         )
         pygame_gui.elements.UILabel(
             relative_rect=volume_label_rect, 
@@ -56,10 +57,11 @@ class SettingsScreen(Screen):
             object_id=ObjectID(class_id="@small-text")
         )
 
+        slider_label_width = 25
         volume_slider_rect = pygame.Rect(
-            volume_label_rect.right,
+            volume_label_rect.right + slider_label_width,
             volume_label_rect.top,
-            content_area_rect.width - volume_label_rect.width,
+            content_area_rect.width - volume_label_rect.width - slider_label_width*2,
             volume_label_rect.height
         )
         self.volume_slider = pygame_gui.elements.UIHorizontalSlider(
@@ -69,10 +71,34 @@ class SettingsScreen(Screen):
             start_value=self.audio.volume,
             object_id=ObjectID(object_id="#volume-slider")
         )
+        slider_minus_label_rect = pygame.Rect(
+            volume_label_rect.right, 
+            volume_label_rect.top,
+            slider_label_width, 
+            volume_slider_rect.height
+        )
+        pygame_gui.elements.UILabel(
+            relative_rect=slider_minus_label_rect, 
+            text="-",
+            manager=self.ui_manager,
+            object_id=ObjectID(class_id="@small-text")
+        )
+        slider_add_label_rect = pygame.Rect(
+            volume_slider_rect.right, 
+            volume_slider_rect.top,
+            slider_label_width, 
+            volume_slider_rect.height
+        )
+        pygame_gui.elements.UILabel(
+            relative_rect=slider_add_label_rect, 
+            text="+",
+            manager=self.ui_manager,
+            object_id=ObjectID(class_id="@small-text")
+        )
 
         exit_game_button_rect = pygame.Rect(
             content_area_rect.centerx - self.game_window.large_rect_button_width/2,
-            content_area_rect.centery - self.game_window.large_rect_button_height/2,
+            volume_slider_rect.bottom + self.line_spacing,
             self.game_window.large_rect_button_width,
             self.game_window.large_rect_button_height
         )

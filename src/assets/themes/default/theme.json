@@ -52,6 +52,36 @@
             "hovered_text": "#5e5e5e"
         }
     },
+    "horizontal_slider":
+    {
+        "colours":
+        {
+            "dark_bg": "#2cbe83"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "10",
+            "border_width": "0",
+            "sliding_button_width": "50",
+            "enable_arrow_buttons": "0"
+        }
+    },
+    "horizontal_slider.#sliding_button":
+    {
+        "colours": 
+        {
+            "normal_bg": "#70b7df",
+            "hovered_bg": "#a1d9f8",
+            "selected_bg": "#a1d9f8",
+            "active_bg": "#a1d9f8"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "10"
+        }
+    },
     "#title": 
     {
         "prototype": "#general-font",
