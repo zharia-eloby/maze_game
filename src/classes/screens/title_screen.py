@@ -10,16 +10,14 @@ class TitleScreen(Screen):
 
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
-        self.game_window.resize_image('#audio-button', self.audio.button_width, self.audio.button_height)
-        self.game_window.resize_image('#no-audio-button', self.audio.button_width, self.audio.button_height)
+        self.game_window.resize_image('#audio-button', self.audio.get_audio_button_rect().width, self.audio.get_audio_button_rect().height)
+        self.game_window.resize_image('#no-audio-button', self.audio.get_audio_button_rect().width, self.audio.get_audio_button_rect().height)
 
-        button_width = math.floor(self.game_window.drawable_area.width/2)
-        button_height = 100
         play_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - button_width/2,
-            self.game_window.drawable_area.centery + button_height/2,
-            button_width,
-            button_height
+            self.game_window.drawable_area.centerx - self.game_window.large_rect_button_width/2,
+            self.game_window.drawable_area.centery + self.game_window.large_rect_button_height/2,
+            self.game_window.large_rect_button_width,
+            self.game_window.large_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_rect, 
@@ -27,7 +25,7 @@ class TitleScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#play-button")
         )
-        self.game_window.resize_image('#play-button', button_width, button_height)
+        self.game_window.resize_image('#play-button', play_rect.width, play_rect.height)
         
         title_rect = pygame.Rect(
             self.game_window.drawable_area.left, 
@@ -45,7 +43,7 @@ class TitleScreen(Screen):
         credits_rect = pygame.Rect(
             self.game_window.drawable_area.left,
             play_rect.bottom, 
-            self.game_window.drawable_area.width, 
+            self.game_window.drawable_area.width,
             self.game_window.drawable_area.bottom - play_rect.bottom
         )
         pygame_gui.elements.UILabel(

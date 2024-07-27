@@ -21,13 +21,11 @@ class CustomSizeScreen(Screen):
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
         
-        button_width = 45
-        button_height = 45
         back_button_rect = pygame.Rect(
             self.game_window.drawable_area.left,
             self.game_window.drawable_area.top,
-            button_width,
-            button_height
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=back_button_rect, 
@@ -104,14 +102,11 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(class_id="@medium-text")
         )
 
-        arrow_width = 50
-        arrow_height = 50
-
         row_up_arrow_rect = pygame.Rect(
-            row_text_rect.centerx - arrow_width/2,
-            row_text_rect.top - arrow_height,
-            arrow_width,
-            arrow_height
+            row_text_rect.centerx - self.game_window.small_sq_button_width/2,
+            row_text_rect.top - self.game_window.small_sq_button_height,
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
         )
         self.row_up_arrow_button = pygame_gui.elements.UIButton(
             relative_rect=row_up_arrow_rect,
@@ -119,13 +114,13 @@ class CustomSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#row-up-arrow", class_id="@up-arrow")
         )
-        self.game_window.resize_image('@up-arrow', arrow_width, arrow_height)
+        self.game_window.resize_image('@up-arrow', row_up_arrow_rect.width, row_up_arrow_rect.height)
 
         row_down_arrow_rect = pygame.Rect(
-            row_text_rect.centerx - arrow_width/2,
+            row_text_rect.centerx - self.game_window.small_sq_button_width/2,
             row_text_rect.bottom,
-            arrow_width,
-            arrow_height
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
         )
         self.row_down_arrow_button = pygame_gui.elements.UIButton(
             relative_rect=row_down_arrow_rect,
@@ -133,13 +128,13 @@ class CustomSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#row-down-arrow", class_id="@down-arrow")
         )
-        self.game_window.resize_image('@down-arrow', arrow_width, arrow_height)
+        self.game_window.resize_image('@down-arrow', row_down_arrow_rect.width, row_down_arrow_rect.height)
 
         column_up_arrow_rect = pygame.Rect(
-            col_text_rect.centerx - arrow_width/2,
-            col_text_rect.top - arrow_height,
-            arrow_width,
-            arrow_height
+            col_text_rect.centerx - self.game_window.small_sq_button_width/2,
+            col_text_rect.top - self.game_window.small_sq_button_height,
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
         )
         self.column_up_arrow_button = pygame_gui.elements.UIButton(
             relative_rect=column_up_arrow_rect,
@@ -149,10 +144,10 @@ class CustomSizeScreen(Screen):
         )
 
         column_down_arrow_rect = pygame.Rect(
-            col_text_rect.centerx - arrow_width/2,
+            col_text_rect.centerx - self.game_window.small_sq_button_width/2,
             col_text_rect.bottom,
-            arrow_width,
-            arrow_height
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
         )
         self.column_down_arrow_button = pygame_gui.elements.UIButton(
             relative_rect=column_down_arrow_rect,
@@ -161,13 +156,11 @@ class CustomSizeScreen(Screen):
             object_id=ObjectID(object_id="#column-down-arrow", class_id="@down-arrow")
         )
 
-        lock_button_width = 50
-        lock_button_height = 50
         lock_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - lock_button_width/2,
-            row_down_arrow_rect.bottom - lock_button_height,
-            lock_button_width,
-            lock_button_height
+            self.game_window.drawable_area.centerx - self.game_window.small_sq_button_width/2,
+            row_down_arrow_rect.bottom - self.game_window.small_sq_button_height,
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
         )
         self.locked_button = pygame_gui.elements.UIButton(
             relative_rect=lock_button_rect,
@@ -181,17 +174,15 @@ class CustomSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#unlocked-button")
         )
-        self.game_window.resize_image('#locked-button', lock_button_width, lock_button_height)
-        self.game_window.resize_image('#unlocked-button', lock_button_width, lock_button_height)
+        self.game_window.resize_image('#locked-button', lock_button_rect.width, lock_button_rect.height)
+        self.game_window.resize_image('#unlocked-button', lock_button_rect.width, lock_button_rect.height)
         self.unlocked_button.hide()
         
-        button_width = math.floor(self.game_window.drawable_area.width/2)
-        button_height = 100
         play_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx- button_width/2,
-            self.game_window.drawable_area.bottom - button_height - 50,
-            button_width,
-            button_height
+            self.game_window.drawable_area.centerx- self.game_window.large_rect_button_width/2,
+            self.game_window.drawable_area.bottom - self.game_window.large_rect_button_height - 50,
+            self.game_window.large_rect_button_width,
+            self.game_window.large_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_button_rect, 

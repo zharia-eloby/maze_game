@@ -32,13 +32,11 @@ class PauseMenu(Modal):
             object_id=ObjectID(object_id="#modal-background")
         )
 
-        button_height = 70
-        button_width = background_rect.width-self.margin*2
         exit_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - button_width/2,
-            background_rect.bottom - self.margin - button_height,
-            button_width,
-            button_height
+            background_rect.centerx - self.modal_small_rect_button_width/2,
+            background_rect.bottom - self.margin - self.modal_small_rect_button_height,
+            self.modal_small_rect_button_width,
+            self.modal_small_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=exit_button_rect,
@@ -46,13 +44,13 @@ class PauseMenu(Modal):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#exit-button", class_id="@modal-large-button")
         )
-        self.game_window.resize_image('@modal-large-button', button_width, button_height)
+        self.game_window.resize_image('@modal-large-button', exit_button_rect.width, exit_button_rect.height)
 
         resume_button_rect = pygame.Rect(
-            background_rect.left + self.margin,
-            exit_button_rect.top - button_height - self.line_spacing,
-            button_width,
-            button_height
+            background_rect.centerx - self.modal_small_rect_button_width/2,
+            exit_button_rect.top - self.line_spacing - self.modal_small_rect_button_height,
+            self.modal_small_rect_button_width,
+            self.modal_small_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=resume_button_rect,

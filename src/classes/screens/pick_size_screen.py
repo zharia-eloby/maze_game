@@ -11,13 +11,11 @@ class PickSizeScreen(Screen):
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
 
-        button_width = 45
-        button_height = 45
         back_button_rect = pygame.Rect(
             self.game_window.drawable_area.left,
             self.game_window.drawable_area.top,
-            button_width,
-            button_height
+            self.game_window.small_sq_button_width,
+            self.game_window.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=back_button_rect, 
@@ -26,18 +24,21 @@ class PickSizeScreen(Screen):
             object_id=ObjectID(object_id="#back-button")
         )
         self.game_window.resize_image('#back-button', back_button_rect.width, back_button_rect.height)
-        
+
         num_buttons = 4
-        space_between_buttons = 50
-        button_width = self.game_window.drawable_area.width * 0.6
-        all_buttons_height = self.game_window.drawable_area.height - back_button_rect.height
-        button_height = (all_buttons_height + space_between_buttons)/num_buttons - space_between_buttons
+        button_area_rect = pygame.Rect(
+            self.game_window.drawable_area.centerx - self.game_window.large_rect_button_width/2,
+            back_button_rect.bottom,
+            self.game_window.large_rect_button_width,
+            self.game_window.drawable_area.bottom - back_button_rect.bottom
+        )
+        space_between_buttons = (button_area_rect.height - (self.game_window.large_rect_button_height*num_buttons)) / (num_buttons-1)
         
         easy_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - button_width/2,
-            back_button_rect.bottom,
-            button_width,
-            button_height
+            button_area_rect.left,
+            button_area_rect.top,
+            self.game_window.large_rect_button_width,
+            self.game_window.large_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=easy_button_rect, 
@@ -47,10 +48,10 @@ class PickSizeScreen(Screen):
         )
         
         medium_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - button_width/2,
+            button_area_rect.left,
             easy_button_rect.bottom + space_between_buttons,
-            button_width,
-            button_height
+            self.game_window.large_rect_button_width,
+            self.game_window.large_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=medium_button_rect, 
@@ -60,10 +61,10 @@ class PickSizeScreen(Screen):
         )
         
         hard_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - button_width/2,
+            button_area_rect.left,
             medium_button_rect.bottom + space_between_buttons,
-            button_width,
-            button_height
+            self.game_window.large_rect_button_width,
+            self.game_window.large_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=hard_button_rect, 
@@ -73,10 +74,10 @@ class PickSizeScreen(Screen):
         )
 
         custom_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - button_width/2,
+            button_area_rect.left,
             hard_button_rect.bottom + space_between_buttons,
-            button_width,
-            button_height
+            self.game_window.large_rect_button_width,
+            self.game_window.large_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=custom_button_rect, 

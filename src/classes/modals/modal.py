@@ -9,3 +9,5 @@ class Modal(Screen):
         self.height = math.floor(self.game_window.drawable_area.height * 0.5)
         self.margin = 40
         self.line_spacing = 10
+        self.modal_small_rect_button_width = self.width - self.margin*2
+        self.modal_small_rect_button_height = self.height * 0.25

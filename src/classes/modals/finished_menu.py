@@ -32,16 +32,13 @@ class FinishedMenu(Modal):
             object_id=ObjectID(object_id="#modal-background")
         )
         
-        button_height = 70
-        button_width = background_rect.width-self.margin*2
-        
         exit_button_rect = pygame.Rect(
-            background_rect.left + self.margin,
-            background_rect.bottom - self.margin - button_height,
-            button_width,
-            button_height
+            background_rect.centerx - self.modal_small_rect_button_width/2,
+            background_rect.bottom - self.margin - self.modal_small_rect_button_height,
+            self.modal_small_rect_button_width,
+            self.modal_small_rect_button_height
         )
-        exit_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=exit_button_rect,
             text="exit to home screen",
             manager=self.ui_manager,
@@ -49,12 +46,12 @@ class FinishedMenu(Modal):
         )
 
         play_button_rect = pygame.Rect(
-            background_rect.left + self.margin,
-            exit_button_rect.top - button_height - self.line_spacing,
-            button_width,
-            button_height
+            background_rect.centerx - self.modal_small_rect_button_width/2,
+            exit_button_rect.top - self.line_spacing - self.modal_small_rect_button_height,
+            self.modal_small_rect_button_width,
+            self.modal_small_rect_button_height
         )
-        play_button = pygame_gui.elements.UIButton(
+        pygame_gui.elements.UIButton(
             relative_rect=play_button_rect,
             text="play again",
             manager=self.ui_manager,
