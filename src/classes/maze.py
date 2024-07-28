@@ -174,7 +174,6 @@ class MazeUI(Maze):
         self.topleft = (ui_area.centerx - self.maze_width/2, ui_area.bottom - self.maze_height)
     
     def draw_maze(self, manager):
-        self.set_maze_ui_measurements(self.game_window.drawable_area)
         x_pos = self.topleft[0]
         y_pos = self.topleft[1]
         for i in range(0, self.rows*2+1):
@@ -252,6 +251,7 @@ class MazeUI(Maze):
     def setup_maze_ui(self, manager): 
         self.create_maze()
         self.player_position = self.startpoint
+        self.set_maze_ui_measurements(self.game_window.drawable_area)
         self.draw_maze(manager)
 
         ui_position = self.get_cell_ui_position(self.startpoint)

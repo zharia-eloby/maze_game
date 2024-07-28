@@ -2,6 +2,7 @@ import pygame, os, math, json
 from classes.screens.title_screen import TitleScreen
 from classes.screens.pick_size_screen import PickSizeScreen
 from classes.screens.custom_size_screen import CustomSizeScreen
+from classes.screens.basic_custom_size_screen import BasicCustomSizeScreen
 from classes.screens.play_screen import PlayScreen
 from classes.screens.settings_screen import SettingsScreen
 from classes.audio import AudioDisplay
@@ -44,6 +45,8 @@ class GameWindow:
         self.pick_size_screen.setup()
         self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, game_window))
         self.custom_size_screen.setup()
+        self.basic_custom_size_screen = BasicCustomSizeScreen(self, AudioDisplay(audio, game_window))
+        self.basic_custom_size_screen.setup()
         self.play_screen = PlayScreen(self, AudioDisplay(audio, game_window))
         self.play_screen.setup()
         self.settings_screen = SettingsScreen(self, AudioDisplay(audio, game_window))

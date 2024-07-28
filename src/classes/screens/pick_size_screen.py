@@ -126,7 +126,7 @@ class PickSizeScreen(Screen):
 
                     elif event.ui_object_id == "#custom-button":
                         done = True
-                        next_page = self.game_window.custom_size_screen
+                        next_page = self.game_window.basic_custom_size_screen
 
                     elif event.ui_object_id == "#back-button":
                         done = True
