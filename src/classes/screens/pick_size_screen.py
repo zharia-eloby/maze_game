@@ -107,24 +107,21 @@ class PickSizeScreen(Screen):
                         done = True
                         rows = 10
                         columns = 10
-                        self.game_window.play_screen.set_maze_dimensions(rows, columns)
-                        self.game_window.play_screen.setup_maze_ui()
+                        self.game_window.play_screen.set_maze(rows, columns)
                         next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#medium-button":
                         done = True
                         rows = 20
                         columns = 20
-                        self.game_window.play_screen.set_maze_dimensions(rows, columns)
-                        self.game_window.play_screen.setup_maze_ui()
+                        self.game_window.play_screen.set_maze(rows, columns)
                         next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#hard-button":
                         done = True
                         rows = 30
                         columns = 30
-                        self.game_window.play_screen.set_maze_dimensions(rows, columns)
-                        self.game_window.play_screen.setup_maze_ui()
+                        self.game_window.play_screen.set_maze(rows, columns)
                         next_page = self.game_window.play_screen
 
                     elif event.ui_object_id == "#custom-button":

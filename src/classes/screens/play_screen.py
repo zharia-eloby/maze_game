@@ -1,7 +1,7 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from classes.maze import Maze
+from classes.maze import MazeUI
 from classes.modals.pause_menu import PauseMenu
 from classes.modals.finished_menu import FinishedMenu
 
@@ -9,11 +9,8 @@ class PlayScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
         self.audio = audio
-        self.rows = None
-        self.columns = None
         self.maze = None
         self.solution_stack = None
-        self.player = None
         self.show_solution_button = None
         self.reset_button = None
         self.pause_menu = None
@@ -22,10 +19,9 @@ class PlayScreen(Screen):
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.managers = [self.get_background()['background_manager'], self.solution_manager, self.maze_manager, self.ui_manager]
 
-    def set_maze_dimensions(self, rows, columns):
-        self.rows = rows
-        self.columns = columns
-        self.maze = Maze(self.rows, self.columns)
+    def set_maze(self, rows, columns):
+        self.maze = MazeUI(rows, columns, self.game_window)
+        self.maze.setup_maze_ui(self.maze_manager)
     
     def reset(self):
         self.maze.reset_maze()
@@ -33,59 +29,6 @@ class PlayScreen(Screen):
         self.solution_manager.clear_and_reset()
         self.show_solution_button.enable()
         self.solution_stack = None
-        self.player = None
-
-    def setup_maze_ui(self): 
-        self.maze.create_maze()
-        self.maze.player_position = self.maze.startpoint
-        self.maze.set_maze_ui_measurements(self.game_window.drawable_area)
-        self.maze.draw_maze(self.maze_manager)
-
-        ui_position = self.maze.get_cell_ui_position(self.maze.startpoint)
-        start_rect = pygame.Rect(
-            ui_position[0],
-            ui_position[1],
-            self.maze.cell_width - self.maze.wall_thickness,
-            self.maze.cell_height - self.maze.wall_thickness
-        )
-        pygame_gui.elements.UIPanel(
-            relative_rect=start_rect,
-            manager=self.maze_manager,
-            object_id=ObjectID(object_id="#startpoint")
-        )
-
-        ui_position = self.maze.get_cell_ui_position(self.maze.endpoint)
-        end_rect = pygame.Rect(
-            ui_position[0],
-            ui_position[1],
-            self.maze.cell_width - self.maze.wall_thickness,
-            self.maze.cell_height - self.maze.wall_thickness
-        )
-        pygame_gui.elements.UIPanel(
-            relative_rect=end_rect,
-            manager=self.maze_manager,
-            object_id=ObjectID(object_id="#endpoint")
-        )
-
-        player_margin = math.ceil(self.maze.wall_thickness * 1.5)
-        # set player width to be the smaller of cell width and cell height
-        if start_rect.width > start_rect.height:
-            player_width = self.maze.cell_height - player_margin*2
-        else:
-            player_width = self.maze.cell_width - player_margin*2
-        player_height = player_width
-
-        player_rect = pygame.Rect(
-            start_rect.centerx - player_width/2,
-            start_rect.centery - player_height/2,
-            player_width,
-            player_height
-        )
-        self.player = pygame_gui.elements.UIPanel(
-            relative_rect=player_rect,
-            manager=self.maze_manager,
-            object_id=ObjectID(object_id="#player")
-        )
 
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
@@ -171,7 +114,7 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif event.ui_object_id == "#reset-button":
-                        self.maze.move_player("reset", self.player)
+                        self.maze.move_player("reset")
 
                     elif event.ui_object_id == "#show-solution-button":
                         if not self.solution_stack:
@@ -242,16 +185,16 @@ class PlayScreen(Screen):
                         self.pause_menu.show()
 
                     elif (event.key == pygame.K_UP) or (event.key == pygame.K_w):
-                        self.maze.move_player("up", self.player)
+                        self.maze.move_player("up")
 
                     elif (event.key == pygame.K_DOWN) or (event.key == pygame.K_s):
-                        self.maze.move_player("down", self.player)
+                        self.maze.move_player("down")
 
                     elif (event.key == pygame.K_LEFT) or (event.key == pygame.K_a):
-                        self.maze.move_player("left", self.player)
+                        self.maze.move_player("left")
                     
                     elif (event.key == pygame.K_RIGHT) or (event.key == pygame.K_d):
-                        self.maze.move_player("right", self.player)
+                        self.maze.move_player("right")
                     
                     if self.maze.player_position == self.maze.endpoint:
                         completed = True
@@ -270,7 +213,7 @@ class PlayScreen(Screen):
             restart = self.finished_menu.show()
             if restart:
                 self.reset()
-                self.setup_maze_ui()
+                self.set_maze(self.maze.rows, self.maze.columns)
                 next_page = self
             else:
                 self.reset()
