@@ -110,7 +110,10 @@ class SettingsScreen(Screen):
         )
 
     def show(self):
-        self.volume_slider.set_current_value(pygame.mixer.music.get_volume())
+        if pygame.mixer.music.get_busy():
+            self.volume_slider.set_current_value(pygame.mixer.music.get_volume())
+        else:
+            self.volume_slider.set_current_value(0)
         self.game_window.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
