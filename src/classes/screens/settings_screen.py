@@ -134,14 +134,7 @@ class SettingsScreen(Screen):
 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                     if event.ui_object_id == "#volume-slider":
-                        pygame.mixer.music.set_volume(self.volume_slider.get_current_value())
-                        if not pygame.mixer.music.get_busy() and pygame.mixer.music.get_volume() > 0:
-                            pygame.mixer.music.load(self.audio.audio_file)
-                            pygame.mixer.music.play(loops=-1)
-                        elif pygame.mixer.music.get_busy() and pygame.mixer.music.get_volume() == 0:
-                            pygame.mixer.music.stop()
-                            pygame.mixer.music.set_volume(0)
-                            pygame.mixer.music.unload()
+                        self.audio.set_volume(self.volume_slider.get_current_value())
 
                 self.ui_manager.process_events(event)
 

@@ -52,22 +52,28 @@ class AudioDisplay(Audio):
             self.audio_button.hide()
 
     def turn_on_audio(self):
-        pygame.mixer.music.load(self.audio_file)
-        if self.volume > 0:
-            pygame.mixer.music.set_volume(self.volume) 
-        else: 
+        if pygame.mixer.music.get_volume() == 0:
             pygame.mixer.music.set_volume(1)
-            self.volume = 1
+        pygame.mixer.music.load(self.audio_file)
         pygame.mixer.music.play(loops=-1)
         self.no_audio_button.hide()
         self.audio_button.show()
 
     def turn_off_audio(self):
         pygame.mixer.music.fadeout(250)
-        pygame.mixer.music.set_volume(0)
         pygame.mixer.music.unload()
         self.audio_button.hide()
         self.no_audio_button.show()
+
+    def set_volume(self, new_volume):
+        pygame.mixer.music.set_volume(new_volume)
+        if new_volume > 0:
+            if not pygame.mixer.music.get_busy():
+                pygame.mixer.music.load(self.audio.audio_file)
+                pygame.mixer.music.play(loops=-1)
+        else:
+            pygame.mixer.music.fadeout(250)
+            pygame.mixer.music.unload()
 
     def get_audio_button_rect(self):
         return self.audio_button.get_relative_rect()
