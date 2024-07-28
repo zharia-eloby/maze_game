@@ -22,5 +22,8 @@ while not done:
     if not next_page:
         done = True
 
+gw.settings['audio']['volume'] = pygame.mixer.music.get_volume()
+gw.settings['audio']['on'] = pygame.mixer.music.get_busy()
+gw.save_settings()
 pygame.quit()
 sys.exit()

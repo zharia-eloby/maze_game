@@ -5,12 +5,13 @@ class Audio():
     def __init__(self, game_window):
         self.game_window = game_window
         self.volume = game_window.settings['audio']['volume']
+        self.audio_on = game_window.settings['audio']['on']
         self.audio_file = os.path.realpath(game_window.settings['theme']['audio']['path'])
     
     def initialize(self):
         pygame.mixer.init()
         pygame.mixer.music.set_volume(self.volume)
-        if self.volume > 0:
+        if self.audio_on:
             pygame.mixer.music.load(self.audio_file)
             pygame.mixer.music.play(loops=-1)
 

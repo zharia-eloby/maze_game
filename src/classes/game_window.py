@@ -59,11 +59,11 @@ class GameWindow:
         file.close()
         return contents
 
-    def save_settings(self, updated_content):
+    def save_settings(self):
         path = os.path.realpath("src/assets/settings.json")
         file = open(path, "r+")
         file.seek(0)
-        json.dump(updated_content, file, indent=4)
+        json.dump(self.settings, file, indent=4)
         file.truncate()
         file.close()
 
