@@ -1,4 +1,4 @@
-import random, math, pygame, pygame_gui
+import random, pygame, pygame_gui
 from pygame_gui.core import ObjectID
 
 class Maze:
@@ -157,9 +157,9 @@ class MazeUI(Maze):
         self.maze_width = maze_width
         self.maze_height = maze_height
         
-        self.cell_width = math.floor(self.maze_width/self.columns)
+        self.cell_width = round(self.maze_width/self.columns)
         self.cell_width -= self.cell_width%2
-        self.cell_height = math.floor(self.maze_height/self.rows)
+        self.cell_height = round(self.maze_height/self.rows)
         self.cell_height -= self.cell_height%2
 
         wall_thickness = round(self.cell_width/10)
@@ -280,7 +280,7 @@ class MazeUI(Maze):
             object_id=ObjectID(object_id="#endpoint")
         )
 
-        player_margin = math.ceil(self.wall_thickness * 1.5)
+        player_margin = round(self.wall_thickness * 1.5)
         # set player width to be the smaller of cell width and cell height
         if start_rect.width > start_rect.height:
             player_width = self.cell_height - player_margin*2
