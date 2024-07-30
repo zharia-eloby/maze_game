@@ -6,6 +6,7 @@ from classes.screens.basic_custom_size_screen import BasicCustomSizeScreen
 from classes.screens.play_screen import PlayScreen
 from classes.screens.settings_screen import SettingsScreen
 from classes.audio import AudioDisplay
+from classes.modals.modal import Modal
 from PIL import Image
 
 class GameWindow:
@@ -37,11 +38,12 @@ class GameWindow:
         self.pick_size_screen = None
         self.custom_size_screen = None
         self.play_screen = None
-        self.resize_images = True
+        self.resize = True
 
     def initialize(self):
         pygame.init()
         pygame.font.init()
+        if self.resize: self.resize_images()
 
     def initialize_screens(self, audio, game_window):
         self.title_screen = TitleScreen(self, AudioDisplay(audio, game_window))
@@ -79,19 +81,123 @@ class GameWindow:
         pygame.display.update()
 
     def resize_image(self, image_id, width, height, normal=True, hovered=True):
-        if self.resize_images:
-            theme_file = os.path.realpath(self.settings['theme']['path'])
-            file = open(theme_file, "r")
-            contents = json.loads(file.read())
-            file.close()
-            images_folder = os.path.realpath("src/assets/images/")
-            if normal:
-                image_file = contents[image_id]['images']['normal_image']['resource']
-                img = Image.open(os.path.join(images_folder, image_file))
-                img = img.resize((width, height))
-                img = img.save(os.path.join(images_folder, image_file))
-            if hovered:
-                image_file = contents[image_id]['images']['hovered_image']['resource']
-                img = Image.open(os.path.join(images_folder, image_file))
-                img = img.resize((width, height))
-                img.save(os.path.join(images_folder, image_file))
+        theme_file = os.path.realpath(self.settings['theme']['path'])
+        file = open(theme_file, "r")
+        contents = json.loads(file.read())
+        file.close()
+        images_folder = os.path.realpath("src/assets/images/")
+        if normal:
+            image_file = contents[image_id]['images']['normal_image']['resource']
+            img = Image.open(os.path.join(images_folder, image_file))
+            img = img.resize((width, height))
+            img = img.save(os.path.join(images_folder, image_file))
+        if hovered:
+            image_file = contents[image_id]['images']['hovered_image']['resource']
+            img = Image.open(os.path.join(images_folder, image_file))
+            img = img.resize((width, height))
+            img.save(os.path.join(images_folder, image_file))
+
+    def resize_images(self):
+        images = [
+            {
+                'id': '#settings-cog-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True 
+            },
+            {
+                'id': '#audio-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '#no-audio-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '#play-button', 
+                'width': self.large_rect_button_width,
+                'height': self.large_rect_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '#back-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '@large-wide-button',
+                'width': self.large_wide_button_width,
+                'height': self.large_wide_button_height,
+                'normal': True,
+                'hovered': True
+            },
+            {
+                'id': '#locked-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '#unlocked-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '#show-solution-button',
+                'width': self.small_rect_button_width,
+                'height': self.small_rect_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '#reset-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '#pause-button', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '@up-arrow', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '@down-arrow', 
+                'width': self.small_sq_button_width,
+                'height': self.small_sq_button_height,
+                'normal': True, 
+                'hovered': True
+            },
+            {
+                'id': '@modal-wide-button',
+                'width': Modal(self).modal_wide_button_width,
+                'height': Modal(self).modal_wide_button_width,
+                'normal': True, 
+                'hovered': True
+
+            }
+        ]
+        for i in images:
+            self.resize_image(i['id'], i['width'], i['height'], i['normal'], i['hovered'])

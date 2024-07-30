@@ -51,8 +51,7 @@ class PlayScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#pause-button")
         )
-        self.game_window.resize_image("#pause-button", pause_button_rect.width, pause_button_rect.height)
-
+        
         reset_button_rect = pygame.Rect(
             pause_button_rect.left - self.game_window.small_sq_button_width - 20,
             self.game_window.drawable_area.top,
@@ -65,8 +64,7 @@ class PlayScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#reset-button")
         )
-        self.game_window.resize_image("#reset-button", reset_button_rect.width, reset_button_rect.height)
-
+        
         show_solution_rect = pygame.Rect(
             self.game_window.drawable_area.left,
             self.game_window.drawable_area.top,
@@ -79,7 +77,6 @@ class PlayScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#show-solution-button")
         )
-        self.game_window.resize_image('#show-solution-button', show_solution_rect.width, show_solution_rect.height)
 
     def show(self):
         self.audio.set_audio_display()

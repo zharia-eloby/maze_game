@@ -10,8 +10,6 @@ class TitleScreen(Screen):
 
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
-        self.game_window.resize_image('#audio-button', self.audio.get_audio_button_rect().width, self.audio.get_audio_button_rect().height)
-        self.game_window.resize_image('#no-audio-button', self.audio.get_audio_button_rect().width, self.audio.get_audio_button_rect().height)
 
         settings_button_rect = pygame.Rect(
             self.game_window.drawable_area.left,
@@ -25,8 +23,7 @@ class TitleScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#settings-cog-button")
         )
-        self.game_window.resize_image('#settings-cog-button', settings_button_rect.width, settings_button_rect.height)
-        
+
         play_rect = pygame.Rect(
             self.game_window.drawable_area.centerx - self.game_window.large_rect_button_width/2,
             self.game_window.drawable_area.centery + self.game_window.large_rect_button_height/2,
@@ -39,7 +36,6 @@ class TitleScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#play-button")
         )
-        self.game_window.resize_image('#play-button', play_rect.width, play_rect.height)
         
         title_rect = pygame.Rect(
             self.game_window.drawable_area.left, 

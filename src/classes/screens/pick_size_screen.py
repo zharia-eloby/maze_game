@@ -23,8 +23,7 @@ class PickSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#back-button")
         )
-        self.game_window.resize_image('#back-button', back_button_rect.width, back_button_rect.height)
-
+        
         num_buttons = 4
         button_area_rect = pygame.Rect(
             self.game_window.drawable_area.centerx - self.game_window.large_wide_button_width/2,
@@ -46,7 +45,6 @@ class PickSizeScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#easy-button", class_id="@large-wide-button")
         )
-        self.game_window.resize_image("@large-wide-button", easy_button_rect.width, easy_button_rect.height)
         
         medium_button_rect = pygame.Rect(
             button_area_rect.left,

@@ -44,8 +44,7 @@ class PauseMenu(Modal):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#exit-button", class_id="@modal-wide-button")
         )
-        self.game_window.resize_image('@modal-wide-button', exit_button_rect.width, exit_button_rect.height)
-
+        
         resume_button_rect = pygame.Rect(
             background_rect.centerx - self.modal_wide_button_width/2,
             exit_button_rect.top - self.line_spacing - self.modal_wide_button_height,
