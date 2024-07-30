@@ -40,7 +40,7 @@ class BasicCustomSizeScreen(Screen):
             self.game_window.drawable_area.centerx - slider_width/2,
             back_button_rect.bottom + self.line_spacing,
             slider_width,
-            30
+            self.game_window.slider_height
         )
         self.dimensions_slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=dimensions_slider_rect,
@@ -53,34 +53,34 @@ class BasicCustomSizeScreen(Screen):
         min_text_label_rect = pygame.Rect(
             dimensions_slider_rect.left,
             dimensions_slider_rect.bottom,
-            self.game_window.drawable_area.width * 0.15,
-            25
+            dimensions_slider_rect.width,
+            self.game_window.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=min_text_label_rect,
-            text="easiest",
+            text="easy",
             manager=self.ui_manager,
-            object_id=ObjectID(class_id="@small-text")
+            object_id=ObjectID(class_id="@small-text-left")
         )
 
         max_text_label_rect = pygame.Rect(
-            dimensions_slider_rect.right - min_text_label_rect.width,
+            dimensions_slider_rect.left,
             dimensions_slider_rect.bottom,
-            min_text_label_rect.width,
-            min_text_label_rect.height
+            dimensions_slider_rect.width,
+            self.game_window.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=max_text_label_rect,
-            text="hardest",
+            text="hard",
             manager=self.ui_manager,
-            object_id=ObjectID(class_id="@small-text")
+            object_id=ObjectID(class_id="@small-text-right")
         )
 
         preview_text_label_rect = pygame.Rect(
             self.game_window.drawable_area.left,
             min_text_label_rect.bottom,
             self.game_window.drawable_area.width,
-            25
+            self.game_window.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=preview_text_label_rect,
@@ -90,23 +90,23 @@ class BasicCustomSizeScreen(Screen):
         )
         
         play_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx- self.game_window.large_rect_button_width/2,
-            self.game_window.drawable_area.bottom - self.game_window.large_rect_button_height,
-            self.game_window.large_rect_button_width,
-            self.game_window.large_rect_button_height
+            self.game_window.drawable_area.centerx- self.game_window.large_wide_button_width/2,
+            self.game_window.drawable_area.bottom - self.game_window.large_wide_button_height,
+            self.game_window.large_wide_button_width,
+            self.game_window.large_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_button_rect, 
-            text="",
+            text="start",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#play-button")
+            object_id=ObjectID(object_id="#start-button", class_id="@large-wide-button")
         )
 
         self.maze_area = pygame.Rect(
             preview_text_label_rect.left,
-            preview_text_label_rect.bottom,
+            preview_text_label_rect.bottom + self.line_spacing,
             self.game_window.drawable_area.width,
-            play_button_rect.top - preview_text_label_rect.bottom - self.line_spacing
+            play_button_rect.top - preview_text_label_rect.bottom - self.line_spacing*2
         )
 
     def show(self):
@@ -148,7 +148,7 @@ class BasicCustomSizeScreen(Screen):
                         self.maze_manager.clear_and_reset()
                         next_page = self.game_window.pick_size_screen
 
-                    elif event.ui_object_id == "#play-button":
+                    elif event.ui_object_id == "#start-button":
                         done = True
                         self.game_window.play_screen.set_maze(maze.rows, maze.columns)
                         del maze

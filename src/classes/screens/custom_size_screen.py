@@ -38,11 +38,11 @@ class CustomSizeScreen(Screen):
             self.game_window.drawable_area.left,
             back_button_rect.bottom,
             self.game_window.drawable_area.width,
-            70
+            self.game_window.medium_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=select_text_rect,
-            text="Select your Dimensions",
+            text="Choose Dimensions",
             manager=self.ui_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
@@ -51,17 +51,17 @@ class CustomSizeScreen(Screen):
             self.game_window.drawable_area.left,
             select_text_rect.bottom,
             self.game_window.drawable_area.width,
-            25
+            self.game_window.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=warning_text_rect,
-            text="* dimensions must be within 10 units of each other *",
+            text="* must be within 10 units of each other *",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="@small-text")
         )
         
         x_width = self.game_window.drawable_area.width * 0.1
-        x_height = 100
+        x_height = self.game_window.medium_text_height
         x_text_rect = pygame.Rect(
             self.game_window.drawable_area.centerx - x_width/2,
             self.game_window.drawable_area.centery - x_height/2,

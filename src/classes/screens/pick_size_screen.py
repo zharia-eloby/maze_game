@@ -27,9 +27,9 @@ class PickSizeScreen(Screen):
 
         num_buttons = 4
         button_area_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - self.game_window.large_rect_button_width/2,
+            self.game_window.drawable_area.centerx - self.game_window.large_wide_button_width/2,
             back_button_rect.bottom,
-            self.game_window.large_rect_button_width,
+            self.game_window.large_wide_button_width,
             self.game_window.drawable_area.bottom - back_button_rect.bottom
         )
         space_between_buttons = (button_area_rect.height - (self.game_window.large_rect_button_height*num_buttons)) / (num_buttons-1)
@@ -37,55 +37,55 @@ class PickSizeScreen(Screen):
         easy_button_rect = pygame.Rect(
             button_area_rect.left,
             button_area_rect.top,
-            self.game_window.large_rect_button_width,
-            self.game_window.large_rect_button_height
+            self.game_window.large_wide_button_width,
+            self.game_window.large_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=easy_button_rect, 
             text="easy",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#easy-button", class_id="@large-button")
+            object_id=ObjectID(object_id="#easy-button", class_id="@large-wide-button")
         )
+        self.game_window.resize_image("@large-wide-button", easy_button_rect.width, easy_button_rect.height)
         
         medium_button_rect = pygame.Rect(
             button_area_rect.left,
             easy_button_rect.bottom + space_between_buttons,
-            self.game_window.large_rect_button_width,
-            self.game_window.large_rect_button_height
+            self.game_window.large_wide_button_width,
+            self.game_window.large_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=medium_button_rect, 
             text="medium",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#medium-button", class_id="@large-button")
+            object_id=ObjectID(object_id="#medium-button", class_id="@large-wide-button")
         )
         
         hard_button_rect = pygame.Rect(
             button_area_rect.left,
             medium_button_rect.bottom + space_between_buttons,
-            self.game_window.large_rect_button_width,
-            self.game_window.large_rect_button_height
+            self.game_window.large_wide_button_width,
+            self.game_window.large_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=hard_button_rect, 
             text="hard",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#hard-button", class_id="@large-button")
+            object_id=ObjectID(object_id="#hard-button", class_id="@large-wide-button")
         )
 
         custom_button_rect = pygame.Rect(
             button_area_rect.left,
             hard_button_rect.bottom + space_between_buttons,
-            self.game_window.large_rect_button_width,
-            self.game_window.large_rect_button_height
+            self.game_window.large_wide_button_width,
+            self.game_window.large_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=custom_button_rect, 
             text="custom",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#custom-button", class_id="@large-button")
+            object_id=ObjectID(object_id="#custom-button", class_id="@large-wide-button")
         )
-        self.game_window.resize_image('@large-button', custom_button_rect.width, custom_button_rect.height)
 
     def show(self):
         self.audio.set_audio_display()

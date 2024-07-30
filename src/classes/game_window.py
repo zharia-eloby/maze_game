@@ -1,4 +1,4 @@
-import pygame, os, math, json
+import pygame, os, json
 from classes.screens.title_screen import TitleScreen
 from classes.screens.pick_size_screen import PickSizeScreen
 from classes.screens.custom_size_screen import CustomSizeScreen
@@ -20,12 +20,17 @@ class GameWindow:
             self.screen_width - self.margin*2,
             self.screen_height - self.margin*2
         )
-        self.small_sq_button_width = 45
+        self.small_sq_button_width = 50
         self.small_sq_button_height = self.small_sq_button_width
-        self.small_rect_button_width = math.floor(self.drawable_area.width * 0.3)
+        self.small_rect_button_width = round(self.drawable_area.width * 0.3)
         self.small_rect_button_height = self.small_sq_button_height
-        self.large_rect_button_width = math.floor(self.drawable_area.width * 0.5)
-        self.large_rect_button_height = math.floor(self.drawable_area.height * 0.15)
+        self.large_rect_button_width = round(self.drawable_area.width * 0.5)
+        self.large_rect_button_height = round(self.drawable_area.height * 0.15)
+        self.large_wide_button_width = self.drawable_area.width * 0.75
+        self.large_wide_button_height = self.large_rect_button_height
+        self.small_text_height = 20
+        self.medium_text_height = 50
+        self.slider_height = 30
         self.settings = self.load_settings()
         self.theme_file = os.path.realpath(self.settings['theme']['path'])
         self.title_screen = None

@@ -35,7 +35,7 @@ class SettingsScreen(Screen):
             content_area_rect.left, 
             content_area_rect.top,
             content_area_rect.width, 
-            50
+            self.game_window.medium_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=settings_title_rect, 
@@ -48,7 +48,7 @@ class SettingsScreen(Screen):
             content_area_rect.left, 
             settings_title_rect.bottom + self.line_spacing,
             content_area_rect.width * 0.5, 
-            30
+            self.game_window.slider_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=volume_label_rect, 
@@ -62,7 +62,7 @@ class SettingsScreen(Screen):
             volume_label_rect.right + slider_label_width,
             volume_label_rect.top,
             content_area_rect.width - volume_label_rect.width - slider_label_width*2,
-            volume_label_rect.height
+            self.game_window.slider_height
         )
         self.volume_slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=volume_slider_rect,
@@ -97,16 +97,16 @@ class SettingsScreen(Screen):
         )
 
         exit_game_button_rect = pygame.Rect(
-            content_area_rect.centerx - self.game_window.large_rect_button_width/2,
+            content_area_rect.centerx - self.game_window.large_wide_button_width/2,
             volume_slider_rect.bottom + self.line_spacing,
-            self.game_window.large_rect_button_width,
-            self.game_window.large_rect_button_height
+            self.game_window.large_wide_button_width,
+            self.game_window.large_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=exit_game_button_rect,
             text="exit game",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#exit-button", class_id="@large-button")
+            object_id=ObjectID(object_id="#exit-button", class_id="@large-wide-button")
         )
 
     def show(self):

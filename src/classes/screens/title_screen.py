@@ -56,9 +56,9 @@ class TitleScreen(Screen):
 
         credits_rect = pygame.Rect(
             self.game_window.drawable_area.left,
-            play_rect.bottom, 
+            self.game_window.drawable_area.bottom - self.game_window.small_text_height, 
             self.game_window.drawable_area.width,
-            self.game_window.drawable_area.bottom - play_rect.bottom
+            self.game_window.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=credits_rect, 

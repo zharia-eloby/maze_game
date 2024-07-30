@@ -7,12 +7,12 @@
         },
         "font":
         {
-            "name": "roboto",
+            "name": "bungee-regular",
             "size": "1",
             "regular_resource": 
             {
                 "package": "assets.fonts",
-                "resource": "ChelseaMarket-Regular.ttf"
+                "resource": "Bungee-Regular.otf"
             }
         }
     },
@@ -21,8 +21,24 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "roboto",
+            "name": "bungee-regular",
             "size": 16
+        }
+    },
+    "@small-text-left":
+    {
+        "prototype": "@small-text",
+        "misc":
+        {
+            "text_horiz_alignment": "left"
+        }
+    },
+    "@small-text-right":
+    {
+        "prototype": "@small-text",
+        "misc":
+        {
+            "text_horiz_alignment": "right"
         }
     },
     "@medium-text":
@@ -30,7 +46,7 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "roboto",
+            "name": "bungee-regular",
             "size": 36
         }
     },
@@ -49,21 +65,24 @@
             "active_border": "#00000000",
             "selected_border": "#00000000",
             "normal_text": "#ffffff",
-            "hovered_text": "#5e5e5e"
+            "hovered_text": "#ffffff",
+            "disabled_text": "#ffffff",
+            "active_text": "#ffffff",
+            "selected_text": "#ffffff"
         }
     },
     "horizontal_slider":
     {
         "colours":
         {
-            "dark_bg": "#2cbe83"
+            "dark_bg": "#70b7df"
         },
         "misc":
         {
             "shape": "rounded_rectangle",
             "shape_corner_radius": "10",
             "border_width": "0",
-            "sliding_button_width": "50",
+            "sliding_button_width": "30",
             "enable_arrow_buttons": "0"
         }
     },
@@ -71,15 +90,16 @@
     {
         "colours": 
         {
-            "normal_bg": "#70b7df",
-            "hovered_bg": "#a1d9f8",
-            "selected_bg": "#a1d9f8",
-            "active_bg": "#a1d9f8"
+            "normal_bg": "#ffffff",
+            "hovered_bg": "#ddefff",
+            "selected_bg": "#ddefff",
+            "active_bg": "#ddefff"
         },
         "misc":
         {
             "shape": "rounded_rectangle",
-            "shape_corner_radius": "10"
+            "shape_corner_radius": "10",
+            "border_width": "0"
         }
     },
     "#title": 
@@ -87,7 +107,7 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "roboto",
+            "name": "bungee-regular",
             "size": "72"
         },
         "misc":
@@ -126,7 +146,7 @@
     {
         "colours":
         {
-            "dark_bg":"#b3b3b3"
+            "dark_bg":"#70b7df"
         },
         "misc":
         {
@@ -138,7 +158,7 @@
     {
         "colours":
         {
-            "dark_bg":"#17d2a3"
+            "dark_bg":"#2cbe83"
         },
         "misc":
         {
@@ -150,7 +170,7 @@
     {
         "font": 
         {
-            "name": "roboto",
+            "name": "bungee-regular",
             "size": "36"
         },
         "prototype": "#ui-button",
@@ -165,6 +185,52 @@
             {
                 "package": "assets.images",
                 "resource": "general/large-button-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-button-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-button-default.png"
+            }
+        },
+        "misc": 
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "@large-wide-button": 
+    {
+        "font": 
+        {
+            "name": "bungee-regular",
+            "size": "28"
+        },
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-wide-button-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-wide-button-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-wide-button-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/large-wide-button-default.png"
             }
         },
         "misc": 
@@ -177,14 +243,14 @@
         "colours": 
         {
             "dark_bg": "#000000",
-            "normal_border": "#ffffff"
+            "normal_border": "#a1d9f8"
         },
         "misc": 
         {
             "shadow_width": "0",
-            "shape_corner_radius": "6",
+            "shape_corner_radius": "10",
             "shape": "rounded_rectangle",
-            "border_width": "3"
+            "border_width": "5"
         }
     },
     "#play-button": 
@@ -201,6 +267,16 @@
             {
                 "package": "assets.images",
                 "resource": "play/play-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "play/play-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "play/play-default.png"
             }
         }
     },
@@ -218,6 +294,16 @@
             {
                 "package": "assets.images",
                 "resource": "settings/settings-cog-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "settings/settings-cog-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "settings/settings-cog-default.png"
             }
         }
     },
@@ -235,6 +321,16 @@
             {
                 "package": "assets.images",
                 "resource": "navigation/back-arrow-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "navigation/back-arrow-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "navigation/back-arrow-default.png"
             }
         }
     },
@@ -252,6 +348,16 @@
             {
                 "package": "assets.images",
                 "resource": "audio/audio-on-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-on-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-on-default.png"
             }
         }
     },
@@ -269,6 +375,16 @@
             {
                 "package": "assets.images",
                 "resource": "audio/audio-off-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-off-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "audio/audio-off-default.png"
             }
         }
     },
@@ -286,6 +402,16 @@
             {
                 "package": "assets.images",
                 "resource": "pause/pause-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "pause/pause-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "pause/pause-default.png"
             }
         }
     },
@@ -303,6 +429,16 @@
             {
                 "package": "assets.images",
                 "resource": "reset/reset-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "reset/reset-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "reset/reset-default.png"
             }
         }
     },
@@ -320,6 +456,16 @@
             {
                 "package": "assets.images",
                 "resource": "arrow/up-arrow-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/up-arrow-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/up-arrow-default.png"
             }
         }
     },
@@ -337,6 +483,16 @@
             {
                 "package": "assets.images",
                 "resource": "arrow/down-arrow-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/down-arrow-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "arrow/down-arrow-default.png"
             }
         }
     },
@@ -354,6 +510,16 @@
             {
                 "package": "assets.images",
                 "resource": "locks/locked-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/locked-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/locked-default.png"
             }
             
         }
@@ -372,14 +538,24 @@
             {
                 "package": "assets.images",
                 "resource": "locks/unlocked-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/unlocked-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "locks/unlocked-default.png"
             }
         }
     },
-    "@modal-large-button": 
+    "@modal-wide-button": 
     {
         "font": 
         {
-            "name": "roboto",
+            "name": "bungee-regular",
             "size": "20"
         },
         "prototype": "#ui-button",
@@ -388,12 +564,22 @@
             "normal_image": 
             {
                 "package": "assets.images",
-                "resource": "modal/modal-large-button-default.png"
+                "resource": "modal/modal-wide-button-default.png"
             },
             "hovered_image": 
             {
                 "package": "assets.images",
-                "resource": "modal/modal-large-button-hover.png"
+                "resource": "modal/modal-wide-button-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "modal/modal-wide-button-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "modal/modal-wide-button-default.png"
             }
         },
         "misc":
@@ -405,7 +591,7 @@
     {
         "font": 
         {
-            "name": "roboto",
+            "name": "bungee-regular",
             "size": "16"
         },
         "prototype": "#ui-button",
@@ -420,6 +606,16 @@
             {
                 "package": "assets.images",
                 "resource": "solution/show-solution-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "solution/show-solution-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "solution/show-solution-default.png"
             }
         }
     },
@@ -440,8 +636,8 @@
     {
         "colours":
         {
-            "dark_bg": "rgba(0,0,0,100)",
-            "normal_border":"rgba(0,0,0,100)"
+            "dark_bg": "rgba(0,0,0,150)",
+            "normal_border":"rgba(0,0,0,150)"
         }
     }
 }

@@ -51,6 +51,7 @@ class PlayScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#pause-button")
         )
+        self.game_window.resize_image("#pause-button", pause_button_rect.width, pause_button_rect.height)
 
         reset_button_rect = pygame.Rect(
             pause_button_rect.left - self.game_window.small_sq_button_width - 20,
@@ -64,6 +65,7 @@ class PlayScreen(Screen):
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#reset-button")
         )
+        self.game_window.resize_image("#reset-button", reset_button_rect.width, reset_button_rect.height)
 
         show_solution_rect = pygame.Rect(
             self.game_window.drawable_area.left,
@@ -73,7 +75,7 @@ class PlayScreen(Screen):
         )
         self.show_solution_button = pygame_gui.elements.UIButton(
             relative_rect=show_solution_rect,
-            text="show solution",
+            text="give up",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#show-solution-button")
         )
