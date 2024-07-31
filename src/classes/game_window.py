@@ -193,10 +193,9 @@ class GameWindow:
             {
                 'id': '@modal-wide-button',
                 'width': Modal(self).modal_wide_button_width,
-                'height': Modal(self).modal_wide_button_width,
+                'height': Modal(self).modal_wide_button_height,
                 'normal': True, 
                 'hovered': True
-
             }
         ]
         for i in images:

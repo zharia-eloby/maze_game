@@ -10,4 +10,4 @@ class Modal(Screen):
         self.margin = 40
         self.line_spacing = 10
         self.modal_wide_button_width = self.width - self.margin*2
-        self.modal_wide_button_height = self.height * 0.2
+        self.modal_wide_button_height = round(self.height * 0.2)
