@@ -2,8 +2,8 @@ import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
 from classes.maze import MazeUI
-from classes.modals.pause_menu import PauseMenu
-from classes.modals.finished_menu import FinishedMenu
+from classes.modals.pause_modal import PauseModal
+from classes.modals.finished_modal import FinishedModal
 from classes.modals.show_solution_modal import ShowSolutionModal
 
 class PlayScreen(Screen):
@@ -14,8 +14,8 @@ class PlayScreen(Screen):
         self.solution_stack = None
         self.show_solution_button = None
         self.reset_button = None
-        self.pause_menu = None
-        self.finished_menu = None
+        self.pause_modal = None
+        self.finished_modal = None
         self.show_solution_modal = None
         self.solution_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
@@ -35,11 +35,11 @@ class PlayScreen(Screen):
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
 
-        self.pause_menu = PauseMenu(self.game_window)
-        self.pause_menu.setup()
+        self.pause_modal = PauseModal(self.game_window)
+        self.pause_modal.setup()
 
-        self.finished_menu = FinishedMenu(self.game_window)
-        self.finished_menu.setup()
+        self.finished_modal = FinishedModal(self.game_window)
+        self.finished_modal.setup()
 
         self.show_solution_modal = ShowSolutionModal(self.game_window)
         self.show_solution_modal.setup()
@@ -108,7 +108,7 @@ class PlayScreen(Screen):
                     if event.ui_object_id == "#pause-button":
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
-                        resume = self.pause_menu.show()
+                        resume = self.pause_modal.show()
                         if not resume:
                             pygame.event.clear()
                             self.reset()
@@ -188,7 +188,7 @@ class PlayScreen(Screen):
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.pause_menu.show()
+                        self.pause_modal.show()
 
                     elif (event.key == pygame.K_UP) or (event.key == pygame.K_w):
                         self.maze.move_player("up")
@@ -216,7 +216,7 @@ class PlayScreen(Screen):
             self.game_window.redraw_elements(self.managers, time_delta)
             
         if completed:
-            restart = self.finished_menu.show()
+            restart = self.finished_modal.show()
             if restart:
                 self.reset()
                 self.set_maze(self.maze.rows, self.maze.columns)

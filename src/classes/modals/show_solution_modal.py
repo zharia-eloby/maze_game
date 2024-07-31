@@ -5,7 +5,7 @@ from classes.modals.modal import Modal
 class ShowSolutionModal(Modal):
     def __init__(self, game_window):
         super().__init__(game_window)
-        self.menu_background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
+        self.modal_background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         
     def setup(self):
         overlay_rect = pygame.Rect(
@@ -28,7 +28,7 @@ class ShowSolutionModal(Modal):
         )
         pygame_gui.elements.UIPanel(
             relative_rect = background_rect,
-            manager=self.menu_background_manager,
+            manager=self.modal_background_manager,
             object_id=ObjectID(object_id="#modal-background")
         )
 
@@ -67,7 +67,7 @@ class ShowSolutionModal(Modal):
         pygame_gui.elements.UILabel(
             relative_rect=modal_title_text_1_rect,
             text="reveal",
-            manager=self.menu_background_manager,
+            manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
         modal_title_text_2_rect = pygame.Rect(
@@ -79,14 +79,14 @@ class ShowSolutionModal(Modal):
         pygame_gui.elements.UILabel(
             relative_rect=modal_title_text_2_rect,
             text="solution?",
-            manager=self.menu_background_manager,
+            manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
 
     def show(self):
         give_up = None
         time_delta = math.ceil(time.time())
-        self.game_window.redraw_elements([self.overlay_manager, self.menu_background_manager, self.ui_manager], 0)
+        self.game_window.redraw_elements([self.overlay_manager, self.modal_background_manager, self.ui_manager], 0)
         while give_up is None:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -103,5 +103,5 @@ class ShowSolutionModal(Modal):
                 self.ui_manager.process_events(event)
 
             time_delta = math.ceil(time.time()) - time_delta
-            self.game_window.redraw_elements([self.menu_background_manager, self.ui_manager], time_delta)
+            self.game_window.redraw_elements([self.modal_background_manager, self.ui_manager], time_delta)
         return give_up

@@ -2,10 +2,10 @@ import pygame, pygame_gui, math, time, sys
 from pygame_gui.core import ObjectID
 from classes.modals.modal import Modal
 
-class FinishedMenu(Modal):
+class FinishedModal(Modal):
     def __init__(self, game_window):
         super().__init__(game_window)
-        self.menu_background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
+        self.modal_background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
 
     def setup(self):
         overlay_rect = pygame.Rect(
@@ -28,7 +28,7 @@ class FinishedMenu(Modal):
         )
         pygame_gui.elements.UIPanel(
             relative_rect=background_rect,
-            manager=self.menu_background_manager,
+            manager=self.modal_background_manager,
             object_id=ObjectID(object_id="#modal-background")
         )
         
@@ -67,12 +67,12 @@ class FinishedMenu(Modal):
         pygame_gui.elements.UILabel (
             relative_rect=finished_message_rect,
             text="YOU DID IT!",
-            manager=self.menu_background_manager,
+            manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
 
     def show(self):
-        self.game_window.redraw_elements([self.overlay_manager, self.menu_background_manager, self.ui_manager], 0)
+        self.game_window.redraw_elements([self.overlay_manager, self.modal_background_manager, self.ui_manager], 0)
     
         done = False
         restart = False
@@ -91,6 +91,6 @@ class FinishedMenu(Modal):
                 self.ui_manager.process_events(event)
             
             time_delta = math.ceil(time.time()) - time_delta
-            self.game_window.redraw_elements([self.menu_background_manager, self.ui_manager], time_delta)
+            self.game_window.redraw_elements([self.modal_background_manager, self.ui_manager], time_delta)
         
         return restart
