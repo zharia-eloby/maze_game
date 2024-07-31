@@ -202,7 +202,7 @@
             "text_vert_alignment": "center"
         }
     },
-    "@large-wide-button": 
+    "@thick-wide-button": 
     {
         "font": 
         {
@@ -215,22 +215,58 @@
             "normal_image": 
             {
                 "package": "assets.images",
-                "resource": "general/large-wide-button-default.png"
+                "resource": "general/thick-wide-button-default.png"
             },
             "hovered_image": 
             {
                 "package": "assets.images",
-                "resource": "general/large-wide-button-hover.png"
+                "resource": "general/thick-wide-button-hover.png"
             },
             "selected_image": 
             {
                 "package": "assets.images",
-                "resource": "general/large-wide-button-default.png"
+                "resource": "general/thick-wide-button-default.png"
             },
             "disabled_image": 
             {
                 "package": "assets.images",
-                "resource": "general/large-wide-button-default.png"
+                "resource": "general/thick-wide-button-default.png"
+            }
+        },
+        "misc": 
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "@thin-wide-button": 
+    {
+        "font": 
+        {
+            "name": "bungee-regular",
+            "size": "28"
+        },
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/thin-wide-button-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/thin-wide-button-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/thin-wide-button-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets.images",
+                "resource": "general/thin-wide-button-default.png"
             }
         },
         "misc": 
@@ -615,7 +651,7 @@
             "disabled_image": 
             {
                 "package": "assets.images",
-                "resource": "solution/show-solution-default.png"
+                "resource": "solution/show-solution-disabled.png"
             }
         }
     },
