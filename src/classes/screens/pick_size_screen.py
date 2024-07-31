@@ -25,13 +25,14 @@ class PickSizeScreen(Screen):
         )
         
         num_buttons = 4
+        line_spacing = 15
         button_area_rect = pygame.Rect(
             self.game_window.drawable_area.centerx - self.game_window.large_wide_button_width/2,
-            back_button_rect.bottom,
+            back_button_rect.bottom + line_spacing,
             self.game_window.large_wide_button_width,
-            self.game_window.drawable_area.bottom - back_button_rect.bottom
+            self.game_window.drawable_area.bottom - back_button_rect.bottom - line_spacing*2
         )
-        space_between_buttons = (button_area_rect.height - (self.game_window.large_rect_button_height*num_buttons)) / (num_buttons-1)
+        space_between_buttons = round((button_area_rect.height - (self.game_window.large_wide_button_height*num_buttons)) / (num_buttons-1))
         
         easy_button_rect = pygame.Rect(
             button_area_rect.left,
