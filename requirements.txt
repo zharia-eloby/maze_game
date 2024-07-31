@@ -1,0 +1,7 @@
+importlib-resources==6.4.0
+pillow==10.4.0
+pygame==2.6.0
+pygame-ce==2.5.0
+pygame-gui==0.6.12
+python-i18n==0.3.9
+zipp==3.19.2
