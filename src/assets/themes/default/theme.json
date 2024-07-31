@@ -47,7 +47,7 @@
         "font":
         {
             "name": "bungee-regular",
-            "size": 36
+            "size": 28
         }
     },
     "#ui-button":
@@ -556,7 +556,7 @@
         "font": 
         {
             "name": "bungee-regular",
-            "size": "20"
+            "size": "16"
         },
         "prototype": "#ui-button",
         "images": 
