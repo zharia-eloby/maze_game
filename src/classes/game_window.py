@@ -27,8 +27,9 @@ class GameWindow:
         self.small_rect_button_height = self.small_sq_button_height
         self.large_rect_button_width = round(self.drawable_area.width * 0.5)
         self.large_rect_button_height = round(self.large_rect_button_width * 0.35)
-        self.large_wide_button_width = round(self.drawable_area.width * 0.75)
-        self.large_wide_button_height = round(self.drawable_area.height * 0.15)
+        self.wide_button_width = round(self.drawable_area.width * 0.75)
+        self.thick_wide_button_height = round(self.drawable_area.height * 0.15)
+        self.thin_wide_button_height = round(self.drawable_area.height * 0.1)
         self.small_text_height = 20
         self.medium_text_height = 50
         self.slider_height = 30
@@ -80,7 +81,7 @@ class GameWindow:
             m.draw_ui(self.window)
         pygame.display.update()
 
-    def resize_image(self, image_id, width, height, normal=True, hovered=True):
+    def resize_image(self, image_id, width, height, normal=True, hovered=True, disabled=False):
         theme_file = os.path.realpath(self.settings['theme']['path'])
         file = open(theme_file, "r")
         contents = json.loads(file.read())
@@ -96,6 +97,11 @@ class GameWindow:
             img = Image.open(os.path.join(images_folder, image_file))
             img = img.resize((width, height))
             img.save(os.path.join(images_folder, image_file))
+        if disabled:
+            image_file = contents[image_id]['images']['disabled_image']['resource']
+            img = Image.open(os.path.join(images_folder, image_file))
+            img = img.resize((width, height))
+            img.save(os.path.join(images_folder, image_file))
 
     def resize_images(self):
         images = [
@@ -104,99 +110,121 @@ class GameWindow:
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True 
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#audio-button', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#no-audio-button', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#play-button', 
                 'width': self.large_rect_button_width,
                 'height': self.large_rect_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#back-button', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
-                'id': '@large-wide-button',
-                'width': self.large_wide_button_width,
-                'height': self.large_wide_button_height,
+                'id': '@thick-wide-button',
+                'width': self.wide_button_width,
+                'height': self.thick_wide_button_height,
                 'normal': True,
-                'hovered': True
+                'hovered': True,
+                'disabled': False
+            },
+            {
+                'id': '@thin-wide-button',
+                'width': self.wide_button_width,
+                'height': self.thin_wide_button_height,
+                'normal': True,
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#locked-button', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#unlocked-button', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#show-solution-button',
                 'width': self.small_rect_button_width,
                 'height': self.small_rect_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': True
             },
             {
                 'id': '#reset-button', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '#pause-button', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '@up-arrow', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '@down-arrow', 
                 'width': self.small_sq_button_width,
                 'height': self.small_sq_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             },
             {
                 'id': '@modal-wide-button',
                 'width': Modal(self).modal_wide_button_width,
                 'height': Modal(self).modal_wide_button_height,
                 'normal': True, 
-                'hovered': True
+                'hovered': True,
+                'disabled': False
             }
         ]
         for i in images:
-            self.resize_image(i['id'], i['width'], i['height'], i['normal'], i['hovered'])
+            self.resize_image(i['id'], i['width'], i['height'], i['normal'], i['hovered'], i['disabled'])

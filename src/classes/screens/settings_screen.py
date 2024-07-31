@@ -97,16 +97,16 @@ class SettingsScreen(Screen):
         )
 
         exit_game_button_rect = pygame.Rect(
-            content_area_rect.centerx - self.game_window.large_wide_button_width/2,
+            content_area_rect.centerx - self.game_window.wide_button_width/2,
             volume_slider_rect.bottom + self.line_spacing,
-            self.game_window.large_wide_button_width,
-            self.game_window.large_wide_button_height
+            self.game_window.wide_button_width,
+            self.game_window.thin_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=exit_game_button_rect,
             text="exit game",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#exit-button", class_id="@large-wide-button")
+            object_id=ObjectID(object_id="#exit-button", class_id="@thin-wide-button")
         )
 
     def show(self):

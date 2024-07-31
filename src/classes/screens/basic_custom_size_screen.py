@@ -90,16 +90,16 @@ class BasicCustomSizeScreen(Screen):
         )
         
         play_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx- self.game_window.large_wide_button_width/2,
-            self.game_window.drawable_area.bottom - self.game_window.large_wide_button_height,
-            self.game_window.large_wide_button_width,
-            self.game_window.large_wide_button_height
+            self.game_window.drawable_area.centerx- self.game_window.wide_button_width/2,
+            self.game_window.drawable_area.bottom - self.game_window.thin_wide_button_height,
+            self.game_window.wide_button_width,
+            self.game_window.thin_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_button_rect, 
             text="start",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#start-button", class_id="@large-wide-button")
+            object_id=ObjectID(object_id="#start-button", class_id="@thin-wide-button")
         )
 
         self.maze_area = pygame.Rect(
