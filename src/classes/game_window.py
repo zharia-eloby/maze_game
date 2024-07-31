@@ -45,6 +45,7 @@ class GameWindow:
         pygame.init()
         pygame.font.init()
         if self.resize: self.resize_images()
+        pygame.display.set_caption('Maze')
 
     def initialize_screens(self, audio, game_window):
         self.title_screen = TitleScreen(self, AudioDisplay(audio, game_window))
