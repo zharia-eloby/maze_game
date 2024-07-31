@@ -4,6 +4,7 @@ from classes.screens.screen import Screen
 from classes.maze import MazeUI
 from classes.modals.pause_menu import PauseMenu
 from classes.modals.finished_menu import FinishedMenu
+from classes.modals.show_solution_modal import ShowSolutionModal
 
 class PlayScreen(Screen):
     def __init__(self, game_window, audio):
@@ -15,6 +16,7 @@ class PlayScreen(Screen):
         self.reset_button = None
         self.pause_menu = None
         self.finished_menu = None
+        self.show_solution_modal = None
         self.solution_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.managers = [self.get_background()['background_manager'], self.solution_manager, self.maze_manager, self.ui_manager]
@@ -38,6 +40,9 @@ class PlayScreen(Screen):
 
         self.finished_menu = FinishedMenu(self.game_window)
         self.finished_menu.setup()
+
+        self.show_solution_modal = ShowSolutionModal(self.game_window)
+        self.show_solution_modal.setup()
         
         pause_button_rect = pygame.Rect(
             self.audio.get_audio_button_rect().left - self.game_window.small_sq_button_width - 20,
@@ -116,14 +121,16 @@ class PlayScreen(Screen):
                         self.maze.move_player("reset")
 
                     elif event.ui_object_id == "#show-solution-button":
-                        if not self.solution_stack:
-                            self.solution_stack = self.maze.solve_maze()
-                        curr_index = 0
-                        new_line = True
-                        solving = True
-                        pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
-                        self.solution_manager.clear_and_reset()
-                        self.show_solution_button.disable()
+                        give_up = self.show_solution_modal.show()
+                        if give_up:
+                            if not self.solution_stack:
+                                self.solution_stack = self.maze.solve_maze()
+                            curr_index = 0
+                            new_line = True
+                            solving = True
+                            pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
+                            self.solution_manager.clear_and_reset()
+                            self.show_solution_button.disable()
 
                 elif event.type == SHOW_SOLUTION:
                     if new_line:
