@@ -1,4 +1,4 @@
-import random, pygame, pygame_gui
+import math, random, pygame, pygame_gui
 from pygame_gui.core import ObjectID
 
 class Maze:
@@ -148,29 +148,25 @@ class MazeUI(Maze):
         
     def set_maze_ui_measurements(self, ui_area):
         if ui_area.width > ui_area.height:
-            maze_height = ui_area.height
-            maze_width = maze_height
+            self.maze_height = ui_area.height
         else:
-            maze_height = ui_area.width
-            maze_width = maze_height
-
-        self.maze_width = maze_width
-        self.maze_height = maze_height
+            self.maze_height = ui_area.width
+        self.maze_width = self.maze_height
         
         self.cell_width = round(self.maze_width/self.columns)
         self.cell_width -= self.cell_width%2
         self.cell_height = round(self.maze_height/self.rows)
         self.cell_height -= self.cell_height%2
 
-        wall_thickness = round(self.cell_width/10)
-        wall_thickness -= wall_thickness%2
-        if wall_thickness < 2:
-            wall_thickness = 2
-        self.wall_thickness = wall_thickness
+        self.wall_thickness = round(self.cell_width/10)
+        self.wall_thickness -= self.wall_thickness%2
+        if self.wall_thickness < 2:
+            self.wall_thickness = 2
 
-        # set startpoint so the maze is horizontally centered
+        # maze width & height may be slightly different. reset them to the actual width & height
         self.maze_width = self.cell_width * self.columns + self.wall_thickness
         self.maze_height = self.cell_height * self.rows + self.wall_thickness
+        # set startpoint so the maze is horizontally centered
         self.topleft = (ui_area.centerx - self.maze_width/2, ui_area.bottom - self.maze_height)
     
     def draw_maze(self, manager):
