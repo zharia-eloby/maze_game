@@ -154,20 +154,16 @@ class MazeUI(Maze):
         self.maze_width = self.maze_height
         
         self.cell_width = round(self.maze_width/self.columns)
-        self.cell_width -= self.cell_width%2
         self.cell_height = round(self.maze_height/self.rows)
-        self.cell_height -= self.cell_height%2
 
         self.wall_thickness = round(self.cell_width/10)
-        self.wall_thickness -= self.wall_thickness%2
-        if self.wall_thickness < 2:
-            self.wall_thickness = 2
+        if self.wall_thickness < 2: self.wall_thickness = 2
 
         # maze width & height may be slightly different. reset them to the actual width & height
         self.maze_width = self.cell_width * self.columns + self.wall_thickness
         self.maze_height = self.cell_height * self.rows + self.wall_thickness
         # set startpoint so the maze is horizontally centered
-        self.topleft = (ui_area.centerx - self.maze_width/2, ui_area.bottom - self.maze_height)
+        self.topleft = (ui_area.centerx - round(self.maze_width/2), ui_area.bottom - self.maze_height)
     
     def draw_maze(self, manager):
         x_pos = self.topleft[0]
