@@ -9,26 +9,31 @@ class Maze:
         self.startpoint = None
         self.endpoint = None
         self.player_position = None
-    
-    def check_neighbors(self, current_position):
-        available_neighbors = []
-        if current_position[1] > 1:                  # check that it CAN have a left neighbor, then check if it has an unvisited left neighbor
-            if self.maze[current_position[0]][current_position[1]-2] != 'v':
-                available_neighbors += [(current_position[0], current_position[1]-2)]
+
+    def get_neighbors(self, cell, cell_exclusions, wall_exclusions):
+        neighbors = []
+
+        # check if cell can have left neighbor. if so, check that left neighbor is valid
+        if cell[1] > 1:
+            if (self.maze[cell[0]][cell[1]-1] not in wall_exclusions) and (self.maze[cell[0]][cell[1]-2] not in cell_exclusions):
+                neighbors += [(cell[0], cell[1]-2)]
                 
-        if current_position[1] < len(self.maze[0]) - 2:     # if CAN have right neighbor, check that the right neighbor is unvisited
-            if self.maze[current_position[0]][current_position[1]+2] != 'v':
-                available_neighbors += [(current_position[0], current_position[1]+2)]
+        # check if cell can have right neighbor. if so, check that right neighbor is valid
+        if cell[1] < len(self.maze[0]) - 2:
+            if (self.maze[cell[0]][cell[1]+1] not in wall_exclusions) and (self.maze[cell[0]][cell[1]+2] not in cell_exclusions):
+                neighbors += [(cell[0], cell[1]+2)]
                 
-        if current_position[0] > 1:                  # if CAN have upper neighbor, check that the upper neighbor is unvisited
-            if self.maze[current_position[0]-2][current_position[1]] != 'v':
-                available_neighbors += [(current_position[0]-2, current_position[1])]
+        # check if cell can have above neighbor. if so, check that above neighbor is valid
+        if cell[0] > 1:
+            if (self.maze[cell[0]-1][cell[1]] not in wall_exclusions) and (self.maze[cell[0]-2][cell[1]] not in cell_exclusions):
+                neighbors += [(cell[0]-2, cell[1])]
                 
-        if current_position[0] < len(self.maze) - 2:     # if CAN have below neighbor, check that the below neighbor is unvisited
-            if self.maze[current_position[0]+2][current_position[1]] != 'v':
-                available_neighbors += [(current_position[0]+2, current_position[1])]
-                
-        return available_neighbors
+        # check if cell can have below neighbor. if so, check that below neighbor is valid
+        if cell[0] < len(self.maze) - 2:
+            if (self.maze[cell[0]+1][cell[1]] not in wall_exclusions) and (self.maze[cell[0]+2][cell[1]] not in cell_exclusions):
+                neighbors += [(cell[0]+2, cell[1])]
+
+        return neighbors
     
     """
     use the backtracking algorithm to create a maze
@@ -46,7 +51,7 @@ class Maze:
         self.maze[curr_cell[0]][curr_cell[1]] = 'v'
 
         while (len(stack) > 0):
-            neighbors = self.check_neighbors(curr_cell)
+            neighbors = self.get_neighbors(curr_cell, ['v'], [])
             
             if len(neighbors) > 0:
                 chosen = random.choice(neighbors)
@@ -68,30 +73,6 @@ class Maze:
             self.startpoint = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
 
     """
-    only used for solving a maze. checks available paths for the current cell
-    """
-    def check_paths(self, curr_cell):
-        available_paths = []
-
-        # can go right from curr_cell, and hasn't visited the right neighbor
-        if (self.maze[curr_cell[0]+1][curr_cell[1]] != 'w') and (self.maze[curr_cell[0]+2][curr_cell[1]] != 'x'):
-            available_paths += [(curr_cell[0]+2, curr_cell[1])]
-
-        # can go left from curr_cell, and hasn't visited the left neighbor
-        if (self.maze[curr_cell[0]-1][curr_cell[1]] != 'w') and (self.maze[curr_cell[0]-2][curr_cell[1]] != 'x'):
-            available_paths += [(curr_cell[0]-2, curr_cell[1])]
-
-        # can go down from curr_cell, and hasn't visited the neighbor below
-        if (self.maze[curr_cell[0]][curr_cell[1]+1] != 'w') and (self.maze[curr_cell[0]][curr_cell[1]+2] != 'x'):
-            available_paths += [(curr_cell[0], curr_cell[1]+2)]
-
-        # can go up from curr_cell, and hasn't visited the neighbor above
-        if (self.maze[curr_cell[0]][curr_cell[1]-1] != 'w') and (self.maze[curr_cell[0]][curr_cell[1]-2] != 'x'):
-            available_paths += [(curr_cell[0], curr_cell[1]-2)]
-
-        return available_paths
-
-    """
     solves the maze by picking a random path and backtracking until the end is found
     """
     def solve_maze(self):
@@ -103,13 +84,13 @@ class Maze:
 
         available_paths = []
         while (curr_cell != self.endpoint):
-            available_paths = self.check_paths(curr_cell)
+            available_paths = self.get_neighbors(curr_cell, ['x'], ['w'])
 
             # if all neighbors have been visited, pop from the stack until there is an available neighbor
             while not available_paths:
                 solution_path.pop()
                 curr_cell = solution_path[len(solution_path)-1]
-                available_paths = self.check_paths(curr_cell)
+                available_paths = self.get_neighbors(curr_cell, ['x'], ['w'])
 
             curr_cell = random.choice(available_paths)
             solution_path += [curr_cell]
