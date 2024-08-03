@@ -43,7 +43,7 @@ class Maze:
         stack = []
         curr_cell = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
         stack.append(curr_cell)
-        self.maze[1][1] = 'v'
+        self.maze[curr_cell[0]][curr_cell[1]] = 'v'
 
         while (len(stack) > 0):
             neighbors = self.check_neighbors(curr_cell)
