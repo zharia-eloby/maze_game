@@ -35,55 +35,37 @@ class Maze:
     """
     def create_maze(self):
         # start by creating a grid. walls will be erased later to create the maze
-        for i in range(0, self.rows*2+1):
-            row = []
-            for j in range(0, self.columns*2+1):
-                if i % 2 == 0:
-                    row += ['w']
-                else:
-                    if j % 2 == 0:
-                        row += ['w']
-                    else:
-                        row += ['c']
-            self.maze.append(row)
-        
-        cells_to_go = (self.rows*self.columns)-1 # when this gets to 0, all cells have been visited and the maze is finished
-        
+        for i in range(self.rows):
+            self.maze.append(['w']*(self.columns*2+1))
+            self.maze.append(['w', 'c']*(self.columns) + ['w'])
+        self.maze.append(['w']*(self.columns*2+1))
+
         stack = []
-        stack.append((1,1))
+        curr_cell = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
+        stack.append(curr_cell)
         self.maze[1][1] = 'v'
-        
-        while (cells_to_go > 0):
-            curr_cell = stack.pop()
-            stack.append(curr_cell)
-            
+
+        while (len(stack) > 0):
             neighbors = self.check_neighbors(curr_cell)
             
             if len(neighbors) > 0:
                 chosen = random.choice(neighbors)
                 
                 # remove the wall in between the current cell and its chosen neighbor
-                if chosen[0] == curr_cell[0]:         # current cell & chosen neighbor are in the same row
-                    if chosen[1] > curr_cell[1]:      # neighbor is on the right
-                        self.maze[curr_cell[0]][curr_cell[1]+1] = 'o'
-                    else:
-                        self.maze[curr_cell[0]][curr_cell[1]-1] = 'o'
-                        
-                else:                                   # current cell & chosen neighbor are in the same column
-                    if chosen[0] > curr_cell[0]:      # neighbor is below
-                        self.maze[curr_cell[0]+1][curr_cell[1]] = 'o'
-                    else:
-                        self.maze[curr_cell[0]-1][curr_cell[1]] = 'o'
+                row_index = curr_cell[0] + int((chosen[0] - curr_cell[0])/2)
+                column_index = curr_cell[1] + int((chosen[1] - curr_cell[1])/2)
+                self.maze[row_index][column_index] = 'o'
 
                 self.maze[chosen[0]][chosen[1]] = 'v'
-                cells_to_go -= 1
-                if cells_to_go == 0:
-                    self.endpoint = chosen
-                    while (self.startpoint is None) or (self.endpoint == self.startpoint):
-                        self.startpoint = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
+
                 stack.append(chosen)
+                curr_cell = chosen
             else:
-                stack.pop()
+                curr_cell = stack.pop()
+
+        self.endpoint = curr_cell
+        while (self.startpoint is None) or (self.endpoint == self.startpoint):
+            self.startpoint = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
 
     """
     only used for solving a maze. checks available paths for the current cell
