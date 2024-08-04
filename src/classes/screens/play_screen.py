@@ -118,7 +118,7 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif event.ui_object_id == "#reset-button":
-                        self.maze.move_player("reset")
+                        self.maze.move_player((0, 0))
 
                     elif event.ui_object_id == "#show-solution-button":
                         give_up = self.show_solution_modal.show()
@@ -191,16 +191,16 @@ class PlayScreen(Screen):
                         self.pause_modal.show()
 
                     elif (event.key == pygame.K_UP) or (event.key == pygame.K_w):
-                        self.maze.move_player("up")
+                        self.maze.move_player((-1, 0))
 
                     elif (event.key == pygame.K_DOWN) or (event.key == pygame.K_s):
-                        self.maze.move_player("down")
+                        self.maze.move_player((1, 0))
 
                     elif (event.key == pygame.K_LEFT) or (event.key == pygame.K_a):
-                        self.maze.move_player("left")
+                        self.maze.move_player((0, -1))
                     
                     elif (event.key == pygame.K_RIGHT) or (event.key == pygame.K_d):
-                        self.maze.move_player("right")
+                        self.maze.move_player((0, 1))
                     
                     if self.maze.player_position == self.maze.endpoint:
                         completed = True

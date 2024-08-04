@@ -174,9 +174,15 @@ class MazeUI(Maze):
         y_position = ((index[0]-1)/2) * self.cell_height + self.topleft[1] + self.wall_thickness
         return (x_position, y_position)
 
+    """
+    move the player in the given direction
+    - direction: a tuple. 1st value is the number of rows to move, 2nd value is the number of columns to move
+    - (0, 1) moves the player right one cell, (1, 0) moves the player down one cell, etc
+    - (0, 0) resets the player to the startpoint
+    """
     def move_player(self, direction):
         current_position = self.player_position
-        if direction == "reset":
+        if direction == (0, 0):
             start_rect = self.get_cell_ui_position(self.startpoint)
             startpoint_left = start_rect[0] + self.cell_width/2 - self.player.get_relative_rect().width/2 - self.wall_thickness/2
             startpoint_top = start_rect[1] + self.cell_height/2 - self.player.get_relative_rect().height/2 - self.wall_thickness/2
@@ -187,11 +193,6 @@ class MazeUI(Maze):
 
         current_left = self.player.get_relative_rect().left
         current_top = self.player.get_relative_rect().top
-        if direction == "up": direction = (-1, 0)
-        elif direction == "down": direction = (1, 0)
-        elif direction == "left": direction = (0, -1)
-        else: direction = (0, 1)
-
         if self.maze[current_position[0]+direction[0]][current_position[1]+direction[1]] == "o":
             self.player.set_relative_position((current_left + (self.cell_width*direction[1]), current_top + (self.cell_height*direction[0])))
             current_position = (current_position[0] + (direction[0]*2), current_position[1] + (direction[1]*2))
