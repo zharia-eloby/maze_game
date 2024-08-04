@@ -46,7 +46,7 @@ class Maze:
         self.maze.append(['w']*(self.columns*2+1))
 
         stack = []
-        curr_cell = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
+        curr_cell = (random.randrange(0, len(self.maze)-1, 2) + 1, random.randrange(0, len(self.maze[0])-1, 2) + 1)
         stack.append(curr_cell)
         self.maze[curr_cell[0]][curr_cell[1]] = 'v'
 
@@ -70,7 +70,7 @@ class Maze:
 
         self.endpoint = curr_cell
         while (self.startpoint is None) or (self.endpoint == self.startpoint):
-            self.startpoint = (random.randrange(0, self.rows) * 2 + 1, random.randrange(0, self.columns) * 2 + 1)
+            self.startpoint = (random.randrange(0, len(self.maze)-1, 2) + 1, random.randrange(0, len(self.maze[0])-1, 2) + 1)
 
     """
     solves the maze by picking a random path and backtracking until the end is found
@@ -89,12 +89,13 @@ class Maze:
             # if all neighbors have been visited, pop from the stack until there is an available neighbor
             while not available_paths:
                 solution_path.pop()
-                curr_cell = solution_path[len(solution_path)-1]
+                curr_cell = solution_path[-1]
                 available_paths = self.get_neighbors(curr_cell, ['x'], ['w'])
 
             curr_cell = random.choice(available_paths)
             solution_path += [curr_cell]
             self.maze[curr_cell[0]][curr_cell[1]] = 'x'
+
         return solution_path
     
 class MazeUI(Maze):
@@ -131,8 +132,8 @@ class MazeUI(Maze):
     def draw_maze(self, manager):
         x_pos = self.topleft[0]
         y_pos = self.topleft[1]
-        for i in range(0, self.rows*2+1):
-            for j in range(0, self.columns*2+1):
+        for i in range(0, len(self.maze)):
+            for j in range(0, len(self.maze[0])):
                 if (i % 2 == 0) and (j % 2 == 1): # horizontal
                     if self.maze[i][j] == 'w':
                         wall_rect = pygame.Rect(
@@ -186,21 +187,15 @@ class MazeUI(Maze):
 
         current_left = self.player.get_relative_rect().left
         current_top = self.player.get_relative_rect().top
-        if direction == "up" and self.maze[current_position[0]-1][current_position[1]] == "o":
-            self.player.set_relative_position((current_left, current_top - self.cell_height))
-            current_position = (current_position[0] - 2, current_position[1])
+        if direction == "up": direction = (-1, 0)
+        elif direction == "down": direction = (1, 0)
+        elif direction == "left": direction = (0, -1)
+        else: direction = (0, 1)
 
-        elif direction == "down" and self.maze[current_position[0]+1][current_position[1]] == "o":
-            self.player.set_relative_position((current_left, current_top + self.cell_height))
-            current_position = (current_position[0] + 2, current_position[1])
+        if self.maze[current_position[0]+direction[0]][current_position[1]+direction[1]] == "o":
+            self.player.set_relative_position((current_left + (self.cell_width*direction[1]), current_top + (self.cell_height*direction[0])))
+            current_position = (current_position[0] + (direction[0]*2), current_position[1] + (direction[1]*2))
 
-        elif direction == "left" and self.maze[current_position[0]][current_position[1]-1] == "o":
-            self.player.set_relative_position((current_left - self.cell_width, current_top))
-            current_position = (current_position[0], current_position[1] - 2)
-
-        elif direction == "right" and self.maze[current_position[0]][current_position[1]+1] == "o":
-            self.player.set_relative_position((current_left + self.cell_width, current_top))
-            current_position = (current_position[0], current_position[1] + 2)
         self.player_position = current_position
     
     def setup_maze_ui(self, manager): 

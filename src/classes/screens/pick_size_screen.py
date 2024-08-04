@@ -104,8 +104,8 @@ class PickSizeScreen(Screen):
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#easy-button":
                         done = True
-                        rows = 10
-                        columns = 10
+                        rows = 5
+                        columns = 5
                         self.game_window.play_screen.set_maze(rows, columns)
                         next_page = self.game_window.play_screen
 
