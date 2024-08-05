@@ -9,6 +9,7 @@ class Maze:
         self.startpoint = None
         self.endpoint = None
         self.player_position = None
+        self.solution = []
 
     def get_neighbors(self, cell, cell_exclusions, wall_exclusions):
         neighbors = []
@@ -76,7 +77,7 @@ class Maze:
     solves the maze by picking a random path and backtracking until the end is found
     """
     def solve_maze(self):
-        solution_path = [self.startpoint]
+        self.solution = [self.startpoint]
         curr_cell = self.startpoint
         
         # mark the cell with 'x' in the maze array when visited
@@ -88,15 +89,13 @@ class Maze:
 
             # if all neighbors have been visited, pop from the stack until there is an available neighbor
             while not available_paths:
-                solution_path.pop()
-                curr_cell = solution_path[-1]
+                self.solution.pop()
+                curr_cell = self.solution[-1]
                 available_paths = self.get_neighbors(curr_cell, ['x'], ['w'])
 
             curr_cell = random.choice(available_paths)
-            solution_path += [curr_cell]
+            self.solution += [curr_cell]
             self.maze[curr_cell[0]][curr_cell[1]] = 'x'
-
-        return solution_path
     
 class MazeUI(Maze):
     def __init__(self, rows, columns, game_window):
@@ -263,3 +262,4 @@ class MazeUI(Maze):
         self.topleft = None
         self.player = None
         self.player_position = None
+        self.solution = []

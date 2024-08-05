@@ -11,7 +11,6 @@ class PlayScreen(Screen):
         super().__init__(game_window)
         self.audio = audio
         self.maze = None
-        self.solution_stack = None
         self.show_solution_button = None
         self.reset_button = None
         self.pause_modal = None
@@ -30,7 +29,6 @@ class PlayScreen(Screen):
         self.maze_manager.clear_and_reset()
         self.solution_manager.clear_and_reset()
         self.show_solution_button.enable()
-        self.solution_stack = None
 
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
@@ -123,8 +121,8 @@ class PlayScreen(Screen):
                     elif event.ui_object_id == "#show-solution-button":
                         give_up = self.show_solution_modal.show()
                         if give_up:
-                            if not self.solution_stack:
-                                self.solution_stack = self.maze.solve_maze()
+                            if len(self.maze.solution) == 0:
+                                self.maze.solve_maze()
                             curr_index = 0
                             new_line = True
                             solving = True
@@ -134,13 +132,13 @@ class PlayScreen(Screen):
 
                 elif event.type == SHOW_SOLUTION:
                     if new_line:
-                        if curr_index == len(self.solution_stack) - 1:
+                        if curr_index == len(self.maze.solution) - 1:
                             solving = False
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                             self.show_solution_button.enable()
                         else:
-                            curr_cell = self.solution_stack[curr_index]
-                            next_cell = self.solution_stack[curr_index + 1]
+                            curr_cell = self.maze.solution[curr_index]
+                            next_cell = self.maze.solution[curr_index + 1]
 
                             ui_position = self.maze.get_cell_ui_position(curr_cell)
                             line_rect = pygame.Rect(
