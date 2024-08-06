@@ -16,18 +16,16 @@ class PlayScreen(Screen):
         self.pause_modal = None
         self.finished_modal = None
         self.show_solution_modal = None
-        self.solution_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        self.managers = [self.get_background()['background_manager'], self.solution_manager, self.maze_manager, self.ui_manager]
+        self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def set_maze(self, rows, columns):
         self.maze = MazeUI(rows, columns, self.game_window)
-        self.maze.setup_maze_ui(self.maze_manager)
+        self.maze.setup_maze_ui()
+        self.managers.insert(1, self.maze.maze_manager)
+        self.managers.insert(1, self.maze.solution_manager)
     
     def reset(self):
         self.maze.reset_maze()
-        self.maze_manager.clear_and_reset()
-        self.solution_manager.clear_and_reset()
         self.show_solution_button.enable()
 
     def setup(self):
@@ -127,7 +125,7 @@ class PlayScreen(Screen):
                             new_line = True
                             solving = True
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
-                            self.solution_manager.clear_and_reset()
+                            self.maze.solution_manager.clear_and_reset()
                             self.show_solution_button.disable()
 
                 elif event.type == SHOW_SOLUTION:
@@ -149,7 +147,7 @@ class PlayScreen(Screen):
                             )
                             line = pygame_gui.elements.UIPanel(
                                 relative_rect=line_rect,
-                                manager=self.solution_manager,
+                                manager=self.maze.solution_manager,
                                 object_id=ObjectID(object_id="#solution-path")
                             )
 

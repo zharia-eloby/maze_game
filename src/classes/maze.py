@@ -108,6 +108,8 @@ class MazeUI(Maze):
         self.topleft = None
         self.player = None
         self.game_window = game_window
+        self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
+        self.solution_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         
     def set_maze_ui_measurements(self, ui_area):
         if ui_area.width > ui_area.height:
@@ -128,7 +130,7 @@ class MazeUI(Maze):
         # set startpoint so the maze is horizontally centered
         self.topleft = (ui_area.centerx - round(self.maze_width/2), ui_area.bottom - self.maze_height)
     
-    def draw_maze(self, manager):
+    def draw_maze(self):
         x_pos = self.topleft[0]
         y_pos = self.topleft[1]
         for i in range(0, len(self.maze)):
@@ -143,7 +145,7 @@ class MazeUI(Maze):
                         )
                         pygame_gui.elements.UIPanel(
                             relative_rect=wall_rect,
-                            manager=manager,
+                            manager=self.maze_manager,
                             object_id=ObjectID(class_id="@wall")
                         )
                     x_pos += self.cell_width
@@ -157,7 +159,7 @@ class MazeUI(Maze):
                         )
                         pygame_gui.elements.UIPanel(
                             relative_rect=wall_rect,
-                            manager=manager,
+                            manager=self.maze_manager,
                             object_id=ObjectID(class_id="@wall")
                         )
                     x_pos += self.cell_width
@@ -198,11 +200,11 @@ class MazeUI(Maze):
 
         self.player_position = current_position
     
-    def setup_maze_ui(self, manager): 
+    def setup_maze_ui(self): 
         self.create_maze()
         self.player_position = self.startpoint
         self.set_maze_ui_measurements(self.game_window.drawable_area)
-        self.draw_maze(manager)
+        self.draw_maze()
 
         ui_position = self.get_cell_ui_position(self.startpoint)
         start_rect = pygame.Rect(
@@ -213,7 +215,7 @@ class MazeUI(Maze):
         )
         pygame_gui.elements.UIPanel(
             relative_rect=start_rect,
-            manager=manager,
+            manager=self.maze_manager,
             object_id=ObjectID(object_id="#startpoint")
         )
 
@@ -226,7 +228,7 @@ class MazeUI(Maze):
         )
         pygame_gui.elements.UIPanel(
             relative_rect=end_rect,
-            manager=manager,
+            manager=self.maze_manager,
             object_id=ObjectID(object_id="#endpoint")
         )
 
@@ -246,7 +248,7 @@ class MazeUI(Maze):
         )
         self.player = pygame_gui.elements.UIPanel(
             relative_rect=player_rect,
-            manager=manager,
+            manager=self.maze_manager,
             object_id=ObjectID(object_id="#player")
         )
     
@@ -263,3 +265,5 @@ class MazeUI(Maze):
         self.player = None
         self.player_position = None
         self.solution = []
+        self.maze_manager.clear_and_reset()
+        self.solution_manager.clear_and_reset()
