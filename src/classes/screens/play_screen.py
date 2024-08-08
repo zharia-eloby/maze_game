@@ -1,7 +1,7 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from classes.screens.screen import Screen
-from classes.maze import MazeUI
+from classes.maze import MazeUI, LineSolutionPath
 from classes.modals.pause_modal import PauseModal
 from classes.modals.finished_modal import FinishedModal
 from classes.modals.show_solution_modal import ShowSolutionModal
@@ -121,66 +121,18 @@ class PlayScreen(Screen):
                         if give_up:
                             if len(self.maze.solution) == 0:
                                 self.maze.solve_maze()
-                            curr_index = 0
-                            new_line = True
                             solving = True
+                            solution_drawer = LineSolutionPath(self.maze)
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                             self.maze.solution_manager.clear_and_reset()
                             self.show_solution_button.disable()
 
                 elif event.type == SHOW_SOLUTION:
-                    if new_line:
-                        if curr_index == len(self.maze.solution) - 1:
-                            solving = False
-                            pygame.time.set_timer(SHOW_SOLUTION, 0)
-                            self.show_solution_button.enable()
-                        else:
-                            curr_cell = self.maze.solution[curr_index]
-                            next_cell = self.maze.solution[curr_index + 1]
-
-                            ui_position = self.maze.get_cell_ui_position(curr_cell)
-                            line_rect = pygame.Rect(
-                                ui_position[0] + self.maze.cell_width/2 - self.maze.wall_thickness,
-                                ui_position[1] + self.maze.cell_height/2 - self.maze.wall_thickness,
-                                self.maze.wall_thickness,
-                                self.maze.wall_thickness
-                            )
-                            line = pygame_gui.elements.UIPanel(
-                                relative_rect=line_rect,
-                                manager=self.maze.solution_manager,
-                                object_id=ObjectID(object_id="#solution-path")
-                            )
-
-                            if (curr_cell[1] < next_cell[1]) or (curr_cell[1] > next_cell[1]):   # horizontal
-                                target_width = self.maze.cell_width + self.maze.wall_thickness
-                                target_height = self.maze.wall_thickness
-
-                            elif (curr_cell[0] < next_cell[0]) or (curr_cell[0] > next_cell[0]): # vertical
-                                target_width = self.maze.wall_thickness
-                                target_height = self.maze.cell_height + self.maze.wall_thickness
-
-                            new_line = False
-                            curr_index += 1
-                    else:
-                        if curr_cell[1] < next_cell[1]:   # going right
-                            line.set_dimensions((line.get_relative_rect().width + increment, line.get_relative_rect().height))
-
-                        elif curr_cell[1] > next_cell[1]: # going left
-                            left = line.get_relative_rect().left
-                            line.set_dimensions((line.get_relative_rect().width + increment, line.get_relative_rect().height))
-                            line.set_relative_position((left - increment, line.get_relative_rect().top))
-
-                        elif curr_cell[0] < next_cell[0]: # going down
-                            line.set_dimensions((line.get_relative_rect().width, line.get_relative_rect().height + increment))
-
-                        elif curr_cell[0] > next_cell[0]: # going up
-                            top = line.relative_rect.top
-                            line.set_dimensions((line.get_relative_rect().width, line.get_relative_rect().height + increment))
-                            line.set_relative_position((line.get_relative_rect().left, top - increment))
-                        
-                        if (line.get_relative_rect().width >= target_width) and (line.get_relative_rect().height >= target_height):
-                            line.set_dimensions((target_width, target_height))
-                            new_line = True
+                    complete = solution_drawer.draw()
+                    if complete:
+                        solving = False
+                        pygame.time.set_timer(SHOW_SOLUTION, 0)
+                        self.show_solution_button.enable()
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
