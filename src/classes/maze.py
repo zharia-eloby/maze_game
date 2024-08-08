@@ -275,41 +275,48 @@ class SolutionPath:
     def __init__(self, maze_ui):
         self.maze_ui = maze_ui
         self.solution_manager = pygame_gui.UIManager((self.maze_ui.game_window.screen_width, self.maze_ui.game_window.screen_height), self.maze_ui.game_window.theme_file)
-        self.index = 0
 
 class LineSolutionPath(SolutionPath):
     def __init__(self, maze_ui):
         super().__init__(maze_ui)
-        self.line_thickness = 2
+        self.line_thickness = 6
         self.current_line = None
         self.increment = 1
+        self.index = 0
         self.current_line_target_width = None
         self.current_line_target_height = None
 
     def draw(self):
         if self.current_line is None:
             cell_ui_position = self.maze_ui.get_cell_ui_position(self.maze_ui.solution[self.index])
-            line_rect = pygame.Rect(
-                cell_ui_position[0] + self.maze_ui.cell_width/2 - self.maze_ui.wall_thickness,
-                cell_ui_position[1] + self.maze_ui.cell_height/2 - self.maze_ui.wall_thickness,
-                self.maze_ui.wall_thickness,
-                self.maze_ui.wall_thickness
-            )
-            self.current_line = pygame_gui.elements.UIPanel(
-                relative_rect=line_rect,
-                manager=self.maze_ui.solution_manager,
-                object_id=ObjectID(object_id="#solution-path")
-            )
 
             # horizontal
             if (self.maze_ui.solution[self.index][1] < self.maze_ui.solution[self.index+1][1]) or (self.maze_ui.solution[self.index][1] > self.maze_ui.solution[self.index+1][1]):
                 self.current_line_target_width = self.maze_ui.cell_width + self.maze_ui.wall_thickness
                 self.current_line_target_height = self.maze_ui.wall_thickness
+                line_rect = pygame.Rect(
+                    cell_ui_position[0] + self.maze_ui.cell_width/2 - self.maze_ui.wall_thickness,
+                    cell_ui_position[1] + self.maze_ui.cell_height/2 - self.maze_ui.wall_thickness,
+                    self.maze_ui.wall_thickness,
+                    self.maze_ui.wall_thickness
+                )
 
             # vertical
             elif (self.maze_ui.solution[self.index][0] < self.maze_ui.solution[self.index+1][0]) or (self.maze_ui.solution[self.index][0] > self.maze_ui.solution[self.index+1][0]):
                 self.current_line_target_width = self.maze_ui.wall_thickness
                 self.current_line_target_height = self.maze_ui.cell_height + self.maze_ui.wall_thickness
+                line_rect = pygame.Rect(
+                    cell_ui_position[0] + self.maze_ui.cell_width/2 - self.maze_ui.wall_thickness,
+                    cell_ui_position[1] + self.maze_ui.cell_height/2 - self.maze_ui.wall_thickness,
+                    self.maze_ui.wall_thickness,
+                    self.maze_ui.wall_thickness
+                )
+
+            self.current_line = pygame_gui.elements.UIPanel(
+                relative_rect=line_rect,
+                manager=self.maze_ui.solution_manager,
+                object_id=ObjectID(object_id="#solution-path")
+            )
         else:
             # going right
             if self.maze_ui.solution[self.index][1] < self.maze_ui.solution[self.index+1][1]:
