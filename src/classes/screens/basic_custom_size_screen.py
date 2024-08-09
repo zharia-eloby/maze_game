@@ -116,7 +116,8 @@ class BasicCustomSizeScreen(Screen):
         maze = MazeUI(self.default_rows, self.default_columns, self.game_window)
         maze.create_maze()
         maze.set_maze_ui_measurements(self.maze_area)
-        maze.draw_maze(self.maze_manager)
+        maze.draw_maze()
+        self.managers.insert(1, maze.maze_manager)
 
         done = False
         next_page = None
@@ -139,7 +140,7 @@ class BasicCustomSizeScreen(Screen):
                         maze.columns = maze.rows
                         maze.create_maze()
                         maze.set_maze_ui_measurements(self.maze_area)
-                        maze.draw_maze(self.maze_manager)
+                        maze.draw_maze()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#back-button":
