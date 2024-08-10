@@ -138,7 +138,17 @@ class PlayScreen(Screen):
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.pause_modal.show()
+                        if solving: 
+                            pygame.time.set_timer(SHOW_SOLUTION, 0)
+                        resume = self.pause_modal.show()
+                        if not resume:
+                            pygame.event.clear()
+                            self.reset()
+                            done = True
+                            next_page = self.game_window.title_screen
+                            break
+                        elif solving:
+                            pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif (event.key == pygame.K_UP) or (event.key == pygame.K_w):
                         self.maze.move_player((-1, 0))
