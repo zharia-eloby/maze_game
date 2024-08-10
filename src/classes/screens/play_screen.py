@@ -87,11 +87,10 @@ class PlayScreen(Screen):
         SHOW_SOLUTION = pygame.USEREVENT + 1
 
         solution_speed = 10
-
         done = False
         next_page = None
         solving = False
-        completed = False
+        end_reached = False
         self.game_window.redraw_elements(self.managers, 0)
         time_delta = math.ceil(time.time())
         while not done:
@@ -108,7 +107,6 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                         resume = self.pause_modal.show()
                         if not resume:
-                            pygame.event.clear()
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
@@ -163,7 +161,7 @@ class PlayScreen(Screen):
                         self.maze.move_player((0, 1))
                     
                     if self.maze.player_position == self.maze.endpoint:
-                        completed = True
+                        end_reached = True
                         done = True
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
@@ -175,7 +173,7 @@ class PlayScreen(Screen):
             time_delta = math.ceil(time.time()) - time_delta
             self.game_window.redraw_elements(self.managers, time_delta)
             
-        if completed:
+        if end_reached:
             restart = self.finished_modal.show()
             if restart:
                 self.reset()

@@ -16,8 +16,7 @@ class BasicCustomSizeScreen(Screen):
         self.default_rows = int((self.row_max-self.row_min)/2) + self.row_min
         self.default_columns = self.default_rows
         self.dimensions = None
-        self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        self.managers = [self.get_background()['background_manager'], self.maze_manager, self.ui_manager]
+        self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
@@ -135,7 +134,6 @@ class BasicCustomSizeScreen(Screen):
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if maze.rows != new_rows:
                         maze.reset_maze()
-                        self.maze_manager.clear_and_reset()
                         maze.rows = new_rows
                         maze.columns = maze.rows
                         maze.create_maze()
@@ -145,15 +143,11 @@ class BasicCustomSizeScreen(Screen):
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#back-button":
                         done = True
-                        del maze
-                        self.maze_manager.clear_and_reset()
                         next_page = self.game_window.pick_size_screen
 
                     elif event.ui_object_id == "#start-button":
                         done = True
                         self.game_window.play_screen.set_maze(maze.rows, maze.columns)
-                        del maze
-                        self.maze_manager.clear_and_reset()
                         next_page = self.game_window.play_screen
                 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
@@ -165,4 +159,6 @@ class BasicCustomSizeScreen(Screen):
                 time_delta = math.ceil(time.time()) - time_delta
                 self.game_window.redraw_elements(self.managers, time_delta)
         
+        del maze
+        self.managers = [self.get_background()['background_manager'], self.ui_manager]
         return next_page
