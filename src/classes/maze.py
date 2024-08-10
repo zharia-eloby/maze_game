@@ -110,7 +110,10 @@ class MazeUI(Maze):
         self.game_window = game_window
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
 
-    def set_maze_ui_measurements(self, ui_area):
+    """
+    sets the measurements for the maze's ui elements (wall size, maze width/height, cell width/height)
+    """
+    def set_ui_sizes(self, ui_area):
         if ui_area.width > ui_area.height:
             self.maze_height = ui_area.height
         else:
@@ -202,7 +205,7 @@ class MazeUI(Maze):
     def setup_maze_ui(self): 
         self.create_maze()
         self.player_position = self.startpoint
-        self.set_maze_ui_measurements(self.game_window.drawable_area)
+        self.set_ui_sizes(self.game_window.drawable_area)
         self.draw_maze()
 
         ui_position = self.get_cell_ui_position(self.startpoint)
@@ -250,11 +253,8 @@ class MazeUI(Maze):
             manager=self.maze_manager,
             object_id=ObjectID(object_id="#player")
         )
-
-    def draw_solution_path(self, index, line):
-        return index + 1
     
-    def reset_maze(self):
+    def reset(self):
         self.maze = []
         self.maze_width = None
         self.maze_height = None
@@ -275,9 +275,9 @@ class LineSolutionPath():
         self.solution_manager = pygame_gui.UIManager((self.maze_ui.game_window.screen_width, self.maze_ui.game_window.screen_height), self.maze_ui.game_window.theme_file)
         self.line_thickness = round((self.maze_ui.cell_width - self.maze_ui.wall_thickness)*0.1)
         if self.line_thickness < 2: self.line_thickness = 2
-        self.current_line = None
         self.increment = 1
         self.index = 0
+        self.current_line = None
         self.current_line_target_width = None
         self.current_line_target_height = None
         self.current_direction = None

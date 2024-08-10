@@ -15,12 +15,14 @@ class GameWindow:
         self.screen_height = 700
         self.window = pygame.display.set_mode([self.screen_width, self.screen_height])
         self.margin = 50
+        
         self.drawable_area = pygame.Rect(
             self.margin,
             self.margin,
             self.screen_width - self.margin*2,
             self.screen_height - self.margin*2
         )
+
         self.small_sq_button_width = 50
         self.small_sq_button_height = self.small_sq_button_width
         self.small_rect_button_width = round(self.drawable_area.width * 0.3)
@@ -33,12 +35,16 @@ class GameWindow:
         self.small_text_height = 20
         self.medium_text_height = 50
         self.slider_height = 30
+
         self.settings = self.load_settings()
         self.theme_file = os.path.realpath(self.settings['theme']['path'])
+
         self.title_screen = None
         self.pick_size_screen = None
         self.custom_size_screen = None
+        self.basic_custom_size_screen = None
         self.play_screen = None
+
         self.resize = True
 
     def initialize(self):

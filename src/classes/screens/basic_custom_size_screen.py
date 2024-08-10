@@ -114,7 +114,7 @@ class BasicCustomSizeScreen(Screen):
 
         maze = MazeUI(self.default_rows, self.default_columns, self.game_window)
         maze.create_maze()
-        maze.set_maze_ui_measurements(self.maze_area)
+        maze.set_ui_sizes(self.maze_area)
         maze.draw_maze()
         self.managers.insert(1, maze.maze_manager)
 
@@ -127,33 +127,36 @@ class BasicCustomSizeScreen(Screen):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
+                    break
                 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if maze.rows != new_rows:
-                        maze.reset_maze()
+                        maze.reset()
                         maze.rows = new_rows
                         maze.columns = maze.rows
                         maze.create_maze()
-                        maze.set_maze_ui_measurements(self.maze_area)
+                        maze.set_ui_sizes(self.maze_area)
                         maze.draw_maze()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#back-button":
                         done = True
                         next_page = self.game_window.pick_size_screen
+                        break
 
                     elif event.ui_object_id == "#start-button":
                         done = True
                         self.game_window.play_screen.set_maze(maze.rows, maze.columns)
                         next_page = self.game_window.play_screen
+                        break
                 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                     new_rows = self.row_min + int((self.row_max - self.row_min) * self.dimensions_slider.get_current_value())
                 
-                if not done: self.ui_manager.process_events(event)
+                self.ui_manager.process_events(event)
 
             if not done:
                 time_delta = math.ceil(time.time()) - time_delta

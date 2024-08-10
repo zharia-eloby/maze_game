@@ -26,7 +26,7 @@ class PlayScreen(Screen):
         self.managers = [self.get_background()['background_manager'], self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]
     
     def reset(self):
-        self.maze.reset_maze()
+        self.maze.reset()
         self.solution_drawer.reset()
         self.show_solution_button.enable()
         self.managers.clear()
