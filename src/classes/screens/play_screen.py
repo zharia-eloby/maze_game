@@ -16,17 +16,20 @@ class PlayScreen(Screen):
         self.pause_modal = None
         self.finished_modal = None
         self.show_solution_modal = None
-        self.managers = [self.get_background()['background_manager'], self.ui_manager]
+        self.solution_drawer = None
+        self.managers = None
 
     def set_maze(self, rows, columns):
         self.maze = MazeUI(rows, columns, self.game_window)
         self.maze.setup_maze_ui()
-        self.managers.insert(1, self.maze.maze_manager)
-        self.managers.insert(1, self.maze.solution_manager)
+        self.solution_drawer = LineSolutionPath(self.maze)
+        self.managers = [self.get_background()['background_manager'], self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]
     
     def reset(self):
         self.maze.reset_maze()
+        self.solution_drawer.reset()
         self.show_solution_button.enable()
+        self.managers.clear()
 
     def setup(self):
         self.audio.create_audio_buttons(self.ui_manager)
@@ -101,7 +104,7 @@ class PlayScreen(Screen):
 
                 elif (event.type == pygame_gui.UI_BUTTON_PRESSED) and (len(event.__dict__) > 0):
                     if event.ui_object_id == "#pause-button":
-                        if solving:
+                        if solving: 
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                         resume = self.pause_modal.show()
                         if not resume:
@@ -122,13 +125,11 @@ class PlayScreen(Screen):
                             if len(self.maze.solution) == 0:
                                 self.maze.solve_maze()
                             solving = True
-                            solution_drawer = LineSolutionPath(self.maze)
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
-                            self.maze.solution_manager.clear_and_reset()
                             self.show_solution_button.disable()
 
                 elif event.type == SHOW_SOLUTION:
-                    complete = solution_drawer.draw()
+                    complete = self.solution_drawer.draw()
                     if complete:
                         solving = False
                         pygame.time.set_timer(SHOW_SOLUTION, 0)

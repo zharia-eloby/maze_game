@@ -109,8 +109,7 @@ class MazeUI(Maze):
         self.player = None
         self.game_window = game_window
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        self.solution_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
-        
+
     def set_maze_ui_measurements(self, ui_area):
         if ui_area.width > ui_area.height:
             self.maze_height = ui_area.height
@@ -269,7 +268,6 @@ class MazeUI(Maze):
         self.player_position = None
         self.solution = []
         self.maze_manager.clear_and_reset()
-        self.solution_manager.clear_and_reset()
 
 class LineSolutionPath():
     def __init__(self, maze_ui):
@@ -327,7 +325,7 @@ class LineSolutionPath():
 
             self.current_line = pygame_gui.elements.UIPanel(
                 relative_rect=line_rect,
-                manager=self.maze_ui.solution_manager,
+                manager=self.solution_manager,
                 object_id=ObjectID(object_id="#solution-path")
             )
         else:
@@ -358,3 +356,11 @@ class LineSolutionPath():
                 if self.index == len(self.maze_ui.solution) - 1:
                     return True
         return False
+
+    def reset(self):
+        self.solution_manager.clear_and_reset()
+        self.index = 0
+        self.current_line = None
+        self.current_line_target_width = None
+        self.current_line_target_height = None
+        self.current_direction = None
