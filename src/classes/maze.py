@@ -276,19 +276,26 @@ class LineSolutionPath():
         self.maze_ui = maze_ui
         self.solution_manager = pygame_gui.UIManager((self.maze_ui.game_window.screen_width, self.maze_ui.game_window.screen_height), self.maze_ui.game_window.theme_file)
         self.line_thickness = round((self.maze_ui.cell_width - self.maze_ui.wall_thickness)*0.25)
+        if self.line_thickness < 2: self.line_thickness = 2
         self.current_line = None
         self.increment = 1
         self.index = 0
         self.current_line_target_width = None
         self.current_line_target_height = None
+        self.current_direction = None
+
+    def set_current_direction(self):
+        col_direction = self.maze_ui.solution[self.index+1][1] - self.maze_ui.solution[self.index][1]
+        row_direction = self.maze_ui.solution[self.index+1][0] - self.maze_ui.solution[self.index][0]
+        self.current_direction = (row_direction, col_direction)
 
     def draw(self):
         if self.current_line is None:
             cell_ui_position = self.maze_ui.get_cell_ui_position(self.maze_ui.solution[self.index])
+            self.set_current_direction()
             # horizontal
-            if self.maze_ui.solution[self.index][1] != self.maze_ui.solution[self.index+1][1]:
-                direction = (self.maze_ui.solution[self.index][1] - self.maze_ui.solution[self.index+1][1])
-                if direction > 0:
+            if self.current_direction[0] == 0:
+                if self.current_direction[1] < 0:
                     adjustment = self.increment
                 else:
                     adjustment = 0
@@ -296,25 +303,24 @@ class LineSolutionPath():
                 self.current_line_target_height = self.line_thickness
                 line_rect = pygame.Rect(
                     # shift x position left by 1 if going left from current cell to next cell
-                    cell_ui_position[0] + (self.maze_ui.cell_width - self.maze_ui.wall_thickness)/2 - self.line_thickness/2 - adjustment,
-                    cell_ui_position[1] + (self.maze_ui.cell_height - self.maze_ui.wall_thickness)/2 - self.line_thickness/2,
+                    cell_ui_position[0] + (self.maze_ui.cell_width - self.maze_ui.wall_thickness - self.line_thickness)/2 - adjustment,
+                    cell_ui_position[1] + (self.maze_ui.cell_height - self.maze_ui.wall_thickness - self.line_thickness)/2,
                     self.line_thickness + adjustment,
                     self.line_thickness
                 )
 
             # vertical
-            elif self.maze_ui.solution[self.index][0] != self.maze_ui.solution[self.index+1][0]:
-                direction = (self.maze_ui.solution[self.index][0] - self.maze_ui.solution[self.index+1][0])
-                if direction > 0:
+            else:
+                if self.current_direction[0] < 0:
                     adjustment = self.increment
                 else:
                     adjustment = 0
                 self.current_line_target_width = self.line_thickness
                 self.current_line_target_height = self.maze_ui.cell_height + self.line_thickness
                 line_rect = pygame.Rect(
-                    cell_ui_position[0] + (self.maze_ui.cell_width - self.maze_ui.wall_thickness)/2 - self.line_thickness/2,
+                    cell_ui_position[0] + (self.maze_ui.cell_width - self.maze_ui.wall_thickness - self.line_thickness)/2,
                     # shift y position up by 1 if going up from current cell to next cell
-                    cell_ui_position[1] + (self.maze_ui.cell_height - self.maze_ui.wall_thickness)/2 - self.line_thickness/2 - adjustment,
+                    cell_ui_position[1] + (self.maze_ui.cell_height - self.maze_ui.wall_thickness - self.line_thickness)/2 - adjustment,
                     self.line_thickness,
                     self.line_thickness + adjustment
                 )
@@ -326,21 +332,21 @@ class LineSolutionPath():
             )
         else:
             # going right
-            if self.maze_ui.solution[self.index][1] < self.maze_ui.solution[self.index+1][1]:
+            if self.current_direction[1] > 0:
                 self.current_line.set_dimensions((self.current_line.get_relative_rect().width + self.increment, self.current_line.get_relative_rect().height))
 
             # going left
-            elif self.maze_ui.solution[self.index][1] > self.maze_ui.solution[self.index+1][1]:
+            elif self.current_direction[1] < 0:
                 left = self.current_line.get_relative_rect().left
                 self.current_line.set_dimensions((self.current_line.get_relative_rect().width + self.increment, self.current_line.get_relative_rect().height))
                 self.current_line.set_relative_position((left - self.increment, self.current_line.get_relative_rect().top))
 
             # going down
-            elif self.maze_ui.solution[self.index][0] < self.maze_ui.solution[self.index+1][0]:
+            elif self.current_direction[0] > 0:
                 self.current_line.set_dimensions((self.current_line.get_relative_rect().width, self.current_line.get_relative_rect().height + self.increment))
 
             # going up
-            elif self.maze_ui.solution[self.index][0] > self.maze_ui.solution[self.index+1][0]:
+            elif self.current_direction[0] < 0:
                 top = self.current_line.relative_rect.top
                 self.current_line.set_dimensions((self.current_line.get_relative_rect().width, self.current_line.get_relative_rect().height + self.increment))
                 self.current_line.set_relative_position((self.current_line.get_relative_rect().left, top - self.increment))
