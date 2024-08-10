@@ -84,7 +84,6 @@ class PlayScreen(Screen):
         SHOW_SOLUTION = pygame.USEREVENT + 1
 
         solution_speed = 10
-        increment = 1
 
         done = False
         next_page = None
@@ -110,6 +109,7 @@ class PlayScreen(Screen):
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
+                            break
                         elif solving:
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
@@ -133,6 +133,7 @@ class PlayScreen(Screen):
                         solving = False
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
                         self.show_solution_button.enable()
+                        break
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
