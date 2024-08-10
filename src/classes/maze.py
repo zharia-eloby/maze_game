@@ -271,14 +271,10 @@ class MazeUI(Maze):
         self.maze_manager.clear_and_reset()
         self.solution_manager.clear_and_reset()
 
-class SolutionPath:
+class LineSolutionPath():
     def __init__(self, maze_ui):
         self.maze_ui = maze_ui
         self.solution_manager = pygame_gui.UIManager((self.maze_ui.game_window.screen_width, self.maze_ui.game_window.screen_height), self.maze_ui.game_window.theme_file)
-
-class LineSolutionPath(SolutionPath):
-    def __init__(self, maze_ui):
-        super().__init__(maze_ui)
         self.line_thickness = round((self.maze_ui.cell_width - self.maze_ui.wall_thickness)*0.25)
         self.current_line = None
         self.increment = 1
@@ -290,10 +286,10 @@ class LineSolutionPath(SolutionPath):
         if self.current_line is None:
             cell_ui_position = self.maze_ui.get_cell_ui_position(self.maze_ui.solution[self.index])
             # horizontal
-            if (self.maze_ui.solution[self.index][1] < self.maze_ui.solution[self.index+1][1]) or (self.maze_ui.solution[self.index][1] > self.maze_ui.solution[self.index+1][1]):
+            if self.maze_ui.solution[self.index][1] != self.maze_ui.solution[self.index+1][1]:
                 direction = (self.maze_ui.solution[self.index][1] - self.maze_ui.solution[self.index+1][1])
                 if direction > 0:
-                    adjustment = 1
+                    adjustment = self.increment
                 else:
                     adjustment = 0
                 self.current_line_target_width = self.maze_ui.cell_width + self.line_thickness
@@ -307,10 +303,10 @@ class LineSolutionPath(SolutionPath):
                 )
 
             # vertical
-            elif (self.maze_ui.solution[self.index][0] < self.maze_ui.solution[self.index+1][0]) or (self.maze_ui.solution[self.index][0] > self.maze_ui.solution[self.index+1][0]):
+            elif self.maze_ui.solution[self.index][0] != self.maze_ui.solution[self.index+1][0]:
                 direction = (self.maze_ui.solution[self.index][0] - self.maze_ui.solution[self.index+1][0])
                 if direction > 0:
-                    adjustment = 1
+                    adjustment = self.increment
                 else:
                     adjustment = 0
                 self.current_line_target_width = self.line_thickness
