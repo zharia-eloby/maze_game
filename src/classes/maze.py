@@ -235,14 +235,14 @@ class MazeUI(Maze):
         player_margin = round(self.wall_thickness * 1.5)
         # set player width to be the smaller of cell width and cell height
         if start_rect.width > start_rect.height:
-            player_width = self.cell_height - player_margin*2
+            player_width = start_rect.height - player_margin*2
         else:
-            player_width = self.cell_width - player_margin*2
+            player_width = start_rect.width - player_margin*2
         player_height = player_width
 
         player_rect = pygame.Rect(
-            start_rect.centerx - player_width/2,
-            start_rect.centery - player_height/2,
+            start_rect.left + (start_rect.width - player_width)/2,
+            start_rect.top + (start_rect.height - player_height)/2,
             player_width,
             player_height
         )
