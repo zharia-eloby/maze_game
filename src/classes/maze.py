@@ -107,6 +107,7 @@ class MazeUI(Maze):
         self.wall_thickness = None
         self.topleft = None
         self.player = None
+        self.maze_area = None
         self.game_window = game_window
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
 
@@ -202,10 +203,10 @@ class MazeUI(Maze):
 
         self.player_position = current_position
     
-    def setup_maze_ui(self): 
+    def setup_maze_ui(self, maze_area): 
         self.create_maze()
         self.player_position = self.startpoint
-        self.set_ui_sizes(self.game_window.drawable_area)
+        self.set_ui_sizes(maze_area)
         self.draw_maze()
 
         ui_position = self.get_cell_ui_position(self.startpoint)

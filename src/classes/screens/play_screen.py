@@ -13,15 +13,17 @@ class PlayScreen(Screen):
         self.maze = None
         self.show_solution_button = None
         self.reset_button = None
+        self.maze_area = None
         self.pause_modal = None
         self.finished_modal = None
         self.show_solution_modal = None
         self.solution_drawer = None
         self.managers = None
+        self.line_spacing = 25
 
     def set_maze(self, rows, columns):
         self.maze = MazeUI(rows, columns, self.game_window)
-        self.maze.setup_maze_ui()
+        self.maze.setup_maze_ui(self.maze_area)
         self.solution_drawer = LineSolutionPath(self.maze)
         self.managers = [self.get_background()['background_manager'], self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]
     
@@ -80,6 +82,13 @@ class PlayScreen(Screen):
             text="give up",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#show-solution-button")
+        )
+
+        self.maze_area = pygame.Rect(
+            self.game_window.drawable_area.left,
+            show_solution_rect.bottom + self.line_spacing,
+            self.game_window.drawable_area.width,
+            self.game_window.drawable_area.height - show_solution_rect.height - self.line_spacing
         )
 
     def show(self):
