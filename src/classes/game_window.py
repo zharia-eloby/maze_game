@@ -48,6 +48,7 @@ class GameWindow:
         self.play_screen = None
 
         self.resize = True
+        self.finished_loading = False
 
     def initialize(self):
         pygame.init()
