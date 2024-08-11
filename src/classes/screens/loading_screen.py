@@ -28,10 +28,7 @@ class LoadingScreen(Screen):
                 if event.type == pygame.QUIT:
                     done = True
                     return
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        done = True
-                        return
+                
                 elif event.type == CUSTOM_EVENT:
                     if self.game_window.finished_loading:
                         done = True

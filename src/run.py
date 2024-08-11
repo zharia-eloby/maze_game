@@ -29,6 +29,8 @@ loading_screen_thread.start()
 load_content_thread.join()
 loading_screen_thread.join()
 
+pygame.event.clear()
+
 next_page = gw.title_screen
 done = False
 while not done:
