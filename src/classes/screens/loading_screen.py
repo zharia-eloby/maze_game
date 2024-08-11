@@ -17,8 +17,8 @@ class LoadingScreen(Screen):
         )
 
     def show(self):
-        CUSTOM_EVENT = pygame.USEREVENT + 1
-        pygame.time.set_timer(CUSTOM_EVENT, 2000)
+        POLL = pygame.USEREVENT + 1
+        pygame.time.set_timer(POLL, 2000)
         self.game_window.redraw_elements(self.managers, 0)
 
         clock = pygame.time.Clock()
@@ -29,10 +29,10 @@ class LoadingScreen(Screen):
                     done = True
                     return
                 
-                elif event.type == CUSTOM_EVENT:
+                elif event.type == POLL:
                     if self.game_window.finished_loading:
                         done = True
-                        pygame.time.set_timer(CUSTOM_EVENT, 0)
+                        pygame.time.set_timer(POLL, 0)
                         return
 
                 elif event.type == pygame.WINDOWRESTORED:
