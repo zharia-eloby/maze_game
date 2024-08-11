@@ -96,9 +96,22 @@ class SettingsScreen(Screen):
             object_id=ObjectID(class_id="@small-text")
         )
 
-        exit_game_button_rect = pygame.Rect(
+        credits_button_rect = pygame.Rect(
             content_area_rect.centerx - self.game_window.wide_button_width/2,
             volume_slider_rect.bottom + self.line_spacing,
+            self.game_window.wide_button_width,
+            self.game_window.thin_wide_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=credits_button_rect,
+            text="credits",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#credits-button", class_id="@thin-wide-button")
+        )
+
+        exit_game_button_rect = pygame.Rect(
+            content_area_rect.centerx - self.game_window.wide_button_width/2,
+            credits_button_rect.bottom + self.line_spacing,
             self.game_window.wide_button_width,
             self.game_window.thin_wide_button_height
         )
@@ -131,9 +144,16 @@ class SettingsScreen(Screen):
                     if event.ui_object_id == "#back-button":
                         done = True
                         next_page = self.game_window.title_screen
+                        break
 
+                    elif event.ui_object_id == "#credits-button":
+                        done = True
+                        next_page = self.game_window.credits_screen
+                        break
+                    
                     elif event.ui_object_id == "#exit-button":
                         done = True
+                        break
 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                     if event.ui_object_id == "#volume-slider":

@@ -1,5 +1,6 @@
 import pygame, os, json
 from classes.screens.title_screen import TitleScreen
+from classes.screens.credits_screen import CreditsScreen
 from classes.screens.pick_size_screen import PickSizeScreen
 from classes.screens.custom_size_screen import CustomSizeScreen
 from classes.screens.basic_custom_size_screen import BasicCustomSizeScreen
@@ -40,6 +41,7 @@ class GameWindow:
         self.theme_file = os.path.realpath(self.settings['theme']['path'])
 
         self.title_screen = None
+        self.credits_screen = None
         self.pick_size_screen = None
         self.custom_size_screen = None
         self.basic_custom_size_screen = None
@@ -56,6 +58,8 @@ class GameWindow:
     def initialize_screens(self, audio, game_window):
         self.title_screen = TitleScreen(self, AudioDisplay(audio, game_window))
         self.title_screen.setup()
+        self.credits_screen = CreditsScreen(self, AudioDisplay(audio, game_window))
+        self.credits_screen.setup()
         self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, game_window))
         self.pick_size_screen.setup()
         self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, game_window))
