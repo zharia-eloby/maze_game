@@ -6,6 +6,7 @@ class TitleScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
         self.audio = audio
+        self.line_spacing = 15
         self.managers = [self.get_background()['background_manager'], self.ui_manager]
 
     def setup(self):
@@ -26,7 +27,7 @@ class TitleScreen(Screen):
 
         play_rect = pygame.Rect(
             self.game_window.drawable_area.centerx - self.game_window.large_rect_button_width/2,
-            self.game_window.drawable_area.centery + self.game_window.large_rect_button_height/2,
+            self.game_window.drawable_area.centery + self.line_spacing/2,
             self.game_window.large_rect_button_width,
             self.game_window.large_rect_button_height
         )
@@ -41,7 +42,7 @@ class TitleScreen(Screen):
             self.game_window.drawable_area.left, 
             self.game_window.drawable_area.top,
             self.game_window.drawable_area.width, 
-            play_rect.top - self.game_window.drawable_area.top
+            play_rect.top - self.line_spacing - self.game_window.drawable_area.top
         )
         pygame_gui.elements.UILabel(
             relative_rect=title_rect, 

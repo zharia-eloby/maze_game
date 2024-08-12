@@ -7,7 +7,7 @@ class Modal(Screen):
         self.overlay_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.width = round(self.game_window.drawable_area.width * 0.7)
         self.height = round(self.game_window.drawable_area.height * 0.5)
-        self.margin = 40
+        self.margin = round(self.width * 0.1)
         self.line_spacing = 10
         self.modal_wide_button_width = self.width - self.margin*2
-        self.modal_wide_button_height = round(self.height * 0.2)
+        self.modal_wide_button_height = round(self.modal_wide_button_width * 0.25)
