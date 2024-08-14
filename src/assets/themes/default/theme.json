@@ -166,42 +166,6 @@
             "border_width": "0"
         }
     },
-    "@large-button": 
-    {
-        "font": 
-        {
-            "name": "bungee-regular",
-            "size": "36"
-        },
-        "prototype": "#ui-button",
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "assets.images",
-                "resource": "general/large-button-default.png"
-            },
-            "hovered_image": 
-            {
-                "package": "assets.images",
-                "resource": "general/large-button-hover.png"
-            },
-            "selected_image": 
-            {
-                "package": "assets.images",
-                "resource": "general/large-button-default.png"
-            },
-            "disabled_image": 
-            {
-                "package": "assets.images",
-                "resource": "general/large-button-default.png"
-            }
-        },
-        "misc": 
-        {
-            "text_vert_alignment": "center"
-        }
-    },
     "@thick-wide-button": 
     {
         "font": 

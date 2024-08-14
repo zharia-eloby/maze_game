@@ -12,7 +12,7 @@ from PIL import Image
 
 class GameWindow:
     def __init__(self):
-        self.screen_width = 600
+        self.screen_width = 650
         self.screen_height = 700
         self.window = pygame.display.set_mode([self.screen_width, self.screen_height])
         self.margin = 50
