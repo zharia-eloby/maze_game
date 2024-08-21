@@ -1,5 +1,6 @@
 import pygame, os, json
 from classes.screens.title_screen import TitleScreen
+from classes.screens.help_screen import HelpScreen
 from classes.screens.credits_screen import CreditsScreen
 from classes.screens.pick_size_screen import PickSizeScreen
 from classes.screens.custom_size_screen import CustomSizeScreen
@@ -34,7 +35,7 @@ class GameWindow:
         self.thick_wide_button_height = round(self.wide_button_width * 0.25)
         self.thin_wide_button_height = round(self.wide_button_width * 0.15)
         self.small_text_height = 20
-        self.medium_text_height = 50
+        self.medium_text_height = 35
         self.slider_height = 30
 
         self.settings = self.load_settings()
@@ -62,6 +63,8 @@ class GameWindow:
         self.title_screen.setup()
         self.credits_screen = CreditsScreen(self, AudioDisplay(audio, game_window))
         self.credits_screen.setup()
+        self.help_screen = HelpScreen(self, AudioDisplay(audio, game_window))
+        self.help_screen.setup()
         self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, game_window))
         self.pick_size_screen.setup()
         self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, game_window))

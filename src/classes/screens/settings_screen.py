@@ -96,9 +96,22 @@ class SettingsScreen(Screen):
             object_id=ObjectID(class_id="@small-text")
         )
 
-        credits_button_rect = pygame.Rect(
+        help_button_rect = pygame.Rect(
             content_area_rect.centerx - self.game_window.wide_button_width/2,
             volume_slider_rect.bottom + self.line_spacing,
+            self.game_window.wide_button_width,
+            self.game_window.thin_wide_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=help_button_rect,
+            text="help",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#help-button", class_id="@thin-wide-button")
+        )
+
+        credits_button_rect = pygame.Rect(
+            content_area_rect.centerx - self.game_window.wide_button_width/2,
+            help_button_rect.bottom + self.line_spacing,
             self.game_window.wide_button_width,
             self.game_window.thin_wide_button_height
         )
@@ -144,6 +157,11 @@ class SettingsScreen(Screen):
                     if event.ui_object_id == "#back-button":
                         done = True
                         next_page = self.game_window.title_screen
+                        break
+
+                    elif event.ui_object_id == "#help-button":
+                        done = True
+                        next_page = self.game_window.help_screen
                         break
 
                     elif event.ui_object_id == "#credits-button":
