@@ -98,25 +98,24 @@ class GameWindow:
         pygame.display.update()
 
     def resize_image(self, image_id, width, height, normal=True, hovered=True, disabled=False):
-        theme_file = os.path.realpath(self.settings['theme']['path'])
-        file = open(theme_file, "r")
+        file = open(self.theme_file, "r")
         contents = json.loads(file.read())
         file.close()
-        images_folder = os.path.realpath("src/assets/images/")
+        images_folder = os.path.realpath("src/assets/")
         if normal:
             image_file = contents[image_id]['images']['normal_image']['resource']
             img = Image.open(os.path.join(images_folder, image_file))
-            img = img.resize((width, height))
-            img = img.save(os.path.join(images_folder, image_file))
+            img.thumbnail((width, height))
+            img.save(os.path.join(images_folder, image_file))
         if hovered:
             image_file = contents[image_id]['images']['hovered_image']['resource']
             img = Image.open(os.path.join(images_folder, image_file))
-            img = img.resize((width, height))
+            img.thumbnail((width, height))
             img.save(os.path.join(images_folder, image_file))
         if disabled:
             image_file = contents[image_id]['images']['disabled_image']['resource']
             img = Image.open(os.path.join(images_folder, image_file))
-            img = img.resize((width, height))
+            img.thumbnail((width, height))
             img.save(os.path.join(images_folder, image_file))
 
     def resize_images(self):
