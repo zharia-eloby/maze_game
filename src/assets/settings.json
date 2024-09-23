@@ -3,15 +3,15 @@
     "screen_height": 700,
     "margin": 50,
     "theme": {
-        "name": "default",
-        "path": "src/assets/themes/default/theme.json",
+        "name": "blue",
+        "path": "src/assets/themes/blue/theme.json",
         "audio": {
             "name": "wrong-place-129242.mp3",
             "path": "src/assets/audio/wrong-place-129242.mp3"
         }
     },
     "audio": {
-        "on": true,
-        "volume": 1.0
+        "on": false,
+        "volume": 0.28125
     }
 }

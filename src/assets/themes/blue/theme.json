@@ -1,0 +1,650 @@
+{
+    "#general-font":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "bungee-regular",
+            "size": "1",
+            "regular_resource": 
+            {
+                "package": "assets.fonts",
+                "resource": "DaysOne-Regular.ttf"
+            }
+        }
+    },
+    "@small-text":
+    {
+        "prototype": "#general-font",
+        "font":
+        {
+            "name": "bungee-regular",
+            "size": 16
+        }
+    },
+    "@small-text-left":
+    {
+        "prototype": "@small-text",
+        "misc":
+        {
+            "text_horiz_alignment": "left"
+        }
+    },
+    "@small-text-right":
+    {
+        "prototype": "@small-text",
+        "misc":
+        {
+            "text_horiz_alignment": "right"
+        }
+    },
+    "@medium-text":
+    {
+        "prototype": "#general-font",
+        "font":
+        {
+            "name": "bungee-regular",
+            "size": 28
+        }
+    },
+    "#ui-button":
+    {
+        "colours": 
+        {
+            "normal_bg": "#00000000",
+            "hovered_bg": "#00000000",
+            "disabled_bg": "#00000000",
+            "active_bg": "#00000000",
+            "selected_bg": "#00000000",
+            "normal_border": "#00000000",
+            "hovered_border": "#00000000",
+            "disabled_border": "#00000000",
+            "active_border": "#00000000",
+            "selected_border": "#00000000",
+            "normal_text": "#ffffff",
+            "hovered_text": "#000000",
+            "disabled_text": "#ffffff",
+            "active_text": "#ffffff",
+            "selected_text": "#ffffff"
+        },
+        "misc": 
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "25",
+            "border_width": "50",
+            "shadow_width": "1"
+        }
+    },
+    "horizontal_slider":
+    {
+        "colours":
+        {
+            "dark_bg": "#70b7df"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "10",
+            "border_width": "0",
+            "sliding_button_width": "30",
+            "enable_arrow_buttons": "0"
+        }
+    },
+    "horizontal_slider.#sliding_button":
+    {
+        "colours": 
+        {
+            "normal_bg": "#ffffff",
+            "hovered_bg": "#ddefff",
+            "selected_bg": "#ddefff",
+            "active_bg": "#ddefff"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "10",
+            "border_width": "0"
+        }
+    },
+    "#title": 
+    {
+        "prototype": "#general-font",
+        "font":
+        {
+            "name": "bungee-regular",
+            "size": "72"
+        },
+        "misc":
+        {
+            "text_vert_alignment": "bottom"
+        }
+    },
+    "#player" : 
+    {
+        "colours":
+        {
+            "dark_bg": "#ffffff",
+            "normal_border": "#ffffff"
+        },
+        "misc":
+        {
+            "border_width": "0",
+            "shadow_width": "0",
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "100"
+        }
+    },
+    "@wall" :
+    {
+        "colours":
+        {
+            "dark_bg": "#ffffff"
+        },
+        "misc" :
+        {
+            "border_width":"0",
+            "shadow_width":"0"
+        }
+    },
+    "#startpoint":
+    {
+        "colours":
+        {
+            "dark_bg":"#70b7df"
+        },
+        "misc":
+        {
+            "shadow_width": "0",
+            "border_width": "0"
+        }
+    },
+    "#endpoint":
+    {
+        "colours":
+        {
+            "dark_bg":"#2cbe83"
+        },
+        "misc":
+        {
+            "shadow_width": "0",
+            "border_width": "0"
+        }
+    },
+    "@thick-wide-button": 
+    {
+        "font": 
+        {
+            "name": "bungee-regular",
+            "size": "28"
+        },
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thick-Wide-Rect-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thick-Wide-Rect-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thick-Wide-Rect-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thick-Wide-Rect-Idle@4x.png"
+            }
+        },
+        "misc": 
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "@thin-wide-button": 
+    {
+        "font": 
+        {
+            "name": "bungee-regular",
+            "size": "28"
+        },
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thin-Wide-Rect-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thin-Wide-Rect-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thin-Wide-Rect-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/general/Thin-Wide-Rect-Idle@4x.png"
+            }
+        },
+        "misc": 
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "#modal-background": 
+    {
+        "colours": 
+        {
+            "dark_bg": "#000000",
+            "normal_border": "#a1d9f8"
+        },
+        "misc": 
+        {
+            "shadow_width": "0",
+            "shape_corner_radius": "10",
+            "shape": "rounded_rectangle",
+            "border_width": "5"
+        }
+    },
+    "#play-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/play/Play-Blue-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/play/Play-Blue-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/play/Play-Blue-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/play/Play-Blue-Idle@4x.png"
+            }
+        }
+    },
+    "#settings-cog-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/settings/Gear-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/settings/Gear-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/settings/Gear-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/settings/Gear-Idle@4x.png"
+            }
+        }
+    },
+    "#back-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/navigation/MediumArrow-Left-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/navigation/MediumArrow-Left-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/navigation/MediumArrow-Left-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/navigation/MediumArrow-Left-Idle@4x.png"
+            }
+        }
+    },
+    "#audio-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-On-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-On-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-On-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-On-Idle@4x.png"
+            }
+        }
+    },
+    "#no-audio-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-Off-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-Off-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-Off-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/audio/Music-Off-Idle@4x.png"
+            }
+        }
+    },
+    "#pause-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/pause/Pause-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/pause/Pause-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/pause/Pause-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/pause/Pause-Idle@4x.png"
+            }
+        }
+    },
+    "#reset-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/reset/Repeat-Right-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/reset/Repeat-Right-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/reset/Repeat-Right-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/reset/Repeat-Right-Idle@4x.png"
+            }
+        }
+    },
+    "@up-arrow": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/up-arrow-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/up-arrow-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/up-arrow-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/up-arrow-default.png"
+            }
+        }
+    },
+    "@down-arrow": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/down-arrow-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/down-arrow-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/down-arrow-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/arrow/down-arrow-default.png"
+            }
+        }
+    },
+    "#locked-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/locked-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/locked-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/locked-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/locked-default.png"
+            }
+            
+        }
+    },
+    "#unlocked-button": 
+    {
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/unlocked-default.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/unlocked-hover.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/unlocked-default.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/locks/unlocked-default.png"
+            }
+        }
+    },
+    "@modal-wide-button": 
+    {
+        "font": 
+        {
+            "name": "bungee-regular",
+            "size": "16"
+        },
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/modal/Modal-Wide-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/modal/Modal-Wide-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/modal/Modal-Wide-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/modal/Modal-Wide-Idle@4x.png"
+            }
+        },
+        "misc":
+        {
+            "text_vert_alignment": "center"
+        }
+    },
+    "#show-solution-button": 
+    {
+        "font": 
+        {
+            "name": "bungee-regular",
+            "size": "16"
+        },
+        "prototype": "#ui-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/solution/Show-Solution-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/solution/Show-Solution-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/solution/Show-Solution-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "assets",
+                "resource": "themes/blue/images/solution/Show-Solution-Idle@4x.png"
+            }
+        }
+    },
+    "#solution-path": 
+    {
+        "colours":
+        {
+            "dark_bg": "#e18cff"
+        },
+        "misc":
+        {
+            "shadow_width":"0",
+            "border_width":"0",
+            "shape": "rectangle"
+        }
+    },
+    "#screen-overlay": 
+    {
+        "colours":
+        {
+            "dark_bg": "rgba(0,0,0,150)",
+            "normal_border":"rgba(0,0,0,150)"
+        }
+    }
+}
