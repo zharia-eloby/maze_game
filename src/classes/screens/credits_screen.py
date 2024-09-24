@@ -6,23 +6,26 @@ class CreditsScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
         self.audio = audio
-        self.line_spacing = 15
+        self.line_spacing = 5
         self.managers = [self.get_background()['background_manager'], self.ui_manager]
         self.credits_column_width = self.game_window.drawable_area.width*0.75
         self.links_column_width = self.game_window.drawable_area.width - self.credits_column_width
         self.credits = {
             "#audio-credits": {
                 "text": "Audio from",
+                "attribution": "Somewhere",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
                 "object_id": "#audio-credits"
             },
             "#background-credits": {
-                "text": "Background from Space Spheremaps",
+                "text": "Background from",
+                "attribution": "Space Spheremaps",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
                 "object_id": "#background-credits"
             },
             "#icons-credits": {
-                "text": "Icons from Kenney.nl",
+                "text": "Icons from",
+                "attribution": "Kenney.nl",
                 "link": "https://kenney.nl/assets/game-icons",
                 "object_id": "#icons-credits"
             }
@@ -70,33 +73,22 @@ class CreditsScreen(Screen):
             object_id=ObjectID(object_id="@small-text")
         )
 
-        previous_rect = development_credits_text
+        html_text = ""
         for i in self.credits:
-            label_rect = pygame.Rect(
-                self.game_window.drawable_area.left,
-                previous_rect.bottom + self.line_spacing,
-                self.credits_column_width,
-                self.game_window.small_text_height
-            )
-            pygame_gui.elements.UILabel(
-                relative_rect=label_rect,
-                text=self.credits[i]["text"],
-                manager=self.ui_manager,
-                object_id=ObjectID(class_id="@small-text")
-            )
-            button_rect = pygame.Rect(
-                label_rect.right,
-                previous_rect.bottom + self.line_spacing,
-                self.links_column_width,
-                self.game_window.small_text_height
-            )
-            pygame_gui.elements.UIButton(
-                relative_rect=button_rect,
-                text="show me",
-                manager=self.ui_manager,
-                object_id=ObjectID(class_id="@small-text", object_id=self.credits[i]["object_id"])
-            )
-            previous_rect = label_rect
+            html_text += "<p>{text} <a href='{link}'>{attribution}</a></p><br>".format(text=self.credits[i]['text'], link=self.credits[i]['link'], attribution=self.credits[i]['attribution'])
+
+        credits_text_rect = pygame.Rect(
+            self.game_window.drawable_area.left,
+            development_credits_text.bottom + self.line_spacing,
+            self.game_window.drawable_area.width,
+            self.game_window.drawable_area.bottom - development_credits_text.bottom - self.line_spacing
+        )
+        pygame_gui.elements.UITextBox(
+            relative_rect=credits_text_rect,
+            html_text=html_text,
+            manager=self.ui_manager,
+            object_id=ObjectID(class_id="@small-text", object_id="#credits-text")
+        )
 
     def show(self):
         self.audio.set_audio_display()
@@ -115,9 +107,8 @@ class CreditsScreen(Screen):
                         done = True
                         next_page = self.game_window.settings_screen
                         break
-
-                    else:
-                        webbrowser.open(self.credits[event.ui_object_id]['link'])
+                elif event.type == pygame_gui.UI_TEXT_BOX_LINK_CLICKED:
+                    webbrowser.open(event.link_target)
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()

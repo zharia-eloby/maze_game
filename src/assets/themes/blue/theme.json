@@ -646,5 +646,20 @@
             "dark_bg": "rgba(0,0,0,150)",
             "normal_border":"rgba(0,0,0,150)"
         }
+    },
+    "#credits-text":
+    {
+        "colours":
+         {
+             "dark_bg":"#00000000"
+         },
+         "misc":
+         {
+             "text_horiz_alignment": "center",
+             "line_spacing": "1",
+             "padding": "0,20",
+             "shape": "rounded_rectangle",
+             "shape_corner_radius": "10"
+         }
     }
 }
