@@ -1,0 +1,39 @@
+{
+    "#general-font":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff"
+        },
+        "font":
+        {
+            "name": "bungee-regular",
+            "size": "1",
+            "regular_resource": 
+            {
+                "package": "assets.fonts",
+                "resource": "DaysOne-Regular.ttf"
+            }
+        }
+    },
+    "@medium-text":
+    {
+        "prototype": "#general-font",
+        "font":
+        {
+            "name": "bungee-regular",
+            "size": 28
+        }
+    },
+    "panel":
+    {
+        "colours": 
+        {
+            "dark_bg": "#000000"
+        },
+        "misc":
+        {
+            "border_width": "0"
+        }
+    }
+}
