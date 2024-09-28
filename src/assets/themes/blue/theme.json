@@ -65,7 +65,7 @@
             "active_border": "#00000000",
             "selected_border": "#00000000",
             "normal_text": "#ffffff",
-            "hovered_text": "#000000",
+            "hovered_text": "#ffffff",
             "disabled_text": "#ffffff",
             "active_text": "#ffffff",
             "selected_text": "#ffffff"
@@ -74,8 +74,8 @@
         {
             "shape": "rounded_rectangle",
             "shape_corner_radius": "25",
-            "border_width": "50",
-            "shadow_width": "1"
+            "border_width": "0",
+            "shadow_width": "0"
         }
     },
     "horizontal_slider":
