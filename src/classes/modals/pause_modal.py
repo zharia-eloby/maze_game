@@ -40,7 +40,7 @@ class PauseModal(Modal):
         )
         pygame_gui.elements.UIButton(
             relative_rect=exit_button_rect,
-            text="back to home",
+            text="Back To Home",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#exit-button", class_id="@modal-wide-button")
         )
@@ -53,7 +53,7 @@ class PauseModal(Modal):
         )
         pygame_gui.elements.UIButton(
             relative_rect=resume_button_rect,
-            text="resume",
+            text="Resume",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#resume-button", class_id="@modal-wide-button")
         )
@@ -66,7 +66,7 @@ class PauseModal(Modal):
         )
         pygame_gui.elements.UILabel(
             relative_rect=paused_text_rect,
-            text="paused",
+            text="Paused",
             manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )

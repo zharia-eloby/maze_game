@@ -52,7 +52,7 @@ class SettingsScreen(Screen):
         )
         pygame_gui.elements.UILabel(
             relative_rect=volume_label_rect, 
-            text="volume",
+            text="Volume",
             manager=self.ui_manager,
             object_id=ObjectID(class_id="@small-text")
         )
@@ -104,7 +104,7 @@ class SettingsScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=help_button_rect,
-            text="help",
+            text="Help",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#help-button", class_id="@thin-wide-button")
         )
@@ -117,7 +117,7 @@ class SettingsScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=credits_button_rect,
-            text="credits",
+            text="Credits",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#credits-button", class_id="@thin-wide-button")
         )
@@ -130,7 +130,7 @@ class SettingsScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=exit_game_button_rect,
-            text="exit game",
+            text="Exit Game",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#exit-button", class_id="@thin-wide-button")
         )

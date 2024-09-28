@@ -40,7 +40,7 @@ class ShowSolutionModal(Modal):
         )
         pygame_gui.elements.UIButton(
             relative_rect=yes_button_rect,
-            text="yes, i give up",
+            text="Yes, I Give Up",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#yes-button", class_id="@modal-wide-button")
         )
@@ -53,7 +53,7 @@ class ShowSolutionModal(Modal):
         )
         pygame_gui.elements.UIButton(
             relative_rect=no_button_rect,
-            text="no, i'll keep trying",
+            text="No, I'll Keep Trying",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#no-button", class_id="@modal-wide-button")
         )
@@ -66,7 +66,7 @@ class ShowSolutionModal(Modal):
         )
         pygame_gui.elements.UILabel(
             relative_rect=modal_title_text_1_rect,
-            text="reveal",
+            text="Reveal",
             manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
@@ -78,7 +78,7 @@ class ShowSolutionModal(Modal):
         )
         pygame_gui.elements.UILabel(
             relative_rect=modal_title_text_2_rect,
-            text="solution?",
+            text="Solution?",
             manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )

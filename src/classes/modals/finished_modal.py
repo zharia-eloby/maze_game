@@ -40,7 +40,7 @@ class FinishedModal(Modal):
         )
         pygame_gui.elements.UIButton(
             relative_rect=exit_button_rect,
-            text="back to home",
+            text="Back To Home",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#exit-button", class_id="@modal-wide-button")
         )
@@ -53,7 +53,7 @@ class FinishedModal(Modal):
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_button_rect,
-            text="play again",
+            text="Play Again",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#play-again", class_id="@modal-wide-button")
         )
@@ -66,7 +66,7 @@ class FinishedModal(Modal):
         )
         pygame_gui.elements.UILabel (
             relative_rect=finished_message_rect,
-            text="YOU DID IT!",
+            text="You Did It!",
             manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )

@@ -79,7 +79,7 @@ class PlayScreen(Screen):
         )
         self.show_solution_button = pygame_gui.elements.UIButton(
             relative_rect=show_solution_rect,
-            text="give up",
+            text="Give Up",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#show-solution-button")
         )

@@ -57,7 +57,7 @@ class BasicCustomSizeScreen(Screen):
         )
         pygame_gui.elements.UILabel(
             relative_rect=min_text_label_rect,
-            text="easy",
+            text="Easy",
             manager=self.ui_manager,
             object_id=ObjectID(class_id="@small-text-left")
         )
@@ -70,7 +70,7 @@ class BasicCustomSizeScreen(Screen):
         )
         pygame_gui.elements.UILabel(
             relative_rect=max_text_label_rect,
-            text="hard",
+            text="Hard",
             manager=self.ui_manager,
             object_id=ObjectID(class_id="@small-text-right")
         )
@@ -83,7 +83,7 @@ class BasicCustomSizeScreen(Screen):
         )
         pygame_gui.elements.UILabel(
             relative_rect=preview_text_label_rect,
-            text="preview",
+            text="Preview",
             manager=self.ui_manager,
             object_id=ObjectID(class_id="@small-text")
         )
@@ -96,7 +96,7 @@ class BasicCustomSizeScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_button_rect, 
-            text="start",
+            text="Start",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#start-button", class_id="@thin-wide-button")
         )

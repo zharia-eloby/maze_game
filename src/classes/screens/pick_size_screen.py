@@ -42,7 +42,7 @@ class PickSizeScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=easy_button_rect, 
-            text="easy",
+            text="Easy",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#easy-button", class_id="@thick-wide-button")
         )
@@ -55,7 +55,7 @@ class PickSizeScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=medium_button_rect, 
-            text="medium",
+            text="Medium",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#medium-button", class_id="@thick-wide-button")
         )
@@ -68,7 +68,7 @@ class PickSizeScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=hard_button_rect, 
-            text="hard",
+            text="Hard",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#hard-button", class_id="@thick-wide-button")
         )
@@ -81,7 +81,7 @@ class PickSizeScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=custom_button_rect, 
-            text="custom",
+            text="Custom",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="#custom-button", class_id="@thick-wide-button")
         )
