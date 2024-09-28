@@ -34,8 +34,8 @@ class GameWindow:
         self.wide_button_width = round(self.drawable_area.width * 0.75)
         self.thick_wide_button_height = round(self.wide_button_width * 0.25)
         self.thin_wide_button_height = round(self.wide_button_width * 0.15)
-        self.small_text_height = 20
-        self.medium_text_height = 35
+        self.small_text_height = 21
+        self.medium_text_height = 36
         self.slider_height = 30
 
         self.settings = self.load_settings()
