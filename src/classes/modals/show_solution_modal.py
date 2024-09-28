@@ -58,27 +58,15 @@ class ShowSolutionModal(Modal):
             object_id=ObjectID(object_id="#no-button", class_id="@modal-wide-button")
         )
 
-        modal_title_text_1_rect = pygame.Rect(
+        modal_title_text_rect = pygame.Rect(
             background_rect.left + self.margin, 
             background_rect.top + self.margin,
             self.width - self.margin*2,
-            (no_button_rect.top - background_rect.top - self.margin - self.line_spacing)/2
+            (no_button_rect.top - background_rect.top - self.margin - self.line_spacing)
         )
         pygame_gui.elements.UILabel(
-            relative_rect=modal_title_text_1_rect,
-            text="Reveal",
-            manager=self.modal_background_manager,
-            object_id=ObjectID(class_id="@medium-text")
-        )
-        modal_title_text_2_rect = pygame.Rect(
-            background_rect.left + self.margin, 
-            modal_title_text_1_rect.bottom,
-            self.width - self.margin*2, 
-            (no_button_rect.top - background_rect.top - self.margin - self.line_spacing)/2
-        )
-        pygame_gui.elements.UILabel(
-            relative_rect=modal_title_text_2_rect,
-            text="Solution?",
+            relative_rect=modal_title_text_rect,
+            text="Reveal Solution?",
             manager=self.modal_background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
