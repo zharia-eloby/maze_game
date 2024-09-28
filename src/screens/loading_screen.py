@@ -1,6 +1,6 @@
 import pygame, pygame_gui
 from pygame_gui.core import ObjectID
-from classes.screens.screen import Screen
+from screens.screen import Screen
 
 class LoadingScreen(Screen):
     def __init__(self, game_window):

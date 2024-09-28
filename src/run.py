@@ -4,9 +4,9 @@ Maze Game with Pygame
 """
 
 import pygame, sys, threading
-from classes.game_window import GameWindow
-from classes.screens.loading_screen import LoadingScreen
-from classes.audio import Audio
+from general.game_window import GameWindow
+from screens.loading_screen import LoadingScreen
+from general.audio import Audio
 
 def load_content(game_window):
     audio = Audio(game_window)

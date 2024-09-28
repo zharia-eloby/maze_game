@@ -1,6 +1,6 @@
 import pygame, pygame_gui, math, time, webbrowser
 from pygame_gui.core import ObjectID
-from classes.screens.screen import Screen
+from screens.screen import Screen
 
 class HelpScreen(Screen):
     def __init__(self, game_window, audio):

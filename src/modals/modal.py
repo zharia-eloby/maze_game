@@ -1,5 +1,5 @@
 import pygame_gui
-from classes.screens.screen import Screen
+from screens.screen import Screen
 
 class Modal(Screen):
     def __init__(self, game_window):
