@@ -107,7 +107,7 @@ class MazeUI(Maze):
         self.wall_thickness = None
         self.topleft = None
         self.player = None
-        self.maze_area = None
+        self.maze_area_rect = None
         self.game_window = game_window
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
 
@@ -136,6 +136,13 @@ class MazeUI(Maze):
     def draw_maze(self):
         x_pos = self.topleft[0]
         y_pos = self.topleft[1]
+
+        pygame_gui.elements.UIPanel(
+            relative_rect=pygame.Rect(x_pos, y_pos, self.maze_width, self.maze_height),
+            manager=self.maze_manager,
+            object_id=ObjectID(object_id="#maze-background")
+        )
+
         for i in range(0, len(self.maze)):
             for j in range(0, len(self.maze[0])):
                 if (i % 2 == 0) and (j % 2 == 1): # horizontal

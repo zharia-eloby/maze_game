@@ -7,7 +7,7 @@ class BasicCustomSizeScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window)
         self.audio = audio
-        self.maze_area = None
+        self.maze_area_rect = None
         self.line_spacing = 15
         self.row_min = 5
         self.row_max = 35
@@ -101,7 +101,7 @@ class BasicCustomSizeScreen(Screen):
             object_id=ObjectID(object_id="#start-button", class_id="@thin-wide-button")
         )
 
-        self.maze_area = pygame.Rect(
+        self.maze_area_rect = pygame.Rect(
             preview_text_label_rect.left,
             preview_text_label_rect.bottom + self.line_spacing,
             self.game_window.drawable_area.width,
@@ -114,7 +114,7 @@ class BasicCustomSizeScreen(Screen):
 
         maze = MazeUI(self.default_rows, self.default_columns, self.game_window)
         maze.create_maze()
-        maze.set_ui_sizes(self.maze_area)
+        maze.set_ui_sizes(self.maze_area_rect)
         maze.draw_maze()
         self.managers.insert(1, maze.maze_manager)
 
@@ -138,7 +138,7 @@ class BasicCustomSizeScreen(Screen):
                         maze.rows = new_rows
                         maze.columns = maze.rows
                         maze.create_maze()
-                        maze.set_ui_sizes(self.maze_area)
+                        maze.set_ui_sizes(self.maze_area_rect)
                         maze.draw_maze()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:

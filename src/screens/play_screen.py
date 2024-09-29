@@ -13,7 +13,7 @@ class PlayScreen(Screen):
         self.maze = None
         self.show_solution_button = None
         self.reset_button = None
-        self.maze_area = None
+        self.maze_area_rect = None
         self.pause_modal = None
         self.finished_modal = None
         self.show_solution_modal = None
@@ -23,7 +23,7 @@ class PlayScreen(Screen):
 
     def set_maze(self, rows, columns):
         self.maze = MazeUI(rows, columns, self.game_window)
-        self.maze.setup_maze_ui(self.maze_area)
+        self.maze.setup_maze_ui(self.maze_area_rect)
         self.solution_drawer = LineSolutionPath(self.maze)
         self.managers = [self.get_background()['background_manager'], self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]
     
@@ -84,7 +84,7 @@ class PlayScreen(Screen):
             object_id=ObjectID(object_id="#show-solution-button")
         )
 
-        self.maze_area = pygame.Rect(
+        self.maze_area_rect = pygame.Rect(
             self.game_window.drawable_area.left,
             show_solution_rect.bottom + self.line_spacing,
             self.game_window.drawable_area.width,

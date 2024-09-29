@@ -153,7 +153,7 @@
     {
         "colours":
         {
-            "dark_bg":"#70b7df"
+            "dark_bg":"#2d84e4"
         },
         "misc":
         {
@@ -170,6 +170,17 @@
         "misc":
         {
             "shadow_width": "0",
+            "border_width": "0"
+        }
+    },
+    "#maze-background":
+    {
+        "colours":
+        {
+            "dark_bg": "#000000"
+        },
+        "misc": 
+        {
             "border_width": "0"
         }
     },
@@ -250,7 +261,7 @@
         "colours": 
         {
             "dark_bg": "#000000",
-            "normal_border": "#a1d9f8"
+            "normal_border": "#77bdfc"
         },
         "misc": 
         {
