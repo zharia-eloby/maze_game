@@ -1,4 +1,4 @@
-import pygame, pygame_gui, math, time
+import pygame, pygame_gui, math, time, webbrowser
 from pygame_gui.core import ObjectID
 from screens.screen import Screen
 
@@ -96,22 +96,22 @@ class SettingsScreen(Screen):
             object_id=ObjectID(class_id="@small-text")
         )
 
-        help_button_rect = pygame.Rect(
+        report_button_rect = pygame.Rect(
             content_area_rect.centerx - self.game_window.wide_button_width/2,
             volume_slider_rect.bottom + self.line_spacing,
             self.game_window.wide_button_width,
             self.game_window.thin_wide_button_height
         )
         pygame_gui.elements.UIButton(
-            relative_rect=help_button_rect,
-            text="Help",
+            relative_rect=report_button_rect,
+            text="Report An Issue",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#help-button", class_id="@thin-wide-button")
+            object_id=ObjectID(object_id="#report-button", class_id="@thin-wide-button")
         )
 
         credits_button_rect = pygame.Rect(
             content_area_rect.centerx - self.game_window.wide_button_width/2,
-            help_button_rect.bottom + self.line_spacing,
+            report_button_rect.bottom + self.line_spacing,
             self.game_window.wide_button_width,
             self.game_window.thin_wide_button_height
         )
@@ -159,11 +159,6 @@ class SettingsScreen(Screen):
                         next_page = self.game_window.title_screen
                         break
 
-                    elif event.ui_object_id == "#help-button":
-                        done = True
-                        next_page = self.game_window.help_screen
-                        break
-
                     elif event.ui_object_id == "#credits-button":
                         done = True
                         next_page = self.game_window.credits_screen
@@ -171,6 +166,10 @@ class SettingsScreen(Screen):
                     
                     elif event.ui_object_id == "#exit-button":
                         done = True
+                        break
+
+                    elif event.ui_object_id == "#report-button":
+                        webbrowser.open("https://github.com/zharia-eloby/maze_game/issues/new")
                         break
 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:

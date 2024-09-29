@@ -1,6 +1,5 @@
 import pygame, os, json
 from screens.title_screen import TitleScreen
-from screens.help_screen import HelpScreen
 from screens.credits_screen import CreditsScreen
 from screens.pick_size_screen import PickSizeScreen
 from screens.custom_size_screen import CustomSizeScreen
@@ -47,6 +46,7 @@ class GameWindow:
         self.custom_size_screen = None
         self.basic_custom_size_screen = None
         self.play_screen = None
+        self.settings_screen = None
 
         self.resize = True
 
@@ -63,8 +63,6 @@ class GameWindow:
         self.title_screen.setup()
         self.credits_screen = CreditsScreen(self, AudioDisplay(audio, game_window))
         self.credits_screen.setup()
-        self.help_screen = HelpScreen(self, AudioDisplay(audio, game_window))
-        self.help_screen.setup()
         self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, game_window))
         self.pick_size_screen.setup()
         self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, game_window))
