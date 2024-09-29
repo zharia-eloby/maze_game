@@ -132,7 +132,7 @@ class SettingsScreen(Screen):
             relative_rect=exit_game_button_rect,
             text="Exit Game",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#exit-button", class_id="@thin-wide-button")
+            object_id=ObjectID(object_id="#exit-button", class_id="#ui-button")
         )
 
     def show(self):

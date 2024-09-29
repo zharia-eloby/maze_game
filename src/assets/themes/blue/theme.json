@@ -52,6 +52,35 @@
     },
     "#ui-button":
     {
+        "prototype": "@medium-text",
+        "colours": 
+        {
+            "normal_bg": "#00000000",
+            "hovered_bg": "#00000000",
+            "disabled_bg": "#00000000",
+            "active_bg": "#00000000",
+            "selected_bg": "#00000000",
+            "normal_border": "#77bdfc",
+            "hovered_border": "#ffffff",
+            "disabled_border": "#ffffff",
+            "active_border": "#77bdfc",
+            "selected_border": "#00000000",
+            "normal_text": "#ffffff",
+            "hovered_text": "#ffffff",
+            "disabled_text": "#ffffff",
+            "active_text": "#ffffff",
+            "selected_text": "#ffffff"
+        },
+        "misc": 
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "25",
+            "border_width": "5",
+            "shadow_width": "0"
+        }
+    },
+    "#ui-image-button":
+    {
         "colours": 
         {
             "normal_bg": "#00000000",
@@ -191,7 +220,7 @@
             "name": "bungee-regular",
             "size": "28"
         },
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -227,7 +256,7 @@
             "name": "bungee-regular",
             "size": "28"
         },
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -273,7 +302,7 @@
     },
     "#play-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -300,7 +329,7 @@
     },
     "#settings-cog-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -327,7 +356,7 @@
     },
     "#back-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -354,7 +383,7 @@
     },
     "#audio-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -381,7 +410,7 @@
     },
     "#no-audio-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -408,7 +437,7 @@
     },
     "#pause-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -435,7 +464,7 @@
     },
     "#reset-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -462,7 +491,7 @@
     },
     "@up-arrow": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -489,7 +518,7 @@
     },
     "@down-arrow": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -516,7 +545,7 @@
     },
     "#locked-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -544,7 +573,7 @@
     },
     "#unlocked-button": 
     {
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -576,7 +605,7 @@
             "name": "bungee-regular",
             "size": "16"
         },
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -612,7 +641,7 @@
             "name": "bungee-regular",
             "size": "16"
         },
-        "prototype": "#ui-button",
+        "prototype": "#ui-image-button",
         "images": 
         {
             "normal_image": 
@@ -662,7 +691,8 @@
     {
         "colours":
          {
-             "dark_bg":"#00000000"
+             "dark_bg":"#00000000",
+             "normal_border": "#77bdfc"
          },
          "misc":
          {
