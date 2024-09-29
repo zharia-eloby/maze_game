@@ -109,6 +109,7 @@ class MazeUI(Maze):
         self.player = None
         self.maze_area_rect = None
         self.game_window = game_window
+        self.maze_background_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
         self.maze_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), self.game_window.theme_file)
 
     """
@@ -139,7 +140,7 @@ class MazeUI(Maze):
 
         pygame_gui.elements.UIPanel(
             relative_rect=pygame.Rect(x_pos, y_pos, self.maze_width, self.maze_height),
-            manager=self.maze_manager,
+            manager=self.maze_background_manager,
             object_id=ObjectID(object_id="#maze-background")
         )
 
