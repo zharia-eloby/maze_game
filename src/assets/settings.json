@@ -1,7 +1,4 @@
 {
-    "screen_width": 600,
-    "screen_height": 700,
-    "margin": 50,
     "theme": {
         "name": "blue",
         "path": "src/assets/themes/blue/theme.json",
