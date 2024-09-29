@@ -37,6 +37,7 @@ class GameWindow:
         self.medium_text_height = 36
         self.slider_height = 30
 
+        self.settings_file = os.path.realpath("src/general/settings.json")
         self.settings = self.load_settings()
         self.theme_file = os.path.realpath(self.settings['theme']['path'])
 
@@ -75,15 +76,13 @@ class GameWindow:
         self.settings_screen.setup()
 
     def load_settings(self):
-        path = os.path.realpath("src/assets/settings.json")
-        file = open(path, "r")
+        file = open(self.settings_file, "r")
         contents = json.loads(file.read())
         file.close()
         return contents
 
     def save_settings(self):
-        path = os.path.realpath("src/assets/settings.json")
-        file = open(path, "r+")
+        file = open(self.settings_file, "r+")
         file.seek(0)
         json.dump(self.settings, file, indent=4)
         file.truncate()
