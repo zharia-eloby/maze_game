@@ -5,7 +5,8 @@
         "audio": {
             "name": "wrong-place-129242.mp3",
             "path": "src/assets/audio/wrong-place-129242.mp3"
-        }
+        },
+        "background": "src/assets/themes/blue/images/background/solid-navy-bg.png"
     },
     "audio": {
         "on": false,

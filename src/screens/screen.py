@@ -15,7 +15,7 @@ class Screen():
             self.game_window.screen_height
         )
         
-        img_file = os.path.realpath("src/assets/themes/" + self.game_window.settings['theme']['name'] + "/images/background/solid-navy-bg.png")
+        img_file = os.path.realpath(self.game_window.settings['theme']['background'])
         img = Image.open(img_file)
         img = img.resize((self.game_window.screen_width, self.game_window.screen_height))
         img.save(img_file)
