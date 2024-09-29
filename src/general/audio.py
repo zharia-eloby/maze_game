@@ -6,7 +6,7 @@ class Audio():
         self.game_window = game_window
         self.volume = game_window.settings['audio']['volume']
         self.audio_on = game_window.settings['audio']['on']
-        self.audio_file = os.path.realpath(game_window.settings['theme']['audio']['path'])
+        self.audio_file = os.path.realpath(game_window.settings['themes'][game_window.settings['current_theme']]['audio']['path'])
     
     def initialize(self):
         pygame.mixer.init()

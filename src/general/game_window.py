@@ -39,7 +39,7 @@ class GameWindow:
 
         self.settings_file = os.path.realpath("src/general/settings.json")
         self.settings = self.load_settings()
-        self.theme_file = os.path.realpath(self.settings['theme']['path'])
+        self.theme_file = os.path.realpath(self.settings['themes'][self.settings['current_theme']]['path'])
 
         self.title_screen = None
         self.credits_screen = None
