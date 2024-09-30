@@ -104,9 +104,9 @@ class SettingsScreen(Screen):
         )
         pygame_gui.elements.UIButton(
             relative_rect=report_button_rect,
-            text="Report An Issue",
+            text="Give Feedback",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#report-button", class_id="@thin-wide-button")
+            object_id=ObjectID(object_id="#feedback-button", class_id="@thin-wide-button")
         )
 
         credits_button_rect = pygame.Rect(
@@ -168,7 +168,7 @@ class SettingsScreen(Screen):
                         done = True
                         break
 
-                    elif event.ui_object_id == "#report-button":
+                    elif event.ui_object_id == "#feedback-button":
                         webbrowser.open("https://github.com/zharia-eloby/maze_game/issues/new")
                         break
 
