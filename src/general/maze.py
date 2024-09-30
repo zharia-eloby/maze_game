@@ -283,8 +283,8 @@ class LineSolutionPath():
         self.maze_ui = maze_ui
         self.solution_manager = pygame_gui.UIManager((self.maze_ui.game_window.screen_width, self.maze_ui.game_window.screen_height), self.maze_ui.game_window.theme_file)
         
-        self.line_width_thickness = round((self.maze_ui.cell_width - self.maze_ui.wall_thickness)*1)
-        self.line_height_thickness = round((self.maze_ui.cell_height - self.maze_ui.wall_thickness)*1)
+        self.line_width_thickness = round((self.maze_ui.cell_width - self.maze_ui.wall_thickness)*0.1)
+        self.line_height_thickness = round((self.maze_ui.cell_height - self.maze_ui.wall_thickness)*0.1)
         if self.line_width_thickness < 2: self.line_width_thickness = 2
         if self.line_height_thickness < 2: self.line_height_thickness = 2
         

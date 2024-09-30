@@ -170,7 +170,7 @@
     {
         "colours":
         {
-            "dark_bg": "#ffffff"
+            "dark_bg": "#8cc4fc"
         },
         "misc" :
         {
@@ -662,7 +662,7 @@
             "disabled_image": 
             {
                 "package": "assets",
-                "resource": "themes/blue/images/solution/Show-Solution-Idle@4x.png"
+                "resource": "themes/blue/images/solution/Show-Solution-Disabled@4x.png"
             }
         }
     },
@@ -670,7 +670,7 @@
     {
         "colours":
         {
-            "dark_bg": "#e18cff"
+            "dark_bg": "#ffffff"
         },
         "misc":
         {
