@@ -7,7 +7,7 @@ class CreditsScreen(Screen):
         super().__init__(game_window)
         self.audio = audio
         self.line_spacing = 5
-        self.managers = [self.get_background()['background_manager'], self.ui_manager]
+        self.managers = [self.background_manager, self.ui_manager]
         self.credits_column_width = self.game_window.drawable_area.width*0.75
         self.links_column_width = self.game_window.drawable_area.width - self.credits_column_width
         self.credits = {
@@ -32,6 +32,7 @@ class CreditsScreen(Screen):
         }
 
     def setup(self):
+        self.set_background()
         self.audio.create_audio_buttons(self.ui_manager)
 
         back_button_rect = pygame.Rect(

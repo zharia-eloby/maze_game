@@ -16,9 +16,10 @@ class BasicCustomSizeScreen(Screen):
         self.default_rows = int((self.row_max-self.row_min)/2) + self.row_min
         self.default_columns = self.default_rows
         self.dimensions = None
-        self.managers = [self.get_background()['background_manager'], self.ui_manager]
+        self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
+        self.set_background()
         self.audio.create_audio_buttons(self.ui_manager)
         
         back_button_rect = pygame.Rect(
@@ -163,5 +164,5 @@ class BasicCustomSizeScreen(Screen):
                 self.game_window.redraw_elements(self.managers, time_delta)
         
         del maze
-        self.managers = [self.get_background()['background_manager'], self.ui_manager]
+        self.managers = [self.background_manager, self.ui_manager]
         return next_page

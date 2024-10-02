@@ -7,9 +7,10 @@ class TitleScreen(Screen):
         super().__init__(game_window)
         self.audio = audio
         self.line_spacing = 15
-        self.managers = [self.get_background()['background_manager'], self.ui_manager]
+        self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
+        self.set_background()
         self.audio.create_audio_buttons(self.ui_manager)
 
         settings_button_rect = pygame.Rect(

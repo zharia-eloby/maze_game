@@ -8,9 +8,10 @@ class SettingsScreen(Screen):
         self.audio = audio
         self.volume_slider = None
         self.line_spacing = 25
-        self.managers = [self.get_background()['background_manager'], self.ui_manager]
+        self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
+        self.set_background()
         back_button_rect = pygame.Rect(
             self.game_window.drawable_area.left,
             self.game_window.drawable_area.top,
