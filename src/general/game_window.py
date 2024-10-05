@@ -16,6 +16,7 @@ class GameWindow:
         self.screen_height = 700
         self.window = pygame.display.set_mode([self.screen_width, self.screen_height])
         self.margin = 50
+        self.line_spacing = 10
         
         self.drawable_area = pygame.Rect(
             self.margin,
@@ -23,6 +24,12 @@ class GameWindow:
             self.screen_width - self.margin*2,
             self.screen_height - self.margin*2
         )
+
+        self.modal_width = round(self.drawable_area.width * 0.7)
+        self.modal_height = round(self.drawable_area.height * 0.5)
+        self.modal_margin = round(self.modal_width * 0.1)
+        self.modal_wide_button_width = self.modal_width - self.modal_margin*2
+        self.modal_wide_button_height = round(self.modal_wide_button_width * 0.2)
 
         self.small_sq_button_width = 50
         self.small_sq_button_height = self.small_sq_button_width
@@ -231,8 +238,8 @@ class GameWindow:
             },
             {
                 'id': '@modal-wide-button',
-                'width': Modal(self).modal_wide_button_width,
-                'height': Modal(self).modal_wide_button_height,
+                'width': self.modal_wide_button_width,
+                'height': self.modal_wide_button_height,
                 'normal': True, 
                 'hovered': True,
                 'disabled': False
