@@ -11,7 +11,7 @@ from general.audio import Audio
 def load_content(game_window):
     audio = Audio(game_window)
     audio.initialize()
-    game_window.initialize_screens(audio, game_window)
+    game_window.initialize_screens(audio)
     game_window.finished_loading = True
 
 def show_loading_screen(game_window):

@@ -66,20 +66,20 @@ class GameWindow:
         if self.resize: self.resize_images()
         pygame.display.set_caption('Maze')
 
-    def initialize_screens(self, audio, game_window):
-        self.title_screen = TitleScreen(self, AudioDisplay(audio, game_window))
+    def initialize_screens(self, audio):
+        self.title_screen = TitleScreen(self, AudioDisplay(audio, self))
         self.title_screen.setup()
-        self.credits_screen = CreditsScreen(self, AudioDisplay(audio, game_window))
+        self.credits_screen = CreditsScreen(self, AudioDisplay(audio, self))
         self.credits_screen.setup()
-        self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, game_window))
+        self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, self))
         self.pick_size_screen.setup()
-        self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, game_window))
+        self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, self))
         self.custom_size_screen.setup()
-        self.basic_custom_size_screen = BasicCustomSizeScreen(self, AudioDisplay(audio, game_window))
+        self.basic_custom_size_screen = BasicCustomSizeScreen(self, AudioDisplay(audio, self))
         self.basic_custom_size_screen.setup()
-        self.play_screen = PlayScreen(self, AudioDisplay(audio, game_window))
+        self.play_screen = PlayScreen(self, AudioDisplay(audio, self))
         self.play_screen.setup()
-        self.settings_screen = SettingsScreen(self, AudioDisplay(audio, game_window))
+        self.settings_screen = SettingsScreen(self, AudioDisplay(audio, self))
         self.settings_screen.setup()
 
     def load_settings(self):
