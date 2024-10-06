@@ -11,8 +11,6 @@ from PIL import Image
 
 class GameWindow:
     def __init__(self, settings):
-        self.window = pygame.display.set_mode([settings.screen_width, settings.screen_height])
-
         self.title_screen = None
         self.credits_screen = None
         self.pick_size_screen = None
@@ -28,6 +26,7 @@ class GameWindow:
     def initialize(self, settings):
         pygame.init()
         pygame.font.init()
+        pygame.display.set_mode([settings.screen_width, settings.screen_height])
         if self.resize: self.resize_images(settings)
         pygame.display.set_caption('Maze')
 
