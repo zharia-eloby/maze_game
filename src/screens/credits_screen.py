@@ -8,8 +8,8 @@ class CreditsScreen(Screen):
         self.audio = audio
         self.line_spacing = 5
         self.managers = [self.background_manager, self.ui_manager]
-        self.credits_column_width = self.game_window.drawable_area.width*0.75
-        self.links_column_width = self.game_window.drawable_area.width - self.credits_column_width
+        self.credits_column_width = self.settings.drawable_area.width*0.75
+        self.links_column_width = self.settings.drawable_area.width - self.credits_column_width
         self.credits = {
             "#audio-credits": {
                 "text": "Audio from",
@@ -33,13 +33,13 @@ class CreditsScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager)
+        self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
         back_button_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
-            self.game_window.drawable_area.top,
-            self.game_window.small_sq_button_width,
-            self.game_window.small_sq_button_height
+            self.settings.drawable_area.left,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=back_button_rect, 
@@ -49,10 +49,10 @@ class CreditsScreen(Screen):
         )
 
         game_title_text_rect = pygame.Rect(
-            self.game_window.drawable_area.left, 
+            self.settings.drawable_area.left, 
             back_button_rect.bottom,
-            self.game_window.drawable_area.width, 
-            self.game_window.medium_text_height
+            self.settings.drawable_area.width, 
+            self.settings.medium_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=game_title_text_rect, 
@@ -62,10 +62,10 @@ class CreditsScreen(Screen):
         )
         
         development_credits_text = pygame.Rect(
-            self.game_window.drawable_area.left, 
+            self.settings.drawable_area.left, 
             game_title_text_rect.bottom + self.line_spacing,
-            self.game_window.drawable_area.width,
-            self.game_window.small_text_height
+            self.settings.drawable_area.width,
+            self.settings.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=development_credits_text, 
@@ -79,10 +79,10 @@ class CreditsScreen(Screen):
             html_text += "<p>{text} <a href='{link}'>{attribution}</a></p><br>".format(text=self.credits[i]['text'], link=self.credits[i]['link'], attribution=self.credits[i]['attribution'])
 
         credits_text_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
+            self.settings.drawable_area.left,
             development_credits_text.bottom + self.line_spacing,
-            self.game_window.drawable_area.width,
-            self.game_window.drawable_area.bottom - development_credits_text.bottom - self.line_spacing
+            self.settings.drawable_area.width,
+            self.settings.drawable_area.bottom - development_credits_text.bottom - self.line_spacing
         )
         pygame_gui.elements.UITextBox(
             relative_rect=credits_text_rect,

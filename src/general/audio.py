@@ -2,11 +2,10 @@ import pygame, pygame_gui, os
 from pygame_gui.core import ObjectID
 
 class Audio():
-    def __init__(self, game_window):
-        self.game_window = game_window
-        self.volume = game_window.settings['audio']['volume']
-        self.audio_on = game_window.settings['audio']['on']
-        self.audio_file = os.path.realpath(game_window.settings['themes'][game_window.settings['current_theme']]['audio']['path'])
+    def __init__(self, settings):
+        self.volume = settings.user_settings['audio']['volume']
+        self.audio_on = settings.user_settings['audio']['on']
+        self.audio_file = os.path.realpath(settings.user_settings['themes'][settings.user_settings['current_theme']]['audio']['path'])
     
     def initialize(self):
         pygame.mixer.init()
@@ -16,18 +15,18 @@ class Audio():
             pygame.mixer.music.play(loops=-1)
 
 class AudioDisplay(Audio):
-    def __init__(self, parent, game_window):
-        super().__init__(game_window)
+    def __init__(self, parent, settings):
+        super().__init__(settings)
         self.audio_button = None
         self.no_audio_button = None
         self.audio = parent
 
-    def create_audio_buttons(self, ui_manager):
+    def create_audio_buttons(self, ui_manager, settings):
         audio_button_rect = pygame.Rect(
-            self.game_window.drawable_area.right - self.game_window.small_sq_button_width,
-            self.game_window.drawable_area.top,
-            self.game_window.small_sq_button_width,
-            self.game_window.small_sq_button_height
+            settings.drawable_area.right - settings.small_sq_button_width,
+            settings.drawable_area.top,
+            settings.small_sq_button_width,
+            settings.small_sq_button_height
         )
         self.audio_button = pygame_gui.elements.UIButton(
             relative_rect=audio_button_rect, 

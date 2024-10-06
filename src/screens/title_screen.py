@@ -11,13 +11,13 @@ class TitleScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager)
+        self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
         settings_button_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
-            self.game_window.drawable_area.top,
-            self.game_window.small_sq_button_width,
-            self.game_window.small_sq_button_height
+            self.settings.drawable_area.left,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=settings_button_rect, 
@@ -27,10 +27,10 @@ class TitleScreen(Screen):
         )
 
         play_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - self.game_window.large_rect_button_width/2,
-            self.game_window.drawable_area.centery + self.line_spacing/2,
-            self.game_window.large_rect_button_width,
-            self.game_window.large_rect_button_height
+            self.settings.drawable_area.centerx - self.settings.large_rect_button_width/2,
+            self.settings.drawable_area.centery + self.line_spacing/2,
+            self.settings.large_rect_button_width,
+            self.settings.large_rect_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_rect, 
@@ -40,10 +40,10 @@ class TitleScreen(Screen):
         )
         
         title_rect = pygame.Rect(
-            self.game_window.drawable_area.left, 
-            self.game_window.drawable_area.top,
-            self.game_window.drawable_area.width, 
-            play_rect.top - self.line_spacing - self.game_window.drawable_area.top
+            self.settings.drawable_area.left, 
+            self.settings.drawable_area.top,
+            self.settings.drawable_area.width, 
+            play_rect.top - self.line_spacing - self.settings.drawable_area.top
         )
         pygame_gui.elements.UILabel(
             relative_rect=title_rect, 

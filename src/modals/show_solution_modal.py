@@ -20,10 +20,10 @@ class ShowSolutionModal(Modal):
         )
 
         background_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - self.game_window.modal_width/2, 
-            self.game_window.drawable_area.centery - self.game_window.modal_height/2, 
-            self.game_window.modal_width, 
-            self.game_window.modal_height
+            self.settings.drawable_area.centerx - self.settings.modal_width/2, 
+            self.settings.drawable_area.centery - self.settings.modal_height/2, 
+            self.settings.modal_width, 
+            self.settings.modal_height
         )
         pygame_gui.elements.UIPanel(
             relative_rect = background_rect,
@@ -32,10 +32,10 @@ class ShowSolutionModal(Modal):
         )
 
         yes_button_rect = pygame.Rect(
-            background_rect.centerx - self.game_window.modal_wide_button_width/2,
-            background_rect.bottom - self.game_window.modal_margin - self.game_window.modal_wide_button_height,
-            self.game_window.modal_wide_button_width,
-            self.game_window.modal_wide_button_height
+            background_rect.centerx - self.settings.modal_wide_button_width/2,
+            background_rect.bottom - self.settings.modal_margin - self.settings.modal_wide_button_height,
+            self.settings.modal_wide_button_width,
+            self.settings.modal_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=yes_button_rect,
@@ -45,10 +45,10 @@ class ShowSolutionModal(Modal):
         )
 
         no_button_rect = pygame.Rect(
-            background_rect.centerx - self.game_window.modal_wide_button_width/2,
-            yes_button_rect.top - self.game_window.line_spacing - self.game_window.modal_wide_button_height,
-            self.game_window.modal_wide_button_width,
-            self.game_window.modal_wide_button_height
+            background_rect.centerx - self.settings.modal_wide_button_width/2,
+            yes_button_rect.top - self.settings.line_spacing - self.settings.modal_wide_button_height,
+            self.settings.modal_wide_button_width,
+            self.settings.modal_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=no_button_rect,
@@ -58,10 +58,10 @@ class ShowSolutionModal(Modal):
         )
 
         modal_title_text_rect = pygame.Rect(
-            background_rect.left + self.game_window.modal_margin, 
-            background_rect.top + self.game_window.modal_margin,
-            self.game_window.modal_width - self.game_window.modal_margin*2,
-            (no_button_rect.top - background_rect.top - self.game_window.modal_margin - self.game_window.line_spacing)
+            background_rect.left + self.settings.modal_margin, 
+            background_rect.top + self.settings.modal_margin,
+            self.settings.modal_width - self.settings.modal_margin*2,
+            (no_button_rect.top - background_rect.top - self.settings.modal_margin - self.settings.line_spacing)
         )
         pygame_gui.elements.UILabel(
             relative_rect=modal_title_text_rect,

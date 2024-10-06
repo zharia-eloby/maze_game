@@ -17,7 +17,7 @@ class LoadingScreen(Screen):
             manager=self.ui_manager
         )
 
-        loading_text_rect = self.game_window.drawable_area
+        loading_text_rect = self.settings.drawable_area
         pygame_gui.elements.UILabel(
             relative_rect=loading_text_rect, 
             text="Loading...",

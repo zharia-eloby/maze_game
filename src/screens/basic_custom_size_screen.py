@@ -20,13 +20,13 @@ class BasicCustomSizeScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager)
+        self.audio.create_audio_buttons(self.ui_manager, self.settings)
         
         back_button_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
-            self.game_window.drawable_area.top,
-            self.game_window.small_sq_button_width,
-            self.game_window.small_sq_button_height
+            self.settings.drawable_area.left,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=back_button_rect, 
@@ -35,12 +35,12 @@ class BasicCustomSizeScreen(Screen):
             object_id=ObjectID(object_id="#back-button")
         )
 
-        slider_width = self.game_window.drawable_area.width * 0.75
+        slider_width = self.settings.drawable_area.width * 0.75
         dimensions_slider_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx - slider_width/2,
+            self.settings.drawable_area.centerx - slider_width/2,
             back_button_rect.bottom + self.line_spacing,
             slider_width,
-            self.game_window.slider_height
+            self.settings.slider_height
         )
         self.dimensions_slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=dimensions_slider_rect,
@@ -54,7 +54,7 @@ class BasicCustomSizeScreen(Screen):
             dimensions_slider_rect.left,
             dimensions_slider_rect.bottom,
             dimensions_slider_rect.width,
-            self.game_window.small_text_height
+            self.settings.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=min_text_label_rect,
@@ -67,7 +67,7 @@ class BasicCustomSizeScreen(Screen):
             dimensions_slider_rect.left,
             dimensions_slider_rect.bottom,
             dimensions_slider_rect.width,
-            self.game_window.small_text_height
+            self.settings.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=max_text_label_rect,
@@ -77,10 +77,10 @@ class BasicCustomSizeScreen(Screen):
         )
 
         preview_text_label_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
+            self.settings.drawable_area.left,
             min_text_label_rect.bottom,
-            self.game_window.drawable_area.width,
-            self.game_window.small_text_height
+            self.settings.drawable_area.width,
+            self.settings.small_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=preview_text_label_rect,
@@ -90,10 +90,10 @@ class BasicCustomSizeScreen(Screen):
         )
         
         play_button_rect = pygame.Rect(
-            self.game_window.drawable_area.centerx- self.game_window.wide_button_width/2,
-            self.game_window.drawable_area.bottom - self.game_window.thin_wide_button_height,
-            self.game_window.wide_button_width,
-            self.game_window.thin_wide_button_height
+            self.settings.drawable_area.centerx- self.settings.wide_button_width/2,
+            self.settings.drawable_area.bottom - self.settings.thin_wide_button_height,
+            self.settings.wide_button_width,
+            self.settings.thin_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=play_button_rect, 
@@ -105,7 +105,7 @@ class BasicCustomSizeScreen(Screen):
         self.maze_area_rect = pygame.Rect(
             preview_text_label_rect.left,
             preview_text_label_rect.bottom + self.line_spacing,
-            self.game_window.drawable_area.width,
+            self.settings.drawable_area.width,
             play_button_rect.top - preview_text_label_rect.bottom - self.line_spacing*2
         )
 

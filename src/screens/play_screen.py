@@ -35,7 +35,7 @@ class PlayScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager)
+        self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
         self.pause_modal = PauseModal(self.game_window, self.settings)
         self.pause_modal.setup()
@@ -47,10 +47,10 @@ class PlayScreen(Screen):
         self.show_solution_modal.setup()
         
         pause_button_rect = pygame.Rect(
-            self.audio.get_audio_button_rect().left - self.game_window.small_sq_button_width - 20,
-            self.game_window.drawable_area.top,
-            self.game_window.small_sq_button_width,
-            self.game_window.small_sq_button_height
+            self.audio.get_audio_button_rect().left - self.settings.small_sq_button_width - 20,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=pause_button_rect,
@@ -60,10 +60,10 @@ class PlayScreen(Screen):
         )
         
         reset_button_rect = pygame.Rect(
-            pause_button_rect.left - self.game_window.small_sq_button_width - 20,
-            self.game_window.drawable_area.top,
-            self.game_window.small_sq_button_width,
-            self.game_window.small_sq_button_height
+            pause_button_rect.left - self.settings.small_sq_button_width - 20,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
         )
         self.reset_button = pygame_gui.elements.UIButton(
             relative_rect=reset_button_rect,
@@ -73,10 +73,10 @@ class PlayScreen(Screen):
         )
         
         show_solution_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
-            self.game_window.drawable_area.top,
-            self.game_window.small_rect_button_width,
-            self.game_window.small_rect_button_height
+            self.settings.drawable_area.left,
+            self.settings.drawable_area.top,
+            self.settings.small_rect_button_width,
+            self.settings.small_rect_button_height
         )
         self.show_solution_button = pygame_gui.elements.UIButton(
             relative_rect=show_solution_rect,
@@ -86,10 +86,10 @@ class PlayScreen(Screen):
         )
 
         self.maze_area_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
+            self.settings.drawable_area.left,
             show_solution_rect.bottom + self.line_spacing,
-            self.game_window.drawable_area.width,
-            self.game_window.drawable_area.height - show_solution_rect.height - self.line_spacing
+            self.settings.drawable_area.width,
+            self.settings.drawable_area.height - show_solution_rect.height - self.line_spacing
         )
 
     def show(self):

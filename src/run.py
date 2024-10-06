@@ -10,7 +10,7 @@ from screens.loading_screen import LoadingScreen
 from general.audio import Audio
 
 def load_content(game_window, settings):
-    audio = Audio(game_window)
+    audio = Audio(settings)
     audio.initialize()
     game_window.initialize_screens(audio, settings)
     game_window.finished_loading = True
@@ -22,9 +22,10 @@ def show_loading_screen(game_window, settings):
 
 def run():
     settings = Settings()
+    settings.load_settings()
 
     gw = GameWindow(settings)
-    gw.initialize()
+    gw.initialize(settings)
 
     load_content_thread = threading.Thread(target=load_content, args=(gw,settings))
     loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,settings))
@@ -42,9 +43,9 @@ def run():
         if not next_page:
             done = True
 
-    gw.settings['audio']['volume'] = pygame.mixer.music.get_volume()
-    gw.settings['audio']['on'] = pygame.mixer.music.get_busy()
-    gw.save_settings()
+    settings.user_settings['audio']['volume'] = pygame.mixer.music.get_volume()
+    settings.user_settings['audio']['on'] = pygame.mixer.music.get_busy()
+    settings.save_settings()
 
     pygame.quit()
     sys.exit()

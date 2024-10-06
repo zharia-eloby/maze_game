@@ -13,10 +13,10 @@ class SettingsScreen(Screen):
     def setup(self):
         self.set_background()
         back_button_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
-            self.game_window.drawable_area.top,
-            self.game_window.small_sq_button_width,
-            self.game_window.small_sq_button_height
+            self.settings.drawable_area.left,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=back_button_rect,
@@ -26,17 +26,17 @@ class SettingsScreen(Screen):
         )
 
         content_area_rect = pygame.Rect(
-            self.game_window.drawable_area.left,
+            self.settings.drawable_area.left,
             back_button_rect.bottom,
-            self.game_window.drawable_area.width,
-            self.game_window.drawable_area.bottom - back_button_rect.bottom
+            self.settings.drawable_area.width,
+            self.settings.drawable_area.bottom - back_button_rect.bottom
         )
 
         settings_title_rect = pygame.Rect(
             content_area_rect.left, 
             content_area_rect.top,
             content_area_rect.width, 
-            self.game_window.medium_text_height
+            self.settings.medium_text_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=settings_title_rect, 
@@ -49,7 +49,7 @@ class SettingsScreen(Screen):
             content_area_rect.left, 
             settings_title_rect.bottom + self.line_spacing,
             content_area_rect.width * 0.5, 
-            self.game_window.slider_height
+            self.settings.slider_height
         )
         pygame_gui.elements.UILabel(
             relative_rect=volume_label_rect, 
@@ -63,7 +63,7 @@ class SettingsScreen(Screen):
             volume_label_rect.right + slider_label_width,
             volume_label_rect.top,
             content_area_rect.width - volume_label_rect.width - slider_label_width*2,
-            self.game_window.slider_height
+            self.settings.slider_height
         )
         self.volume_slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=volume_slider_rect,
@@ -98,10 +98,10 @@ class SettingsScreen(Screen):
         )
 
         report_button_rect = pygame.Rect(
-            content_area_rect.centerx - self.game_window.wide_button_width/2,
+            content_area_rect.centerx - self.settings.wide_button_width/2,
             volume_slider_rect.bottom + self.line_spacing,
-            self.game_window.wide_button_width,
-            self.game_window.thin_wide_button_height
+            self.settings.wide_button_width,
+            self.settings.thin_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=report_button_rect,
@@ -111,10 +111,10 @@ class SettingsScreen(Screen):
         )
 
         credits_button_rect = pygame.Rect(
-            content_area_rect.centerx - self.game_window.wide_button_width/2,
+            content_area_rect.centerx - self.settings.wide_button_width/2,
             report_button_rect.bottom + self.line_spacing,
-            self.game_window.wide_button_width,
-            self.game_window.thin_wide_button_height
+            self.settings.wide_button_width,
+            self.settings.thin_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=credits_button_rect,
@@ -124,10 +124,10 @@ class SettingsScreen(Screen):
         )
 
         exit_game_button_rect = pygame.Rect(
-            content_area_rect.centerx - self.game_window.wide_button_width/2,
+            content_area_rect.centerx - self.settings.wide_button_width/2,
             credits_button_rect.bottom + self.line_spacing,
-            self.game_window.wide_button_width,
-            self.game_window.thin_wide_button_height
+            self.settings.wide_button_width,
+            self.settings.thin_wide_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=exit_game_button_rect,
