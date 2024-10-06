@@ -3,14 +3,15 @@ from pygame_gui.core import ObjectID
 from screens.screen import Screen
 
 class LoadingScreen(Screen):
-    def __init__(self, game_window):
-        super().__init__(game_window)
+    def __init__(self, game_window, settings):
+        super().__init__(game_window, settings)
+        self.settings = settings
         theme_file = os.path.realpath("src/assets/themes/loading/theme.json")
-        self.ui_manager = pygame_gui.UIManager((self.game_window.screen_width, self.game_window.screen_height), theme_file)
+        self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.managers = [self.ui_manager]
 
     def setup(self):
-        background_rect = pygame.Rect(0, 0, self.game_window.screen_width, self.game_window.screen_height)
+        background_rect = pygame.Rect(0, 0, self.settings.screen_width, self.settings.screen_height)
         pygame_gui.elements.UIPanel(
             relative_rect=background_rect,
             manager=self.ui_manager

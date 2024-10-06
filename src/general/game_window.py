@@ -7,22 +7,19 @@ from screens.basic_custom_size_screen import BasicCustomSizeScreen
 from screens.play_screen import PlayScreen
 from screens.settings_screen import SettingsScreen
 from general.audio import AudioDisplay
-from modals.modal import Modal
 from PIL import Image
 
 class GameWindow:
-    def __init__(self):
-        self.screen_width = 650
-        self.screen_height = 700
-        self.window = pygame.display.set_mode([self.screen_width, self.screen_height])
+    def __init__(self, settings):
+        self.window = pygame.display.set_mode([settings.screen_width, settings.screen_height])
         self.margin = 50
         self.line_spacing = 10
         
         self.drawable_area = pygame.Rect(
             self.margin,
             self.margin,
-            self.screen_width - self.margin*2,
-            self.screen_height - self.margin*2
+            settings.screen_width - self.margin*2,
+            settings.screen_height - self.margin*2
         )
 
         self.modal_width = round(self.drawable_area.width * 0.7)
@@ -66,20 +63,20 @@ class GameWindow:
         if self.resize: self.resize_images()
         pygame.display.set_caption('Maze')
 
-    def initialize_screens(self, audio):
-        self.title_screen = TitleScreen(self, AudioDisplay(audio, self))
+    def initialize_screens(self, audio, settings):
+        self.title_screen = TitleScreen(self, settings, AudioDisplay(audio, self))
         self.title_screen.setup()
-        self.credits_screen = CreditsScreen(self, AudioDisplay(audio, self))
+        self.credits_screen = CreditsScreen(self, settings, AudioDisplay(audio, self))
         self.credits_screen.setup()
-        self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, self))
+        self.pick_size_screen = PickSizeScreen(self, settings, AudioDisplay(audio, self))
         self.pick_size_screen.setup()
-        self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, self))
+        self.custom_size_screen = CustomSizeScreen(self, settings, AudioDisplay(audio, self))
         self.custom_size_screen.setup()
-        self.basic_custom_size_screen = BasicCustomSizeScreen(self, AudioDisplay(audio, self))
+        self.basic_custom_size_screen = BasicCustomSizeScreen(self, settings, AudioDisplay(audio, self))
         self.basic_custom_size_screen.setup()
-        self.play_screen = PlayScreen(self, AudioDisplay(audio, self))
+        self.play_screen = PlayScreen(self, settings, AudioDisplay(audio, self))
         self.play_screen.setup()
-        self.settings_screen = SettingsScreen(self, AudioDisplay(audio, self))
+        self.settings_screen = SettingsScreen(self, settings, AudioDisplay(audio, self))
         self.settings_screen.setup()
 
     def load_settings(self):

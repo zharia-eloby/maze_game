@@ -4,27 +4,30 @@ Maze Game with Pygame
 """
 
 import pygame, sys, threading
+from general.settings import Settings
 from general.game_window import GameWindow
 from screens.loading_screen import LoadingScreen
 from general.audio import Audio
 
-def load_content(game_window):
+def load_content(game_window, settings):
     audio = Audio(game_window)
     audio.initialize()
-    game_window.initialize_screens(audio)
+    game_window.initialize_screens(audio, settings)
     game_window.finished_loading = True
 
-def show_loading_screen(game_window):
-    loading_screen = LoadingScreen(game_window)
+def show_loading_screen(game_window, settings):
+    loading_screen = LoadingScreen(game_window, settings)
     loading_screen.setup()
     loading_screen.show()
 
 def run():
-    gw = GameWindow()
+    settings = Settings()
+
+    gw = GameWindow(settings)
     gw.initialize()
 
-    load_content_thread = threading.Thread(target=load_content, args=(gw,))
-    loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,))
+    load_content_thread = threading.Thread(target=load_content, args=(gw,settings))
+    loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,settings))
     load_content_thread.start()
     loading_screen_thread.start()
     load_content_thread.join()

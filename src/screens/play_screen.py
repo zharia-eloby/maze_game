@@ -7,8 +7,8 @@ from modals.finished_modal import FinishedModal
 from modals.show_solution_modal import ShowSolutionModal
 
 class PlayScreen(Screen):
-    def __init__(self, game_window, audio):
-        super().__init__(game_window)
+    def __init__(self, game_window, settings, audio):
+        super().__init__(game_window, settings)
         self.audio = audio
         self.maze = None
         self.show_solution_button = None
@@ -22,7 +22,7 @@ class PlayScreen(Screen):
         self.line_spacing = 25
 
     def set_maze(self, rows, columns):
-        self.maze = MazeUI(rows, columns, self.game_window)
+        self.maze = MazeUI(rows, columns, self.game_window, self.settings)
         self.maze.setup_maze_ui(self.maze_area_rect)
         self.solution_drawer = LineSolutionPath(self.maze)
         self.managers = [self.background_manager, self.maze.maze_background_manager, self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]
@@ -37,13 +37,13 @@ class PlayScreen(Screen):
         self.set_background()
         self.audio.create_audio_buttons(self.ui_manager)
 
-        self.pause_modal = PauseModal(self.game_window)
+        self.pause_modal = PauseModal(self.game_window, self.settings)
         self.pause_modal.setup()
 
-        self.finished_modal = FinishedModal(self.game_window)
+        self.finished_modal = FinishedModal(self.game_window, self.settings)
         self.finished_modal.setup()
 
-        self.show_solution_modal = ShowSolutionModal(self.game_window)
+        self.show_solution_modal = ShowSolutionModal(self.game_window, self.settings)
         self.show_solution_modal.setup()
         
         pause_button_rect = pygame.Rect(
