@@ -122,7 +122,7 @@ class BasicCustomSizeScreen(Screen):
         done = False
         next_page = None
         new_rows = maze.rows
-        self.game_window.redraw_elements(self.managers, 0)
+        self.redraw_elements(self.managers, 0)
         time_delta = math.ceil(time.time())
         while not done:
             for event in pygame.event.get():
@@ -161,7 +161,7 @@ class BasicCustomSizeScreen(Screen):
 
             if not done:
                 time_delta = math.ceil(time.time()) - time_delta
-                self.game_window.redraw_elements(self.managers, time_delta)
+                self.redraw_elements(self.managers, time_delta)
         
         del maze
         self.managers = [self.background_manager, self.ui_manager]

@@ -54,7 +54,7 @@ class TitleScreen(Screen):
 
     def show(self):
         self.audio.set_audio_display()
-        self.game_window.redraw_elements(self.managers, 0)
+        self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
         done = False
@@ -79,5 +79,5 @@ class TitleScreen(Screen):
                 self.ui_manager.process_events(event)
 
             time_delta = math.ceil(time.time()) - time_delta
-            self.game_window.redraw_elements(self.managers, time_delta)
+            self.redraw_elements(self.managers, time_delta)
         return next_page

@@ -28,7 +28,7 @@ class LoadingScreen(Screen):
     def show(self):
         POLL = pygame.USEREVENT + 1
         pygame.time.set_timer(POLL, 1000)
-        self.game_window.redraw_elements(self.managers, 0)
+        self.redraw_elements(self.managers, 0)
 
         clock = pygame.time.Clock()
         done = False
@@ -50,4 +50,4 @@ class LoadingScreen(Screen):
                 self.ui_manager.process_events(event)
 
             clock.tick(1)
-            self.game_window.redraw_elements(self.managers, 1)
+            self.redraw_elements(self.managers, 1)

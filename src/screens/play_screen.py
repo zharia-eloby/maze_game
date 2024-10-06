@@ -101,7 +101,7 @@ class PlayScreen(Screen):
         next_page = None
         solving = False
         end_reached = False
-        self.game_window.redraw_elements(self.managers, 0)
+        self.redraw_elements(self.managers, 0)
         time_delta = math.ceil(time.time())
         while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
@@ -181,7 +181,7 @@ class PlayScreen(Screen):
                 self.ui_manager.process_events(event)
 
             time_delta = math.ceil(time.time()) - time_delta
-            self.game_window.redraw_elements(self.managers, time_delta)
+            self.redraw_elements(self.managers, time_delta)
             
         if end_reached:
             restart = self.finished_modal.show()

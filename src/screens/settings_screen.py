@@ -141,7 +141,7 @@ class SettingsScreen(Screen):
             self.volume_slider.set_current_value(pygame.mixer.music.get_volume())
         else:
             self.volume_slider.set_current_value(0)
-        self.game_window.redraw_elements(self.managers, 0)
+        self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
         done = False
@@ -180,5 +180,5 @@ class SettingsScreen(Screen):
                 self.ui_manager.process_events(event)
 
             time_delta = math.ceil(time.time()) - time_delta
-            self.game_window.redraw_elements(self.managers, time_delta)
+            self.redraw_elements(self.managers, time_delta)
         return next_page

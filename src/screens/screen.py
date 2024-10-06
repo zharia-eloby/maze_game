@@ -28,4 +28,10 @@ class Screen():
             image_surface=pygame.image.load(img_file).convert(),
             manager=self.background_manager
         )
+
+    def redraw_elements(self, managers, time_delta):
+        for m in managers:
+            m.update(time_delta)
+            m.draw_ui(pygame.display.get_surface())
+        pygame.display.update()
     

@@ -71,7 +71,7 @@ class FinishedModal(Modal):
         )
 
     def show(self):
-        self.game_window.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
+        self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
     
         done = False
         restart = False
@@ -90,6 +90,6 @@ class FinishedModal(Modal):
                 self.ui_manager.process_events(event)
             
             time_delta = math.ceil(time.time()) - time_delta
-            self.game_window.redraw_elements([self.background_manager, self.ui_manager], time_delta)
+            self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
         
         return restart

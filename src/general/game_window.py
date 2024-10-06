@@ -47,12 +47,6 @@ class GameWindow:
         self.settings_screen = SettingsScreen(self, settings, AudioDisplay(audio, settings))
         self.settings_screen.setup()
 
-    def redraw_elements(self, managers, time_delta):
-        for m in managers:
-            m.update(time_delta)
-            m.draw_ui(self.window)
-        pygame.display.update()
-
     def resize_image(self, image_id, width, height, normal=True, hovered=True, disabled=False):
         file = open(self.theme_file, "r")
         contents = json.loads(file.read())

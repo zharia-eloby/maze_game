@@ -204,7 +204,7 @@ class CustomSizeScreen(Screen):
         done = False
         next_page = None
         locked = True # if True, rows and cols change simultaneously
-        self.game_window.redraw_elements(self.managers, 0)
+        self.redraw_elements(self.managers, 0)
         time_delta = math.ceil(time.time())
         while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
@@ -326,7 +326,7 @@ class CustomSizeScreen(Screen):
 
             if not done:
                 time_delta = math.ceil(time.time()) - time_delta
-                self.game_window.redraw_elements(self.managers, time_delta)
+                self.redraw_elements(self.managers, time_delta)
         
         self.col_text.set_text(str(self.default_columns))
         self.row_text.set_text(str(self.default_rows))

@@ -74,7 +74,7 @@ class PauseModal(Modal):
         paused = True
         resume = True
         time_delta = math.ceil(time.time())
-        self.game_window.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
+        self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
         while paused:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -92,5 +92,5 @@ class PauseModal(Modal):
                 self.ui_manager.process_events(event)
 
             time_delta = math.ceil(time.time()) - time_delta
-            self.game_window.redraw_elements([self.background_manager, self.ui_manager], time_delta)
+            self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
         return resume
