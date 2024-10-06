@@ -17,12 +17,6 @@ class Screen():
         )
         
         img_file = os.path.realpath(self.settings.user_settings['themes'][self.settings.user_settings['current_theme']]['background'])
-        """
-        img = Image.open(img_file)
-        img = img.resize((self.settings.screen_width, self.settings.screen_height))
-        img.save(img_file)
-        """
-        
         pygame_gui.elements.UIImage(
             relative_rect=background_rect,
             image_surface=pygame.image.load(img_file).convert(),

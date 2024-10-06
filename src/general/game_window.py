@@ -46,8 +46,8 @@ class GameWindow:
         self.settings_screen = SettingsScreen(self, settings, AudioDisplay(audio, settings))
         self.settings_screen.setup()
 
-    def resize_image(self, image_id, width, height, normal=True, hovered=True, disabled=False):
-        file = open(self.theme_file, "r")
+    def resize_image(self, settings, image_id, width, height, normal=True, hovered=True, disabled=False):
+        file = open(settings.theme_file, "r")
         contents = json.loads(file.read())
         file.close()
         images_folder = os.path.realpath("src/assets/")
@@ -68,6 +68,13 @@ class GameWindow:
             img.save(os.path.join(images_folder, image_file))
 
     def resize_images(self, settings):
+        # background image
+        img_file = os.path.realpath(settings.user_settings['themes'][settings.user_settings['current_theme']]['background'])
+        img = Image.open(img_file)
+        img = img.resize((settings.screen_width, settings.screen_height))
+        img.save(img_file)
+
+        # all other images
         images = [
             {
                 'id': '#settings-cog-button', 
@@ -191,4 +198,4 @@ class GameWindow:
             }
         ]
         for i in images:
-            self.resize_image(i['id'], i['width'], i['height'], i['normal'], i['hovered'], i['disabled'])
+            self.resize_image(settings, i['id'], i['width'], i['height'], i['normal'], i['hovered'], i['disabled'])
