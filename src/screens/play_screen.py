@@ -37,13 +37,13 @@ class PlayScreen(Screen):
         self.set_background()
         self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
-        self.pause_modal = PauseModal(self.game_window, self.settings)
+        self.pause_modal = PauseModal(self.settings)
         self.pause_modal.setup()
 
-        self.finished_modal = FinishedModal(self.game_window, self.settings)
+        self.finished_modal = FinishedModal(self.settings)
         self.finished_modal.setup()
 
-        self.show_solution_modal = ShowSolutionModal(self.game_window, self.settings)
+        self.show_solution_modal = ShowSolutionModal(self.settings)
         self.show_solution_modal.setup()
         
         pause_button_rect = pygame.Rect(

@@ -3,9 +3,6 @@ from pygame_gui.core import ObjectID
 from modals.modal import Modal
 
 class ShowSolutionModal(Modal):
-    def __init__(self, game_window, settings):
-        super().__init__(game_window, settings)
-
     def setup(self):
         overlay_rect = pygame.Rect(
             0,
