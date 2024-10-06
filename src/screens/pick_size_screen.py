@@ -3,9 +3,8 @@ from pygame_gui.core import ObjectID
 from screens.screen import Screen
 
 class PickSizeScreen(Screen):
-    def __init__(self, game_window, settings, audio):
-        super().__init__(game_window, settings)
-        self.audio = audio
+    def __init__(self, game_window, audio):
+        super().__init__(game_window, audio)
         self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):

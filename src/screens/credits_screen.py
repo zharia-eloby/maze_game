@@ -3,9 +3,8 @@ from pygame_gui.core import ObjectID
 from screens.screen import Screen
 
 class CreditsScreen(Screen):
-    def __init__(self, game_window, settings, audio):
-        super().__init__(game_window, settings)
-        self.audio = audio
+    def __init__(self, game_window, audio):
+        super().__init__(game_window, audio)
         self.line_spacing = 5
         self.managers = [self.background_manager, self.ui_manager]
         self.credits_column_width = self.settings.drawable_area.width*0.75

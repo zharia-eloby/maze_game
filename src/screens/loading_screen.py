@@ -3,9 +3,8 @@ from pygame_gui.core import ObjectID
 from screens.screen import Screen
 
 class LoadingScreen(Screen):
-    def __init__(self, game_window, settings):
-        super().__init__(game_window, settings)
-        self.settings = settings
+    def __init__(self, game_window):
+        super().__init__(game_window, None)
         theme_file = os.path.realpath("src/assets/themes/loading/theme.json")
         self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.managers = [self.ui_manager]

@@ -4,9 +4,8 @@ from screens.screen import Screen
 from general.maze import MazeUI
 
 class BasicCustomSizeScreen(Screen):
-    def __init__(self, game_window, settings, audio):
-        super().__init__(game_window, settings)
-        self.audio = audio
+    def __init__(self, game_window, audio):
+        super().__init__(game_window, audio)
         self.maze_area_rect = None
         self.line_spacing = 15
         self.row_min = 5

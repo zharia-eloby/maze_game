@@ -1,9 +1,9 @@
 import pygame, pygame_gui, os
-from PIL import Image
 
 class Screen():
-    def __init__(self, game_window, settings):
-        self.settings = settings
+    def __init__(self, game_window, audio):
+        self.audio = audio
+        self.settings = game_window.settings
         self.game_window = game_window
         self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
         self.background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
