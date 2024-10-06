@@ -22,7 +22,7 @@ class PlayScreen(Screen):
         self.line_spacing = 25
 
     def set_maze(self, rows, columns):
-        self.maze = MazeUI(rows, columns, self.game_window, self.settings)
+        self.maze = MazeUI(rows, columns, self.settings)
         self.maze.setup_maze_ui(self.maze_area_rect)
         self.solution_drawer = LineSolutionPath(self.maze)
         self.managers = [self.background_manager, self.maze.maze_background_manager, self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]

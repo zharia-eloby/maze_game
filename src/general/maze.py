@@ -98,7 +98,7 @@ class Maze:
             self.maze[curr_cell[0]][curr_cell[1]] = 'x'
     
 class MazeUI(Maze):
-    def __init__(self, rows, columns, game_window, settings):
+    def __init__(self, rows, columns, settings):
         super().__init__(rows, columns)
         self.settings = settings
         self.maze_width = None
@@ -109,7 +109,6 @@ class MazeUI(Maze):
         self.topleft = None
         self.player = None
         self.maze_area_rect = None
-        self.game_window = game_window
         self.maze_background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
         self.maze_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
 
