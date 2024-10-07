@@ -10,6 +10,12 @@ class CreditsScreen(Screen):
         self.credits_column_width = self.settings.drawable_area.width*0.75
         self.links_column_width = self.settings.drawable_area.width - self.credits_column_width
         self.credits = {
+            "#development-credits": {
+                "text": "Development by",
+                "attribution": "Zharia Eloby",
+                "link": "https://space-spheremaps.itch.io/pixelart-starfields",
+                "object_id": "#development-credits"
+            },
             "#audio-credits": {
                 "text": "Audio from",
                 "attribution": "Somewhere",
@@ -60,28 +66,32 @@ class CreditsScreen(Screen):
             object_id=ObjectID(object_id="@medium-text")
         )
         
-        development_credits_text = pygame.Rect(
+        credits_text = pygame.Rect(
             self.settings.drawable_area.left, 
             game_title_text_rect.bottom + self.line_spacing,
             self.settings.drawable_area.width,
             self.settings.small_text_height
         )
         pygame_gui.elements.UILabel(
-            relative_rect=development_credits_text, 
-            text="Developed by Zharia Eloby",
+            relative_rect=credits_text, 
+            text="Credits",
             manager=self.ui_manager,
             object_id=ObjectID(object_id="@small-text")
         )
 
         html_text = ""
         for i in self.credits:
-            html_text += "<p>{text} <a href='{link}'>{attribution}</a></p><br>".format(text=self.credits[i]['text'], link=self.credits[i]['link'], attribution=self.credits[i]['attribution'])
+            html_text += "<p>{text} <a href='{link}'>{attribution}</a></p><br>".format(
+                text=self.credits[i]['text'], 
+                link=self.credits[i]['link'], 
+                attribution=self.credits[i]['attribution']
+            )
 
         credits_text_rect = pygame.Rect(
             self.settings.drawable_area.left,
-            development_credits_text.bottom + self.line_spacing,
+            credits_text.bottom + self.line_spacing,
             self.settings.drawable_area.width,
-            self.settings.drawable_area.bottom - development_credits_text.bottom - self.line_spacing
+            self.settings.drawable_area.bottom - credits_text.bottom - self.line_spacing
         )
         pygame_gui.elements.UITextBox(
             relative_rect=credits_text_rect,
