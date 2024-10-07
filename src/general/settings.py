@@ -3,18 +3,17 @@ import pygame, os, json
 class Settings:
     def __init__(self):
         self.settings_file = os.path.realpath("src/general/settings.json")
-        self.theme_file = None
 
         self.screen_width = 650
         self.screen_height = 700
-        self.margin = 50
         self.line_spacing = 10
 
+        margin = 50
         self.drawable_area = pygame.Rect(
-            self.margin,
-            self.margin,
-            self.screen_width - self.margin*2,
-            self.screen_height - self.margin*2
+            margin,
+            margin,
+            self.screen_width - margin*2,
+            self.screen_height - margin*2
         )
 
         self.modal_width = round(self.drawable_area.width * 0.7)
@@ -36,6 +35,7 @@ class Settings:
         self.medium_text_height = 36
         self.slider_height = 30
 
+        self.theme_file = None
         self.user_settings = None
 
     def load_settings(self):
