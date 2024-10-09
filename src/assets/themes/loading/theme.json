@@ -35,5 +35,16 @@
         {
             "border_width": "0"
         }
+    },
+    "@line":
+    {
+        "colours": 
+        {
+            "dark_bg": "#ffffff"
+        },
+        "misc":
+        {
+            "border_width": "0"
+        }
     }
 }
