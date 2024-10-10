@@ -24,25 +24,21 @@ class LoadingScreen(Screen):
             object_id=ObjectID(object_id="@medium-text")
         )
 
-        self.loading_line_max_length = round(self.background_rect.width/3)
-        self.loading_line_min_length = 2
-        loading_line_rect = pygame.Rect(
-            self.background_rect.centerx - round(self.loading_line_min_length/2),
-            self.background_rect.centery + round(self.settings.medium_text_height / 2),
-            self.loading_line_min_length,
-            10
+        loading_progress_bar_rect = pygame.Rect(
+            self.background_rect.centerx - round((self.background_rect.width/3)/2),
+            self.background_rect.centery + round(self.settings.medium_text_height/2),
+            round(self.background_rect.width/3),
+            20
         )
-        self.loading_line = pygame_gui.elements.UIPanel(
-            relative_rect=loading_line_rect,
-            manager=self.ui_manager,
-            object_id=ObjectID(object_id="@line")
+        self.loading_progress_bar = pygame_gui.elements.UIStatusBar(
+            relative_rect=loading_progress_bar_rect,
+            manager=self.ui_manager
         )
 
     def show(self):
         POLL = pygame.USEREVENT + 1
         ANIMATE = pygame.USEREVENT + 2
         
-        line_increment = 2
         time_delta = math.ceil(time.time())
 
         pygame.time.set_timer(POLL, 1000)
@@ -57,24 +53,17 @@ class LoadingScreen(Screen):
                     return
                 
                 elif event.type == POLL:
-                    if self.game_window.finished_loading:
+                    if self.game_window.finished_loading and self.loading_progress_bar.percent_full == 1:
                         done = True
                         pygame.time.set_timer(POLL, 0)
                         pygame.time.set_timer(ANIMATE, 0)
                         return
                     
                 elif event.type == ANIMATE:
-                    current_width = self.loading_line.get_relative_rect().width
-                    if current_width + line_increment < self.loading_line_min_length or current_width + line_increment > self.loading_line_max_length:
-                        line_increment *= -1
-                    self.loading_line.set_dimensions((
-                        self.loading_line.get_relative_rect().width + line_increment, 
-                        self.loading_line.get_relative_rect().height
-                    ))
-                    self.loading_line.set_position((
-                        self.background_rect.centerx - self.loading_line.get_relative_rect().width/2, 
-                        self.loading_line.get_relative_rect().top
-                    ))
+                    updated_percent = self.loading_progress_bar.percent_full + 0.05
+                    if updated_percent > self.game_window.loaded_percent:
+                        updated_percent = self.game_window.loaded_percent
+                    self.loading_progress_bar.percent_full = updated_percent
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()

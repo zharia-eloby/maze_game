@@ -22,6 +22,7 @@ class GameWindow:
 
         self.resize = False
 
+        self.loaded_percent = 0
         self.finished_loading = False
 
     def initialize(self):
@@ -34,18 +35,25 @@ class GameWindow:
     def initialize_screens(self, audio):
         self.title_screen = TitleScreen(self, AudioDisplay(audio, self.settings))
         self.title_screen.setup()
+        self.loaded_percent = 0.3
         self.credits_screen = CreditsScreen(self, AudioDisplay(audio, self.settings))
         self.credits_screen.setup()
+        self.loaded_percent = 0.4
         self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, self.settings))
         self.pick_size_screen.setup()
+        self.loaded_percent = 0.5
         self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, self.settings))
         self.custom_size_screen.setup()
+        self.loaded_percent = 0.6
         self.basic_custom_size_screen = BasicCustomSizeScreen(self, AudioDisplay(audio, self.settings))
         self.basic_custom_size_screen.setup()
+        self.loaded_percent = 0.7
         self.play_screen = PlayScreen(self, AudioDisplay(audio, self.settings))
         self.play_screen.setup()
+        self.loaded_percent = 0.8
         self.settings_screen = SettingsScreen(self, AudioDisplay(audio, self.settings))
         self.settings_screen.setup()
+        self.loaded_percent = 0.9
 
     def resize_image(self, image_id, width, height, normal=True, hovered=True, disabled=False):
         file = open(self.settings.theme_file, "r")

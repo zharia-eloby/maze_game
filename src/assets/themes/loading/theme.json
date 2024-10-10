@@ -46,5 +46,20 @@
         {
             "border_width": "0"
         }
+    },
+    "status_bar":
+    {
+        "colours":
+        {
+            "normal_border": "#00000000",
+            "filled_bar": "#2cbe83",
+            "unfilled_bar": "#ffffff"
+        },
+        "misc":
+        {
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "8",
+            "border_width": "0"
+        }
     }
 }
