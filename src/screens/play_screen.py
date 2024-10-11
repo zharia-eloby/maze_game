@@ -18,7 +18,6 @@ class PlayScreen(Screen):
         self.show_solution_modal = None
         self.solution_drawer = None
         self.managers = None
-        self.line_spacing = 25
 
     def set_maze(self, rows, columns):
         self.maze = MazeUI(rows, columns, self.settings)
@@ -86,9 +85,9 @@ class PlayScreen(Screen):
 
         self.maze_area_rect = pygame.Rect(
             self.settings.drawable_area.left,
-            show_solution_rect.bottom + self.line_spacing,
+            show_solution_rect.bottom + self.settings.line_spacing,
             self.settings.drawable_area.width,
-            self.settings.drawable_area.height - show_solution_rect.height - self.line_spacing
+            self.settings.drawable_area.height - show_solution_rect.height - self.settings.line_spacing
         )
 
     def show(self):

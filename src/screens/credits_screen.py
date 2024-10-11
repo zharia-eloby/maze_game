@@ -5,7 +5,6 @@ from screens.screen import Screen
 class CreditsScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window, audio)
-        self.line_spacing = 5
         self.managers = [self.background_manager, self.ui_manager]
         self.credits_column_width = self.settings.drawable_area.width*0.75
         self.links_column_width = self.settings.drawable_area.width - self.credits_column_width
@@ -68,7 +67,7 @@ class CreditsScreen(Screen):
         
         credits_text = pygame.Rect(
             self.settings.drawable_area.left, 
-            game_title_text_rect.bottom + self.line_spacing,
+            game_title_text_rect.bottom + self.settings.line_spacing,
             self.settings.drawable_area.width,
             self.settings.small_text_height
         )
@@ -89,9 +88,9 @@ class CreditsScreen(Screen):
 
         credits_text_rect = pygame.Rect(
             self.settings.drawable_area.left,
-            credits_text.bottom + self.line_spacing,
+            credits_text.bottom + self.settings.line_spacing,
             self.settings.drawable_area.width,
-            self.settings.drawable_area.bottom - credits_text.bottom - self.line_spacing
+            self.settings.drawable_area.bottom - credits_text.bottom - self.settings.line_spacing
         )
         pygame_gui.elements.UITextBox(
             relative_rect=credits_text_rect,

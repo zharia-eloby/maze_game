@@ -6,7 +6,6 @@ class SettingsScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window, audio)
         self.volume_slider = None
-        self.line_spacing = 25
         self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
@@ -46,7 +45,7 @@ class SettingsScreen(Screen):
 
         volume_label_rect = pygame.Rect(
             content_area_rect.left, 
-            settings_title_rect.bottom + self.line_spacing,
+            settings_title_rect.bottom + self.settings.line_spacing,
             content_area_rect.width * 0.5, 
             self.settings.slider_height
         )
@@ -98,7 +97,7 @@ class SettingsScreen(Screen):
 
         report_button_rect = pygame.Rect(
             content_area_rect.centerx - self.settings.wide_button_width/2,
-            volume_slider_rect.bottom + self.line_spacing,
+            volume_slider_rect.bottom + self.settings.line_spacing,
             self.settings.wide_button_width,
             self.settings.thin_wide_button_height
         )
@@ -111,7 +110,7 @@ class SettingsScreen(Screen):
 
         credits_button_rect = pygame.Rect(
             content_area_rect.centerx - self.settings.wide_button_width/2,
-            report_button_rect.bottom + self.line_spacing,
+            report_button_rect.bottom + self.settings.line_spacing,
             self.settings.wide_button_width,
             self.settings.thin_wide_button_height
         )
@@ -124,7 +123,7 @@ class SettingsScreen(Screen):
 
         exit_game_button_rect = pygame.Rect(
             content_area_rect.centerx - self.settings.wide_button_width/2,
-            credits_button_rect.bottom + self.line_spacing,
+            credits_button_rect.bottom + self.settings.line_spacing,
             self.settings.wide_button_width,
             self.settings.thin_wide_button_height
         )

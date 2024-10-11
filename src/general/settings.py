@@ -6,7 +6,7 @@ class Settings:
 
         self.screen_width = 650
         self.screen_height = 700
-        self.line_spacing = 10
+        self.line_spacing = 15
 
         margin = 50
         self.drawable_area = pygame.Rect(

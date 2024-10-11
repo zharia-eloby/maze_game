@@ -7,7 +7,6 @@ class BasicCustomSizeScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window, audio)
         self.maze_area_rect = None
-        self.line_spacing = 15
         self.row_min = 5
         self.row_max = 35
         self.col_min = 5
@@ -37,7 +36,7 @@ class BasicCustomSizeScreen(Screen):
         slider_width = self.settings.drawable_area.width * 0.75
         dimensions_slider_rect = pygame.Rect(
             self.settings.drawable_area.centerx - slider_width/2,
-            back_button_rect.bottom + self.line_spacing,
+            back_button_rect.bottom + self.settings.line_spacing,
             slider_width,
             self.settings.slider_height
         )
@@ -103,9 +102,9 @@ class BasicCustomSizeScreen(Screen):
 
         self.maze_area_rect = pygame.Rect(
             preview_text_label_rect.left,
-            preview_text_label_rect.bottom + self.line_spacing,
+            preview_text_label_rect.bottom + self.settings.line_spacing,
             self.settings.drawable_area.width,
-            play_button_rect.top - preview_text_label_rect.bottom - self.line_spacing*2
+            play_button_rect.top - preview_text_label_rect.bottom - self.settings.line_spacing*2
         )
 
     def show(self):
