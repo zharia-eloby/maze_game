@@ -7,7 +7,7 @@
         }
     },
     "audio": {
-        "on": false,
-        "volume": 1
+        "on": true,
+        "volume": 1.0
     }
 }

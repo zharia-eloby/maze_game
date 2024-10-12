@@ -12,9 +12,9 @@ from general.audio import Audio
 def load_content(game_window, settings):
     audio = Audio(settings)
     game_window.loaded_percent = 0.11
-    audio.initialize()
-    game_window.loaded_percent = 0.22
     game_window.initialize_screens(audio)
+    game_window.loaded_percent = 0.22
+    audio.initialize()
     game_window.loaded_percent = 1
     game_window.finished_loading = True
 
