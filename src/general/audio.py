@@ -5,7 +5,7 @@ class Audio():
     def __init__(self, settings):
         self.volume = settings.user_settings['audio']['volume']
         self.audio_on = settings.user_settings['audio']['on']
-        self.audio_file = os.path.realpath(settings.user_settings['themes'][settings.user_settings['current_theme']]['audio']['path'])
+        self.audio_file = settings.audio_file
     
     def initialize(self):
         pygame.mixer.init()

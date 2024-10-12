@@ -16,7 +16,7 @@ class Screen():
             self.settings.screen_height
         )
         
-        img_file = os.path.realpath(self.settings.user_settings['themes'][self.settings.user_settings['current_theme']]['background'])
+        img_file = self.settings.background_file
         pygame_gui.elements.UIImage(
             relative_rect=background_rect,
             image_surface=pygame.image.load(img_file).convert(),

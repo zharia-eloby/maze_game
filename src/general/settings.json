@@ -2,16 +2,12 @@
     "current_theme": "blue",
     "themes": {
         "blue": {
-            "path": "src/assets/themes/blue/theme.json",
-            "audio": {
-                "name": "wrong-place-129242.mp3",
-                "path": "src/assets/themes/blue/audio/wrong-place-129242.mp3"
-            },
-            "background": "src/assets/themes/blue/images/background/pixelart_starfield.png"
+            "audio": "wrong-place-129242.mp3",
+            "background": "pixelart_starfield.png"
         }
     },
     "audio": {
         "on": false,
-        "volume": 0.28125
+        "volume": 1
     }
 }

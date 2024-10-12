@@ -78,7 +78,7 @@ class GameWindow:
 
     def resize_images(self):
         # background image
-        img_file = os.path.realpath(self.settings.user_settings['themes'][self.settings.user_settings['current_theme']]['background'])
+        img_file = self.settings.background_file
         img = Image.open(img_file)
         img = img.resize((self.settings.screen_width, self.settings.screen_height))
         img.save(img_file)

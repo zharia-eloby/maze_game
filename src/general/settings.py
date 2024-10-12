@@ -35,13 +35,31 @@ class Settings:
         self.medium_text_height = 36
         self.slider_height = 30
 
+        self.theme_file_path = "src/assets/themes/{theme}/theme.json"
+        self.audio_file_path = "src/assets/themes/{theme}/audio/{audio}"
+        self.background_file_path = "src/assets/themes/{theme}/images/background/{background}"
         self.theme_file = None
+        self.audio_file = None
+        self.background_file = None
         self.user_settings = None
 
     def load_settings(self):
         file = open(self.settings_file, "r")
         self.user_settings = json.loads(file.read())
-        self.theme_file = os.path.realpath(self.user_settings['themes'][self.user_settings['current_theme']]['path'])
+        
+        current_theme = self.user_settings['current_theme']
+        self.theme_file = os.path.realpath(str.format(self.theme_file_path, theme=current_theme))
+        self.audio_file = os.path.realpath(str.format(
+            self.audio_file_path, 
+            theme=current_theme, 
+            audio=self.user_settings['themes'][current_theme]['audio']
+        ))
+        self.background_file = os.path.realpath(str.format(
+            self.background_file_path, 
+            theme=current_theme, 
+            background=self.user_settings['themes'][current_theme]['background']
+        ))
+        
         file.close()
 
     def save_settings(self):
