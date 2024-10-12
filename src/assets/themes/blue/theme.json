@@ -7,7 +7,7 @@
         },
         "font":
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": "1",
             "regular_resource": 
             {
@@ -21,7 +21,7 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": 16
         }
     },
@@ -46,7 +46,7 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": 28
         }
     },
@@ -143,7 +143,7 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": "72"
         },
         "misc":
@@ -217,7 +217,7 @@
     {
         "font": 
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": "28"
         },
         "prototype": "#ui-image-button",
@@ -253,7 +253,7 @@
     {
         "font": 
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": "28"
         },
         "prototype": "#ui-image-button",
@@ -493,7 +493,7 @@
     {
         "font": 
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": "16"
         },
         "prototype": "#ui-image-button",
@@ -529,7 +529,7 @@
     {
         "font": 
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": "16"
         },
         "prototype": "#ui-image-button",

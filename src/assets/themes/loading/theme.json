@@ -7,7 +7,7 @@
         },
         "font":
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": "1",
             "regular_resource": 
             {
@@ -21,7 +21,7 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "bungee-regular",
+            "name": "daysone-regular",
             "size": 28
         }
     },
