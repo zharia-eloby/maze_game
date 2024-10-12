@@ -142,22 +142,6 @@ class GameWindow:
                 'disabled': False
             },
             {
-                'id': '#locked-button', 
-                'width': self.settings.small_sq_button_width,
-                'height': self.settings.small_sq_button_height,
-                'normal': True, 
-                'hovered': True,
-                'disabled': False
-            },
-            {
-                'id': '#unlocked-button', 
-                'width': self.settings.small_sq_button_width,
-                'height': self.settings.small_sq_button_height,
-                'normal': True, 
-                'hovered': True,
-                'disabled': False
-            },
-            {
                 'id': '#show-solution-button',
                 'width': self.settings.small_rect_button_width,
                 'height': self.settings.small_rect_button_height,
@@ -175,22 +159,6 @@ class GameWindow:
             },
             {
                 'id': '#pause-button', 
-                'width': self.settings.small_sq_button_width,
-                'height': self.settings.small_sq_button_height,
-                'normal': True, 
-                'hovered': True,
-                'disabled': False
-            },
-            {
-                'id': '@up-arrow', 
-                'width': self.settings.small_sq_button_width,
-                'height': self.settings.small_sq_button_height,
-                'normal': True, 
-                'hovered': True,
-                'disabled': False
-            },
-            {
-                'id': '@down-arrow', 
                 'width': self.settings.small_sq_button_width,
                 'height': self.settings.small_sq_button_height,
                 'normal': True, 
