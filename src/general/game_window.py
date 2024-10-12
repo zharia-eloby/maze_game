@@ -2,7 +2,6 @@ import pygame, os, json
 from screens.title_screen import TitleScreen
 from screens.credits_screen import CreditsScreen
 from screens.pick_size_screen import PickSizeScreen
-from screens.custom_size_screen import CustomSizeScreen
 from screens.basic_custom_size_screen import BasicCustomSizeScreen
 from screens.play_screen import PlayScreen
 from screens.settings_screen import SettingsScreen
@@ -35,25 +34,22 @@ class GameWindow:
     def initialize_screens(self, audio):
         self.title_screen = TitleScreen(self, AudioDisplay(audio, self.settings))
         self.title_screen.setup()
-        self.loaded_percent = 0.3
+        self.loaded_percent = 0.33
         self.credits_screen = CreditsScreen(self, AudioDisplay(audio, self.settings))
         self.credits_screen.setup()
-        self.loaded_percent = 0.4
+        self.loaded_percent = 0.44
         self.pick_size_screen = PickSizeScreen(self, AudioDisplay(audio, self.settings))
         self.pick_size_screen.setup()
-        self.loaded_percent = 0.5
-        self.custom_size_screen = CustomSizeScreen(self, AudioDisplay(audio, self.settings))
-        self.custom_size_screen.setup()
-        self.loaded_percent = 0.6
+        self.loaded_percent = 0.55
         self.basic_custom_size_screen = BasicCustomSizeScreen(self, AudioDisplay(audio, self.settings))
         self.basic_custom_size_screen.setup()
-        self.loaded_percent = 0.7
+        self.loaded_percent = 0.66
         self.play_screen = PlayScreen(self, AudioDisplay(audio, self.settings))
         self.play_screen.setup()
-        self.loaded_percent = 0.8
+        self.loaded_percent = 0.77
         self.settings_screen = SettingsScreen(self, AudioDisplay(audio, self.settings))
         self.settings_screen.setup()
-        self.loaded_percent = 0.9
+        self.loaded_percent = 0.88
 
     def resize_image(self, image_id, width, height, normal=True, hovered=True, disabled=False):
         file = open(self.settings.theme_file, "r")
