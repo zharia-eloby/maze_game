@@ -9,29 +9,25 @@ class CreditsScreen(Screen):
         self.credits_column_width = self.settings.drawable_area.width*0.75
         self.links_column_width = self.settings.drawable_area.width - self.credits_column_width
         self.credits = {
-            "#development-credits": {
+            "development-credits": {
                 "text": "Development by",
                 "attribution": "Zharia Eloby",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
-                "object_id": "#development-credits"
             },
-            "#audio-credits": {
+            "audio-credits": {
                 "text": "Audio from",
                 "attribution": "Somewhere",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
-                "object_id": "#audio-credits"
             },
-            "#background-credits": {
+            "background-credits": {
                 "text": "Background from",
                 "attribution": "Space Spheremaps",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
-                "object_id": "#background-credits"
             },
-            "#icons-credits": {
+            "icons-credits": {
                 "text": "Icons from",
                 "attribution": "Kenney.nl",
                 "link": "https://kenney.nl/assets/game-icons",
-                "object_id": "#icons-credits"
             }
         }
 
