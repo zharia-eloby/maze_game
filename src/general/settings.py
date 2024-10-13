@@ -35,9 +35,9 @@ class Settings:
         self.medium_text_height = 36
         self.slider_height = 30
 
-        self.theme_file_path = "src/assets/themes/{theme}/theme.json"
-        self.audio_file_path = "src/assets/themes/{theme}/audio/{audio}"
-        self.background_file_path = "src/assets/themes/{theme}/images/background/{background}"
+        self.theme_file_path = "src/themes/{theme}/theme.json"
+        self.audio_file_path = "src/themes/{theme}/audio/{audio}"
+        self.background_file_path = "src/themes/{theme}/images/background/{background}"
         self.theme_file = None
         self.audio_file = None
         self.background_file = None

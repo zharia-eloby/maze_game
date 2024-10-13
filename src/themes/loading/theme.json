@@ -11,8 +11,8 @@
             "size": "1",
             "regular_resource": 
             {
-                "package": "assets",
-                "resource": "themes/loading/font/DaysOne-Regular.ttf"
+                "package": "themes",
+                "resource": "loading/font/DaysOne-Regular.ttf"
             }
         }
     },

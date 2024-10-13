@@ -11,8 +11,8 @@
             "size": "1",
             "regular_resource": 
             {
-                "package": "assets",
-                "resource": "themes/blue/font/DaysOne-Regular.ttf"
+                "package": "themes",
+                "resource": "blue/font/DaysOne-Regular.ttf"
             }
         }
     },
@@ -225,23 +225,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thick-Wide-Rect-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thick-Wide-Rect-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thick-Wide-Rect-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thick-Wide-Rect-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thick-Wide-Rect-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thick-Wide-Rect-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thick-Wide-Rect-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thick-Wide-Rect-Idle@4x.png"
             }
         },
         "misc": 
@@ -261,23 +261,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thin-Wide-Rect-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thin-Wide-Rect-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thin-Wide-Rect-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thin-Wide-Rect-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thin-Wide-Rect-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thin-Wide-Rect-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/general/Thin-Wide-Rect-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/general/Thin-Wide-Rect-Idle@4x.png"
             }
         },
         "misc": 
@@ -307,23 +307,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/play/Play-Blue-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/play/Play-Blue-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/play/Play-Blue-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/play/Play-Blue-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/play/Play-Blue-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/play/Play-Blue-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/play/Play-Blue-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/play/Play-Blue-Idle@4x.png"
             }
         }
     },
@@ -334,23 +334,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/settings/Gear-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/settings/Gear-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/settings/Gear-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/settings/Gear-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/settings/Gear-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/settings/Gear-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/settings/Gear-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/settings/Gear-Idle@4x.png"
             }
         }
     },
@@ -361,23 +361,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/navigation/MediumArrow-Left-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/navigation/MediumArrow-Left-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/navigation/MediumArrow-Left-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/navigation/MediumArrow-Left-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/navigation/MediumArrow-Left-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/navigation/MediumArrow-Left-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/navigation/MediumArrow-Left-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/navigation/MediumArrow-Left-Idle@4x.png"
             }
         }
     },
@@ -388,23 +388,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-On-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-On-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-On-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-On-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-On-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-On-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-On-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-On-Idle@4x.png"
             }
         }
     },
@@ -415,23 +415,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-Off-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-Off-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-Off-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-Off-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-Off-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-Off-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/audio/Music-Off-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/audio/Music-Off-Idle@4x.png"
             }
         }
     },
@@ -442,23 +442,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/pause/Pause-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/pause/Pause-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/pause/Pause-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/pause/Pause-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/pause/Pause-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/pause/Pause-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/pause/Pause-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/pause/Pause-Idle@4x.png"
             }
         }
     },
@@ -469,23 +469,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/reset/Repeat-Right-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/reset/Repeat-Right-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/reset/Repeat-Right-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/reset/Repeat-Right-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/reset/Repeat-Right-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/reset/Repeat-Right-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/reset/Repeat-Right-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/reset/Repeat-Right-Idle@4x.png"
             }
         }
     },
@@ -501,23 +501,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/modal/Modal-Wide-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/modal/Modal-Wide-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/modal/Modal-Wide-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/modal/Modal-Wide-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/modal/Modal-Wide-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/modal/Modal-Wide-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/modal/Modal-Wide-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/modal/Modal-Wide-Idle@4x.png"
             }
         },
         "misc":
@@ -537,23 +537,23 @@
         {
             "normal_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/solution/Show-Solution-Idle@4x.png"
+                "package": "themes",
+                "resource": "blue/images/solution/Show-Solution-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/solution/Show-Solution-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/solution/Show-Solution-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/solution/Show-Solution-Hover@4x.png"
+                "package": "themes",
+                "resource": "blue/images/solution/Show-Solution-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "assets",
-                "resource": "themes/blue/images/solution/Show-Solution-Disabled@4x.png"
+                "package": "themes",
+                "resource": "blue/images/solution/Show-Solution-Disabled@4x.png"
             }
         }
     },
