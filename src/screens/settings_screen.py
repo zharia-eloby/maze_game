@@ -168,7 +168,7 @@ class SettingsScreen(Screen):
                         break
 
                     elif event.ui_object_id == "#feedback-button":
-                        webbrowser.open("https://github.com/zharia-eloby/maze_game/issues/new")
+                        webbrowser.open("https://docs.google.com/forms/d/e/1FAIpQLSchHIjMhzE13S0FutPxqLsUEoATb8NTOlnoPVz7oxOZajTKPA/viewform?usp=sf_link")
                         break
 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
