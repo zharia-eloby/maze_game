@@ -10,24 +10,19 @@ class CreditsScreen(Screen):
         self.links_column_width = self.settings.drawable_area.width - self.credits_column_width
         self.credits = {
             "development-credits": {
-                "text": "Development by",
+                "text": "Development",
                 "attribution": "Zharia Eloby",
-                "link": "https://space-spheremaps.itch.io/pixelart-starfields",
+                "link": "https://github.com/zharia-eloby",
             },
             "audio-credits": {
-                "text": "Audio from",
-                "attribution": "Somewhere",
-                "link": "https://space-spheremaps.itch.io/pixelart-starfields",
+                "text": "Audio",
+                "attribution": "'Lost in the Dessert' by jhaeka",
+                "link": "https://joshuuu.itch.io/short-loopable-background-music",
             },
             "background-credits": {
-                "text": "Background from",
+                "text": "Background",
                 "attribution": "Space Spheremaps",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
-            },
-            "icons-credits": {
-                "text": "Icons from",
-                "attribution": "Kenney.nl",
-                "link": "https://kenney.nl/assets/game-icons",
             }
         }
 
@@ -76,7 +71,7 @@ class CreditsScreen(Screen):
 
         html_text = ""
         for i in self.credits:
-            html_text += "<p>{text} <a href='{link}'>{attribution}</a></p><br>".format(
+            html_text += "<p>{text} - <a href='{link}'>{attribution}</a></p><br>".format(
                 text=self.credits[i]['text'], 
                 link=self.credits[i]['link'], 
                 attribution=self.credits[i]['attribution']

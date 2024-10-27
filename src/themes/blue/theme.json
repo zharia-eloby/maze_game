@@ -583,7 +583,10 @@
         "colours":
          {
              "dark_bg":"#00000000",
-             "normal_border": "#77bdfc"
+             "normal_border": "#77bdfc",
+             "link_text": "#77bdfc",
+             "link_hover": "#ffffff",
+             "link_selected": "#ffffff"
          },
          "misc":
          {
