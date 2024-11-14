@@ -4,6 +4,8 @@ class Settings:
     def __init__(self):
         self.settings_file = os.path.realpath("src/general/settings.json")
 
+        self.debug_mode = True
+
         self.screen_width = 650
         self.screen_height = 700
         self.line_spacing = 15

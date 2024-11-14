@@ -53,7 +53,7 @@ class LoadingScreen(Screen):
                     return
                 
                 elif event.type == POLL:
-                    if self.game_window.finished_loading and self.loading_progress_bar.percent_full == 1:
+                    if (self.game_window.finished_loading and self.loading_progress_bar.percent_full == 1) or (self.game_window.error):
                         done = True
                         pygame.time.set_timer(POLL, 0)
                         pygame.time.set_timer(ANIMATE, 0)

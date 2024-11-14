@@ -23,6 +23,7 @@ class GameWindow:
 
         self.loaded_percent = 0
         self.finished_loading = False
+        self.error = False
 
     def initialize(self):
         pygame.init()
