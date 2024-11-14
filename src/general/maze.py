@@ -1,4 +1,4 @@
-import math, random, pygame, pygame_gui
+import random, pygame, pygame_gui
 from pygame_gui.core import ObjectID
 
 class Maze:

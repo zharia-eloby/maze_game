@@ -1,4 +1,4 @@
-import pygame, sys, threading, traceback, os
+import pygame, sys, threading
 from general.settings import Settings
 from general.game_window import GameWindow
 from screens.loading_screen import LoadingScreen

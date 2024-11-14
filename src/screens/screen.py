@@ -1,4 +1,4 @@
-import pygame, pygame_gui, os
+import pygame, pygame_gui
 
 class Screen():
     def __init__(self, game_window, audio):
