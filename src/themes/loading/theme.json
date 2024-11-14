@@ -7,7 +7,7 @@
         },
         "font":
         {
-            "name": "daysone-regular",
+            "name": "roboto-regular",
             "size": "1",
             "regular_resource": 
             {
@@ -21,7 +21,7 @@
         "prototype": "#general-font",
         "font":
         {
-            "name": "daysone-regular",
+            "name": "roboto-regular",
             "size": 28
         }
     },
@@ -30,17 +30,6 @@
         "colours": 
         {
             "dark_bg": "#000000"
-        },
-        "misc":
-        {
-            "border_width": "0"
-        }
-    },
-    "@line":
-    {
-        "colours": 
-        {
-            "dark_bg": "#ffffff"
         },
         "misc":
         {
