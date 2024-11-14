@@ -114,3 +114,4 @@ dmypy.json
 pyvenv.cfg
 /Include
 /Scripts
+/logs

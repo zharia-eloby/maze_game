@@ -5,7 +5,7 @@ class ErrorHandler:
         if debug_mode: print(traceback.format_exc())
 
         # write the error to the erorr log file
-        folder_path = os.path.realpath("./src/logs")
+        folder_path = os.path.realpath("./logs")
         file_path = os.path.join(folder_path, "error_log.txt")
 
         if not os.path.exists(folder_path): 
