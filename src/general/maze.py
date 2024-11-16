@@ -38,6 +38,11 @@ class Maze:
     
     """
     use the backtracking algorithm to create a maze
+    each entry in the array will have one of the following values:
+    'w' - represents a wall between two cells
+    'c' - represents an unvisited cell
+    'v' - represents a visited cell
+    'o' - represents an open path between two cells
     """
     def create_maze(self):
         # start by creating a grid. walls will be erased later to create the maze
