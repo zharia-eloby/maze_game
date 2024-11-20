@@ -19,8 +19,8 @@ class PlayScreen(Screen):
         self.solution_drawer = None
         self.managers = None
 
-    def set_maze(self, rows, columns):
-        self.maze = MazeUI(rows, columns, self.settings)
+    def set_maze(self, dimensions):
+        self.maze = MazeUI(dimensions[0], dimensions[1], self.settings)
         self.maze.setup_maze_ui(self.maze_area_rect)
         self.solution_drawer = LineSolutionPath(self.maze)
         self.managers = [self.background_manager, self.maze.maze_background_manager, self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]
@@ -123,7 +123,7 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif event.ui_object_id == "#reset-button":
-                        self.maze.move_player((0, 0))
+                        self.maze.move_player("reset")
 
                     elif event.ui_object_id == "#show-solution-button":
                         give_up = self.show_solution_modal.show()
@@ -157,16 +157,16 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif (event.key == pygame.K_UP) or (event.key == pygame.K_w):
-                        self.maze.move_player((-1, 0))
+                        self.maze.move_player("up")
 
                     elif (event.key == pygame.K_DOWN) or (event.key == pygame.K_s):
-                        self.maze.move_player((1, 0))
+                        self.maze.move_player("down")
 
                     elif (event.key == pygame.K_LEFT) or (event.key == pygame.K_a):
-                        self.maze.move_player((0, -1))
+                        self.maze.move_player("left")
                     
                     elif (event.key == pygame.K_RIGHT) or (event.key == pygame.K_d):
-                        self.maze.move_player((0, 1))
+                        self.maze.move_player("right")
                     
                     if self.maze.player_position == self.maze.endpoint:
                         end_reached = True
@@ -185,7 +185,7 @@ class PlayScreen(Screen):
             restart = self.finished_modal.show()
             if restart:
                 self.reset()
-                self.set_maze(self.maze.rows, self.maze.columns)
+                self.set_maze(self.maze.dimensions)
                 next_page = self
             else:
                 self.reset()

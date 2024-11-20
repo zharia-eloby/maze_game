@@ -119,7 +119,7 @@ class BasicCustomSizeScreen(Screen):
 
         done = False
         next_page = None
-        new_rows = maze.rows
+        new_rows = maze.dimensions[0]
         self.redraw_elements(self.managers, 0)
         time_delta = math.ceil(time.time())
         while not done:
@@ -132,10 +132,11 @@ class BasicCustomSizeScreen(Screen):
                     pygame.display.update()
 
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    if maze.rows != new_rows:
+                    if maze.dimensions[0] != new_rows:
                         maze.reset()
-                        maze.rows = new_rows
-                        maze.columns = maze.rows
+                        maze.dimensions[0] = new_rows
+                        maze.columns = new_rows
+                        maze.dimensions = (new_rows, maze.columns)
                         maze.create_maze()
                         maze.set_ui_sizes(self.maze_area_rect)
                         maze.draw_maze()
@@ -148,7 +149,7 @@ class BasicCustomSizeScreen(Screen):
 
                     elif event.ui_object_id == "#start-button":
                         done = True
-                        self.game_window.play_screen.set_maze(maze.rows, maze.columns)
+                        self.game_window.play_screen.set_maze(maze.dimensions)
                         next_page = self.game_window.play_screen
                         break
                 
