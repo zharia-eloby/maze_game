@@ -393,7 +393,7 @@ class LineSolutionPath():
         if self.line_width_thickness < 2: self.line_width_thickness = 2
         if self.line_height_thickness < 2: self.line_height_thickness = 2
         
-    def draw(self):
+    def animate(self):
         if not self.current_line:
             current_cell = self.maze_ui.solution[self.index]
             next_cell = self.maze_ui.solution[self.index + 1]

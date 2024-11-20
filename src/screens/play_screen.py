@@ -135,7 +135,7 @@ class PlayScreen(Screen):
                             self.show_solution_button.disable()
 
                 elif event.type == SHOW_SOLUTION:
-                    complete = self.solution_drawer.draw()
+                    complete = self.solution_drawer.animate()
                     if complete:
                         solving = False
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
