@@ -111,7 +111,7 @@ class BasicCustomSizeScreen(Screen):
         self.audio.set_audio_display()
         self.dimensions_slider.set_current_value(0.5)
 
-        maze = MazeUI(self.default_rows, self.default_columns, self.settings)
+        maze = MazeUI((self.default_rows, self.default_columns), self.settings)
         maze.create_maze()
         maze.set_ui_sizes(self.maze_area_rect)
         maze.draw_maze()

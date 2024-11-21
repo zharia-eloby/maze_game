@@ -42,9 +42,9 @@ class Cell:
         return open_walls
         
 class Maze:
-    def __init__(self, rows, columns):
-        self.dimensions = (rows, columns)
-        self.maze = [ [ Cell(j, i) for i in range(columns) ] for j in range(rows) ]
+    def __init__(self, dimensions):
+        self.dimensions = dimensions
+        self.maze = [ [ Cell(j, i) for i in range(dimensions[1]) ] for j in range(dimensions[0]) ]
         self.startpoint = None
         self.endpoint = None
         self.solution = []
@@ -171,8 +171,8 @@ class Maze:
             current_cell.visited = True
 
 class MazeUI(Maze):
-    def __init__(self, rows, columns, settings):
-        super().__init__(rows, columns)
+    def __init__(self, dimensions, settings):
+        super().__init__(dimensions)
         self.settings = settings
         self.maze_width = None
         self.maze_height = None
@@ -377,7 +377,7 @@ class MazeUI(Maze):
         self.solution = []
         self.maze_manager.clear_and_reset()
 
-class LineSolutionPath():
+class LineSolutionUI():
     def __init__(self, maze_ui):
         self.maze_ui = maze_ui
         self.solution_manager = pygame_gui.UIManager((self.maze_ui.settings.screen_width, self.maze_ui.settings.screen_height), self.maze_ui.settings.theme_file)
@@ -465,8 +465,7 @@ class LineSolutionPath():
             self.current_line.set_dimensions((self.current_line_target_width, self.current_line_target_height))
             self.index += 1
             self.current_line = None
-            if self.index == len(self.maze_ui.solution) - 1:
-                return True
+            if self.index == len(self.maze_ui.solution) - 1: return True
             
         return False
 
