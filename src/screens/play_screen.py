@@ -1,7 +1,7 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from screens.screen import Screen
-from general.maze import MazeUI, LineSolutionPath
+from general.maze import MazeUI, LineSolutionUI
 from modals.pause_modal import PauseModal
 from modals.finished_modal import FinishedModal
 from modals.show_solution_modal import ShowSolutionModal
@@ -16,18 +16,18 @@ class PlayScreen(Screen):
         self.pause_modal = None
         self.finished_modal = None
         self.show_solution_modal = None
-        self.solution_drawer = None
+        self.solution_ui = None
         self.managers = None
 
     def set_maze(self, dimensions):
-        self.maze = MazeUI(dimensions[0], dimensions[1], self.settings)
+        self.maze = MazeUI(dimensions, self.settings)
         self.maze.setup_maze_ui(self.maze_area_rect)
-        self.solution_drawer = LineSolutionPath(self.maze)
-        self.managers = [self.background_manager, self.maze.maze_background_manager, self.solution_drawer.solution_manager, self.maze.maze_manager, self.ui_manager]
+        self.solution_ui = LineSolutionUI(self.maze)
+        self.managers = [self.background_manager, self.maze.maze_background_manager, self.solution_ui.solution_manager, self.maze.maze_manager, self.ui_manager]
     
     def reset(self):
         self.maze.reset()
-        self.solution_drawer.reset()
+        self.solution_ui.reset()
         self.show_solution_button.enable()
         self.managers.clear()
 
@@ -135,11 +135,10 @@ class PlayScreen(Screen):
                             self.show_solution_button.disable()
 
                 elif event.type == SHOW_SOLUTION:
-                    complete = self.solution_drawer.animate()
+                    complete = self.solution_ui.animate()
                     if complete:
                         solving = False
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
-                        self.show_solution_button.enable()
                         break
 
                 elif event.type == pygame.KEYDOWN:

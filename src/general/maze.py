@@ -206,13 +206,6 @@ class MazeUI(Maze):
         # set startpoint so the maze is horizontally centered
         self.topleft = (ui_area.centerx - round(self.maze_width/2), ui_area.bottom - self.maze_height)
     
-    def get_cell_ui_position(self, cell):
-        cell_topleft = (
-            self.topleft[0] + (cell.col_index * self.cell_width),
-            self.topleft[1] + (cell.row_index * self.cell_height)
-        )
-        return cell_topleft
-    
     """
     creates the ui elements to draw the walls of the maze
     to avoid duplicates, it will only draw the "right" and "down" walls unless the cell is in the 1st row and/or 1st column
