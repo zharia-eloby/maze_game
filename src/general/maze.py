@@ -392,7 +392,11 @@ class LineSolutionPath():
         self.line_height_thickness = round((self.maze_ui.cell_height - self.maze_ui.wall_thickness)*0.1)
         if self.line_width_thickness < 2: self.line_width_thickness = 2
         if self.line_height_thickness < 2: self.line_height_thickness = 2
-        
+
+    """
+    draw the solution path segment by segment
+    returns True when the entire solution path has been drawn
+    """  
     def animate(self):
         if not self.current_line:
             current_cell = self.maze_ui.solution[self.index]
@@ -406,7 +410,7 @@ class LineSolutionPath():
                     self.line_height_thickness
                 )
                 self.current_line_target_width = self.line_width_thickness
-                self.current_line_target_height = self.maze_ui.cell_height + self.line_width_thickness
+                self.current_line_target_height = self.maze_ui.cell_height + self.line_height_thickness
             elif self.current_direction == "up":
                 line_rect = pygame.Rect(
                     current_cell.rect.center[0],
@@ -415,7 +419,7 @@ class LineSolutionPath():
                     self.line_height_thickness
                 )
                 self.current_line_target_width = self.line_width_thickness
-                self.current_line_target_height = self.maze_ui.cell_height + self.line_width_thickness
+                self.current_line_target_height = self.maze_ui.cell_height + self.line_height_thickness
             elif self.current_direction == "left":
                 line_rect = pygame.Rect(
                     current_cell.rect.center[0],
@@ -423,7 +427,7 @@ class LineSolutionPath():
                     self.line_width_thickness,
                     self.line_height_thickness
                 )
-                self.current_line_target_width = self.maze_ui.cell_width + self.line_height_thickness
+                self.current_line_target_width = self.maze_ui.cell_width + self.line_width_thickness
                 self.current_line_target_height = self.line_height_thickness
             elif self.current_direction == "right":
                 line_rect = pygame.Rect(
@@ -432,7 +436,7 @@ class LineSolutionPath():
                     self.line_width_thickness,
                     self.line_height_thickness
                 )
-                self.current_line_target_width = self.maze_ui.cell_width + self.line_height_thickness
+                self.current_line_target_width = self.maze_ui.cell_width + self.line_width_thickness
                 self.current_line_target_height = self.line_height_thickness
             
             self.current_line = pygame_gui.elements.UIPanel(
