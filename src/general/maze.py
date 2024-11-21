@@ -101,7 +101,7 @@ class Maze:
 
         for i in available_directions:
             neighbor = self.get_neighbor_cell(cell, i)
-            if not neighbor.visited: unvisited_neighbors += [{ 'cell': neighbor, 'direction_from_cell_to_neighbor': i }]
+            if not neighbor.visited: unvisited_neighbors += [neighbor]
 
         return unvisited_neighbors
     
@@ -114,9 +114,16 @@ class Maze:
             self.endpoint = self.maze[random.randint(0, max_rows-1)][random.randint(0, max_cols-1)]
 
     def reset_visited(self):
-        for i in self.maze:
-            for j in i:
-                j.visited = False
+        for row in self.maze:
+            for cell in row:
+                cell.visited = False
+
+    def remove_wall_between_cells(self, cell, neighbor):
+        direction_to_neighbor = self.get_direction_from_cell_to_neighbor(cell, neighbor)
+        cell.walls[direction_to_neighbor] = False
+
+        direction_to_cell = self.get_opposite_direction(direction_to_neighbor)
+        neighbor.walls[direction_to_cell] = False
 
     def create_maze(self):
         stack = []
@@ -131,14 +138,9 @@ class Maze:
 
             if len(unvisited_neighbors) > 0:
                 neighbor = random.choice(unvisited_neighbors)
+                self.remove_wall_between_cells(current_cell, neighbor)
 
-                # remove the wall for that cell object and it's appropriate neighbor
-                direction = neighbor['direction_from_cell_to_neighbor']
-                current_cell.walls[direction] = False
-                neighbor['cell'].walls[self.get_opposite_direction(direction)] = False
-
-                # set current cell to neighbor and mark new cell as visited
-                current_cell = neighbor['cell']
+                current_cell = neighbor
                 current_cell.visited = True
                 stack.append(current_cell)
             else:
@@ -165,7 +167,7 @@ class Maze:
                 current_cell = self.solution[-1]
                 open_unvisited_neighbors = self.get_unvisited_neighbors(current_cell, True)
 
-            current_cell = random.choice(open_unvisited_neighbors)['cell']
+            current_cell = random.choice(open_unvisited_neighbors)
             
             self.solution += [current_cell]
             current_cell.visited = True
@@ -469,3 +471,4 @@ class LineSolutionUI():
         self.current_line_target_width = None
         self.current_line_target_height = None
         self.current_direction = None
+        
