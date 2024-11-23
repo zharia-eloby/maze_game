@@ -176,12 +176,10 @@ class MazeUI(Maze):
     def __init__(self, dimensions, settings):
         super().__init__(dimensions)
         self.settings = settings
-        self.maze_width = None
-        self.maze_height = None
         self.cell_width = None
         self.cell_height = None
         self.wall_thickness = None
-        self.topleft = None
+        self.maze_area_rect = pygame.Rect()
         self.player = None
         self.maze_background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
         self.maze_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
@@ -189,24 +187,31 @@ class MazeUI(Maze):
     """
     sets the measurements for the maze's ui elements (wall size, maze width/height, cell width/height)
     """
-    def set_ui_sizes(self, ui_area):
+    def set_ui_element_sizes(self, ui_area):
         if ui_area.width > ui_area.height:
-            self.maze_height = ui_area.height
+            maze_height = ui_area.height
         else:
-            self.maze_height = ui_area.width
-        self.maze_width = self.maze_height
+            maze_height = ui_area.width
+        maze_width = maze_height
         
-        self.cell_width = round(self.maze_width/self.dimensions[1])
-        self.cell_height = round(self.maze_height/self.dimensions[0])
+        self.cell_width = round(maze_width/self.dimensions[1])
+        self.cell_height = round(maze_height/self.dimensions[0])
 
-        self.wall_thickness = round(self.cell_width/10)
+        if self.cell_width < self.cell_height: 
+            self.wall_thickness = round(self.cell_width/10) 
+        else: 
+            round(self.cell_height/10)
         if self.wall_thickness < 2: self.wall_thickness = 2
 
         # maze width & height may be slightly different. reset them to the actual width & height
-        self.maze_width = self.cell_width * self.dimensions[1] + self.wall_thickness
-        self.maze_height = self.cell_height * self.dimensions[0] + self.wall_thickness
-        # set startpoint so the maze is horizontally centered
-        self.topleft = (ui_area.centerx - round(self.maze_width/2), ui_area.bottom - self.maze_height)
+        maze_width = self.cell_width * self.dimensions[1] + self.wall_thickness
+        maze_height = self.cell_height * self.dimensions[0] + self.wall_thickness
+
+        # set rect so the maze is horizontally centered and bottom-aligned
+        self.maze_area_rect.width = maze_width
+        self.maze_area_rect.height = maze_height
+        self.maze_area_rect.bottom = ui_area.bottom
+        self.maze_area_rect.centerx = ui_area.centerx
     
     """
     creates the ui elements to draw the walls of the maze
@@ -214,8 +219,8 @@ class MazeUI(Maze):
     """
     def draw_walls(self, cell):
         cell.rect = pygame.Rect(
-            self.topleft[0] + (cell.col_index * self.cell_width),
-            self.topleft[1] + (cell.row_index * self.cell_height),
+            self.maze_area_rect.left + (cell.col_index * self.cell_width),
+            self.maze_area_rect.top + (cell.row_index * self.cell_height),
             self.cell_width,
             self.cell_height
         )
@@ -278,7 +283,7 @@ class MazeUI(Maze):
         
     def draw_maze(self):
         pygame_gui.elements.UIPanel(
-            relative_rect=pygame.Rect(self.topleft[0], self.topleft[1], self.maze_width, self.maze_height),
+            relative_rect=pygame.Rect(self.maze_area_rect.left, self.maze_area_rect.top, self.maze_area_rect.width, self.maze_area_rect.height),
             manager=self.maze_background_manager,
             object_id=ObjectID(object_id="#maze-background")
         )
@@ -286,30 +291,11 @@ class MazeUI(Maze):
         for row in self.maze:
             for cell in row:
                 self.draw_walls(cell)
-
-    def move_player(self, direction):
-        if direction == "reset":
-            self.player.relative_rect.center = (
-                self.startpoint.rect.center[0] + self.wall_thickness/2,
-                self.startpoint.rect.center[1] + self.wall_thickness/2
-            )
-            self.player.set_relative_position(self.player.relative_rect.topleft)
-            self.player_position = self.startpoint
-            return
-        
-        if not self.player_position.walls[direction]: # if cell does not have a wall in the desired direction
-            neighbor_cell = self.get_neighbor_cell(self.player_position, direction)
-            self.player.relative_rect.center = (
-                neighbor_cell.rect.center[0] + self.wall_thickness/2,
-                neighbor_cell.rect.center[1] + self.wall_thickness/2
-            )
-            self.player.set_relative_position(self.player.relative_rect.topleft)
-            self.player_position = neighbor_cell
     
-    def setup_maze_ui(self, maze_area): 
+    def set_maze_ui(self, maze_area): 
         self.create_maze()
         self.player_position = self.startpoint
-        self.set_ui_sizes(maze_area)
+        self.set_ui_element_sizes(maze_area)
         self.draw_maze()
 
         start_rect = pygame.Rect(
@@ -356,17 +342,36 @@ class MazeUI(Maze):
             manager=self.maze_manager,
             object_id=ObjectID(object_id="#player")
         )
+
+    def move_player(self, direction):
+        if direction == "reset":
+            self.player.relative_rect.center = (
+                self.startpoint.rect.center[0] + self.wall_thickness/2,
+                self.startpoint.rect.center[1] + self.wall_thickness/2
+            )
+            self.player.set_relative_position(self.player.relative_rect.topleft)
+            self.player_position = self.startpoint
+            return
+        
+        if not self.player_position.walls[direction]: # if cell does not have a wall in the desired direction
+            neighbor_cell = self.get_neighbor_cell(self.player_position, direction)
+            self.player.relative_rect.center = (
+                neighbor_cell.rect.center[0] + self.wall_thickness/2,
+                neighbor_cell.rect.center[1] + self.wall_thickness/2
+            )
+            self.player.set_relative_position(self.player.relative_rect.topleft)
+            self.player_position = neighbor_cell
     
     def reset(self):
         self.maze = []
-        self.maze_width = None
-        self.maze_height = None
+        self.maze_area_rect.width = None
+        self.maze_area_rect.height = None
         self.cell_width = None
         self.cell_height = None
         self.wall_thickness = None
         self.startpoint = None
         self.endpoint = None
-        self.topleft = None
+        self.maze_area_rect = pygame.Rect()
         self.player = None
         self.player_position = None
         self.solution = []

@@ -113,7 +113,7 @@ class BasicCustomSizeScreen(Screen):
 
         maze = MazeUI((self.default_rows, self.default_columns), self.settings)
         maze.create_maze()
-        maze.set_ui_sizes(self.maze_area_rect)
+        maze.set_ui_element_sizes(self.maze_area_rect)
         maze.draw_maze()
         self.managers.insert(1, maze.maze_manager)
 
@@ -138,7 +138,7 @@ class BasicCustomSizeScreen(Screen):
                         maze.columns = new_rows
                         maze.dimensions = (new_rows, maze.columns)
                         maze.create_maze()
-                        maze.set_ui_sizes(self.maze_area_rect)
+                        maze.set_ui_element_sizes(self.maze_area_rect)
                         maze.draw_maze()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:

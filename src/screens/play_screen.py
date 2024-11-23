@@ -21,7 +21,7 @@ class PlayScreen(Screen):
 
     def set_maze(self, dimensions):
         self.maze = MazeUI(dimensions, self.settings)
-        self.maze.setup_maze_ui(self.maze_area_rect)
+        self.maze.set_maze_ui(self.maze_area_rect)
         self.solution_ui = LineSolutionUI(self.maze)
         self.managers = [self.background_manager, self.maze.maze_background_manager, self.solution_ui.solution_manager, self.maze.maze_manager, self.ui_manager]
     
