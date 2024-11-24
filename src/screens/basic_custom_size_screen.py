@@ -134,9 +134,7 @@ class BasicCustomSizeScreen(Screen):
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if maze.dimensions[0] != new_rows:
                         maze.reset()
-                        maze.dimensions[0] = new_rows
-                        maze.columns = new_rows
-                        maze.dimensions = (new_rows, maze.columns)
+                        maze.update_maze_size((new_rows, new_rows))
                         maze.create_maze()
                         maze.set_ui_element_sizes(self.maze_area_rect)
                         maze.draw_maze()

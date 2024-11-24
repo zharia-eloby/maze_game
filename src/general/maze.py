@@ -64,6 +64,10 @@ class Maze:
                     print(cell.walls)
                 print("]")
 
+    def update_maze_size(self, new_dimensions):
+        self.dimensions = new_dimensions
+        self.maze = [ [ Cell(j, i) for i in range(self.dimensions[1]) ] for j in range(self.dimensions[0]) ]
+
     def get_direction_from_cell_to_neighbor(self, from_cell, to_cell):
         if from_cell.row_index == to_cell.row_index:
             if from_cell.col_index > to_cell.col_index: return "left"
@@ -200,7 +204,7 @@ class MazeUI(Maze):
         if self.cell_width < self.cell_height: 
             self.wall_thickness = round(self.cell_width/10) 
         else: 
-            round(self.cell_height/10)
+            self.wall_thickness = round(self.cell_height/10)
         if self.wall_thickness < 2: self.wall_thickness = 2
 
         # maze width & height may be slightly different. reset them to the actual width & height
@@ -364,8 +368,6 @@ class MazeUI(Maze):
     
     def reset(self):
         self.maze = []
-        self.maze_area_rect.width = None
-        self.maze_area_rect.height = None
         self.cell_width = None
         self.cell_height = None
         self.wall_thickness = None
