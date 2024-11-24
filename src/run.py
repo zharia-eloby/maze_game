@@ -59,8 +59,8 @@ def run():
                     done = True
                 pygame.event.clear()
 
-            settings.user_settings['audio']['volume'] = pygame.mixer.music.get_volume()
-            settings.user_settings['audio']['on'] = pygame.mixer.music.get_busy()
+            settings.user_settings['audio']['volume'] = pygame.mixer.Channel(0).get_volume()
+            settings.user_settings['audio']['on'] = pygame.mixer.Channel(0).get_busy()
             settings.save_settings()
         except Exception as e:
             gw.error = True
