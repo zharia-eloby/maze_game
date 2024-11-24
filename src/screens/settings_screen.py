@@ -135,8 +135,8 @@ class SettingsScreen(Screen):
         )
 
     def show(self):
-        if pygame.mixer.music.get_busy():
-            self.volume_slider.set_current_value(pygame.mixer.music.get_volume())
+        if self.audio.background_music_channel.get_busy():
+            self.volume_slider.set_current_value(self.audio.background_music_channel.get_volume())
         else:
             self.volume_slider.set_current_value(0)
         self.redraw_elements(self.managers, 0)
