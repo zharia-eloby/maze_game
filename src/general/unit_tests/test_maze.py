@@ -21,6 +21,17 @@ def test_init():
         for cell in row:
             assert len(cell.get_blocked_walls()) == 4
 
+def test_update_maze_size():
+    maze = Maze((5, 5))
+
+    maze.update_maze_size((7, 9))
+    assert maze.dimensions == (7, 9)
+    assert len(maze.maze) == 7
+    for row in maze.maze:
+        assert len(row) == 9
+        for cell in row:
+            assert len(cell.get_blocked_walls()) == 4
+
 def test_remove_wall_between_cells():
     maze = Maze((10, 10))
 
