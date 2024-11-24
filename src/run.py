@@ -57,6 +57,7 @@ def run():
                 next_page = next_page.show()
                 if not next_page:
                     done = True
+                pygame.event.clear()
 
             settings.user_settings['audio']['volume'] = pygame.mixer.music.get_volume()
             settings.user_settings['audio']['on'] = pygame.mixer.music.get_busy()
@@ -64,6 +65,7 @@ def run():
         except Exception as e:
             gw.error = True
             ErrorHandler.handle_error(e, True, error_screen=error_screen)
+            pygame.event.clear()
             error_screen.show()
 
     pygame.quit()

@@ -81,11 +81,8 @@ class ErrorScreen(Screen):
 
     def show(self):
         pygame.mixer.music.stop()
-        
         time_delta = math.ceil(time.time())
-
         self.redraw_elements(self.managers, 0)
-        pygame.event.clear()
 
         done = False
         while not done:

@@ -90,6 +90,12 @@ class PlayScreen(Screen):
             self.settings.drawable_area.height - show_solution_rect.height - self.settings.line_spacing
         )
 
+    def show_modal(self, modal):
+        pygame.event.clear()
+        result = modal.show()
+        pygame.event.clear()
+        return result
+
     def show(self):
         self.audio.set_audio_display()
         SHOW_SOLUTION = pygame.USEREVENT + 1
@@ -113,7 +119,7 @@ class PlayScreen(Screen):
                     if event.ui_object_id == "#pause-button":
                         if solving: 
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
-                        resume = self.pause_modal.show()
+                        resume = self.show_modal(self.pause_modal)
                         if not resume:
                             self.reset()
                             done = True
@@ -145,9 +151,8 @@ class PlayScreen(Screen):
                     if event.key == pygame.K_ESCAPE:
                         if solving: 
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
-                        resume = self.pause_modal.show()
+                        resume = self.show_modal(self.pause_modal)
                         if not resume:
-                            pygame.event.clear()
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
@@ -181,7 +186,7 @@ class PlayScreen(Screen):
             self.redraw_elements(self.managers, time_delta)
             
         if end_reached:
-            restart = self.finished_modal.show()
+            restart = self.show_modal(self.finished_modal)
             if restart:
                 self.reset()
                 self.set_maze(self.maze.dimensions)
