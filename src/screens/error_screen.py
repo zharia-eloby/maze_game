@@ -75,7 +75,7 @@ class ErrorScreen(Screen):
         if (os.name == "nt"): # for windows devices
             help_text = "<a href=''>See full error log</a>"
         else:
-            help_text = "See error log at '{file_path}'".format(file_path=os.path.realpath("./src/logs/error_log.txt"))
+            help_text = "See error log at '{file_path}'".format(file_path=os.path.realpath("./logs/error_log.txt"))
         html_text = "<p>Error > {error_text}</p><p>{help_text}</p>".format(error_text=error_text, help_text=help_text)
         self.error_text_box.set_text(html_text)
 
@@ -95,7 +95,7 @@ class ErrorScreen(Screen):
                     pygame.display.update()
 
                 elif event.type == pygame_gui.UI_TEXT_BOX_LINK_CLICKED:
-                    os.startfile(os.path.realpath("./src/logs/error_log.txt"))
+                    os.startfile(os.path.realpath("./logs/error_log.txt"))
                 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#report-button":
