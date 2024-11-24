@@ -16,6 +16,22 @@ class Audio():
         if self.audio_on:
             pygame.mixer.Channel(0).play(self.background_music, loops=-1)
 
+    def set_volume(self, new_volume):
+        self.background_music_channel.set_volume(new_volume)
+        if new_volume > 0:
+            if not self.background_music_channel.get_busy():
+                self.background_music_channel.play(self.background_music, loops=-1)
+        else:
+            self.background_music_channel.fadeout(250)
+
+    def turn_on_audio(self):
+        if self.background_music_channel.get_volume() == 0:
+            self.background_music_channel.set_volume(1)
+        self.background_music_channel.play(self.background_music, loops=-1)
+
+    def turn_off_audio(self):
+        self.background_music_channel.fadeout(250)
+
 class AudioDisplay(Audio):
     def __init__(self, parent, settings):
         super().__init__(settings)
@@ -54,24 +70,15 @@ class AudioDisplay(Audio):
             self.audio_button.hide()
 
     def turn_on_audio(self):
-        if self.background_music_channel.get_volume() == 0:
-            self.background_music_channel.set_volume(1)
-        self.background_music_channel.play(self.background_music, loops=-1)
+        super().turn_on_audio()
         self.no_audio_button.hide()
         self.audio_button.show()
 
     def turn_off_audio(self):
-        self.background_music_channel.fadeout(250)
+        super().turn_off_audio()
         self.audio_button.hide()
         self.no_audio_button.show()
 
-    def set_volume(self, new_volume):
-        self.background_music_channel.set_volume(new_volume)
-        if new_volume > 0:
-            if not self.background_music_channel.get_busy():
-                self.background_music_channel.play(self.background_music, loops=-1)
-        else:
-            self.background_music_channel.fadeout(250)
-
     def get_audio_button_rect(self):
         return self.audio_button.get_relative_rect()
+    
