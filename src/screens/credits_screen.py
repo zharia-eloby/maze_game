@@ -14,15 +14,25 @@ class CreditsScreen(Screen):
                 "attribution": "Zharia Eloby",
                 "link": "https://github.com/zharia-eloby",
             },
-            "audio-credits": {
-                "text": "Audio",
-                "attribution": "'Lost in the Dessert' by jhaeka",
-                "link": "https://joshuuu.itch.io/short-loopable-background-music",
-            },
             "background-credits": {
                 "text": "Background",
                 "attribution": "Space Spheremaps",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
+            },
+            "audio-credits": {
+                "text": "Background Music",
+                "attribution": "jhaeka",
+                "link": "https://joshuuu.itch.io/short-loopable-background-music",
+            },
+            "button-sound-fx-credits": {
+                "text": "Button Sound FX",
+                "attribution": "kasse",
+                "link": "https://kasse.itch.io/ui-buttons-sound-effects-pack",
+            },
+            "other-sound-fx-credits": {
+                "text": "Other Sound FX",
+                "attribution": "Kronbits",
+                "link": "https://kronbits.itch.io/freesfx",
             }
         }
 
