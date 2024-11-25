@@ -67,7 +67,7 @@ class SettingsScreen(Screen):
             relative_rect=volume_slider_rect,
             manager=self.ui_manager,
             value_range=(0.0, 1.0),
-            start_value=self.audio.volume,
+            start_value=self.audio.background_volume,
             object_id=ObjectID(object_id="#volume-slider")
         )
         slider_minus_label_rect = pygame.Rect(
@@ -95,9 +95,59 @@ class SettingsScreen(Screen):
             object_id=ObjectID(class_id="@small-text")
         )
 
+        sound_fx_label_rect = pygame.Rect(
+            content_area_rect.left, 
+            volume_label_rect.bottom + self.settings.line_spacing,
+            volume_label_rect.width, 
+            self.settings.slider_height
+        )
+        pygame_gui.elements.UILabel(
+            relative_rect=sound_fx_label_rect, 
+            text="Sound FX",
+            manager=self.ui_manager,
+            object_id=ObjectID(class_id="@small-text")
+        )
+        sound_fx_slider_rect = pygame.Rect(
+            sound_fx_label_rect.right + slider_label_width,
+            sound_fx_label_rect.top,
+            content_area_rect.width - sound_fx_label_rect.width - slider_label_width*2,
+            self.settings.slider_height
+        )
+        self.sound_fx_slider = pygame_gui.elements.UIHorizontalSlider(
+            relative_rect=sound_fx_slider_rect,
+            manager=self.ui_manager,
+            value_range=(0.0, 1.0),
+            start_value=self.audio.background_volume,
+            object_id=ObjectID(object_id="#sound-fx-slider")
+        )
+        slider_minus_label_rect = pygame.Rect(
+            sound_fx_label_rect.right, 
+            sound_fx_label_rect.top,
+            slider_label_width, 
+            sound_fx_slider_rect.height
+        )
+        pygame_gui.elements.UILabel(
+            relative_rect=slider_minus_label_rect, 
+            text="-",
+            manager=self.ui_manager,
+            object_id=ObjectID(class_id="@small-text")
+        )
+        slider_add_label_rect = pygame.Rect(
+            sound_fx_slider_rect.right, 
+            sound_fx_slider_rect.top,
+            slider_label_width, 
+            sound_fx_slider_rect.height
+        )
+        pygame_gui.elements.UILabel(
+            relative_rect=slider_add_label_rect, 
+            text="+",
+            manager=self.ui_manager,
+            object_id=ObjectID(class_id="@small-text")
+        )
+        
         report_button_rect = pygame.Rect(
             content_area_rect.centerx - self.settings.wide_button_width/2,
-            volume_slider_rect.bottom + self.settings.line_spacing,
+            sound_fx_slider_rect.bottom + self.settings.line_spacing,
             self.settings.wide_button_width,
             self.settings.thin_wide_button_height
         )
@@ -134,11 +184,16 @@ class SettingsScreen(Screen):
             object_id=ObjectID(object_id="#exit-button", class_id="#ui-button")
         )
 
-    def show(self):
+    def set_slider_values(self):
         if self.audio.background_music_channel.get_busy():
             self.volume_slider.set_current_value(self.audio.background_music_channel.get_volume())
         else:
             self.volume_slider.set_current_value(0)
+
+        self.sound_fx_slider.set_current_value(self.audio.sound_fx_channel.get_volume())
+
+    def show(self):
+        self.set_slider_values()
         self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
@@ -174,7 +229,9 @@ class SettingsScreen(Screen):
 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                     if event.ui_object_id == "#volume-slider":
-                        self.audio.set_volume(self.volume_slider.get_current_value())
+                        self.audio.set_background_volume(self.volume_slider.get_current_value())
+                    elif event.ui_object_id == "#sound-fx-slider":
+                        self.audio.set_sound_fx_volume(self.sound_fx_slider.get_current_value())
 
                 self.ui_manager.process_events(event)
 

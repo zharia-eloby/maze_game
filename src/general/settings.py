@@ -38,12 +38,12 @@ class Settings:
         self.slider_height = 30
 
         self.theme_file_path = "src/themes/{theme}/theme.json"
-        self.audio_file_path = "src/themes/{theme}/audio/{audio}"
+        self.background_audio_file_path = "src/themes/{theme}/audio/{audio}"
         self.button_pressed_sound_effect_file_path = "src/themes/{theme}/audio/{sound_fx}"
         self.victory_sound_effect_file_path = "src/themes/{theme}/audio/{sound_fx}"
         self.background_image_file_path = "src/themes/{theme}/images/background/{background}"
         self.theme_file = None
-        self.audio_file = None
+        self.background_audio_file = None
         self.button_pressed_sound_effect_file = None
         self.victory_sound_effect_file = None
         self.background_image_file = None
@@ -56,8 +56,8 @@ class Settings:
         
         current_theme = self.user_settings['current_theme']
         self.theme_file = os.path.realpath(str.format(self.theme_file_path, theme=current_theme))
-        self.audio_file = os.path.realpath(str.format(
-            self.audio_file_path, 
+        self.background_audio_file = os.path.realpath(str.format(
+            self.background_audio_file_path, 
             theme=current_theme, 
             audio=self.user_settings['themes'][current_theme]["background_audio"]
         ))

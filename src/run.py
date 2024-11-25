@@ -61,6 +61,7 @@ def run():
 
             settings.user_settings["background_audio"]['volume'] = pygame.mixer.Channel(0).get_volume()
             settings.user_settings["background_audio"]['on'] = pygame.mixer.Channel(0).get_busy()
+            settings.user_settings["sound_fx"]['volume'] = pygame.mixer.Channel(1).get_volume()
             settings.save_settings()
         except Exception as e:
             gw.error = True
