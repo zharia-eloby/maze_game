@@ -10,9 +10,9 @@
     },
     "background_audio": {
         "on": true,
-        "volume": 1.0
+        "volume": 0.71875
     },
     "sound_fx": {
-        "volume": 1.0
+        "volume": 0.3828125
     }
 }

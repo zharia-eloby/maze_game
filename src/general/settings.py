@@ -2,7 +2,7 @@ import pygame, os, json
 
 class Settings:
     def __init__(self):
-        self.settings_file = os.path.realpath("src/general/settings.json")
+        self.user_settings_file = os.path.realpath("src/general/user_settings.json")
 
         self.debug_mode = False
 
@@ -51,7 +51,7 @@ class Settings:
         self.user_settings = None
 
     def load_settings(self):
-        file = open(self.settings_file, "r")
+        file = open(self.user_settings_file, "r")
         self.user_settings = json.loads(file.read())
         
         current_theme = self.user_settings['current_theme']
@@ -80,7 +80,7 @@ class Settings:
         file.close()
 
     def save_settings(self):
-        file = open(self.settings_file, "r+")
+        file = open(self.user_settings_file, "r+")
         file.seek(0)
         json.dump(self.user_settings, file, indent=4)
         file.truncate()
