@@ -145,22 +145,9 @@ class SettingsScreen(Screen):
             object_id=ObjectID(class_id="@small-text")
         )
         
-        report_button_rect = pygame.Rect(
-            content_area_rect.centerx - self.settings.wide_button_width/2,
-            sound_fx_slider_rect.bottom + self.settings.line_spacing,
-            self.settings.wide_button_width,
-            self.settings.thin_wide_button_height
-        )
-        pygame_gui.elements.UIButton(
-            relative_rect=report_button_rect,
-            text="Give Feedback",
-            manager=self.ui_manager,
-            object_id=ObjectID(object_id="#feedback-button", class_id="@thin-wide-button")
-        )
-
         credits_button_rect = pygame.Rect(
             content_area_rect.centerx - self.settings.wide_button_width/2,
-            report_button_rect.bottom + self.settings.line_spacing,
+            sound_fx_slider_rect.bottom + self.settings.line_spacing,
             self.settings.wide_button_width,
             self.settings.thin_wide_button_height
         )
@@ -171,9 +158,22 @@ class SettingsScreen(Screen):
             object_id=ObjectID(object_id="#credits-button", class_id="@thin-wide-button")
         )
 
-        exit_game_button_rect = pygame.Rect(
+        report_button_rect = pygame.Rect(
             content_area_rect.centerx - self.settings.wide_button_width/2,
             credits_button_rect.bottom + self.settings.line_spacing,
+            self.settings.wide_button_width,
+            self.settings.thin_wide_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=report_button_rect,
+            text="Give Feedback",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#feedback-button", class_id="@thin-wide-button")
+        )
+
+        exit_game_button_rect = pygame.Rect(
+            content_area_rect.centerx - self.settings.wide_button_width/2,
+            report_button_rect.bottom + self.settings.line_spacing,
             self.settings.wide_button_width,
             self.settings.thin_wide_button_height
         )
