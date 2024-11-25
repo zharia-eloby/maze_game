@@ -39,7 +39,7 @@ class Audio():
         if effect == "button_pressed": self.sound_fx_channel.play(self.button_pressed_sound_effect)
         elif effect == "victory": self.sound_fx_channel.play(self.victory_sound_effect)
 
-class AudioDisplay(Audio):
+class AudioUI(Audio):
     def __init__(self, parent, settings):
         super().__init__(settings)
         self.audio_button = None
