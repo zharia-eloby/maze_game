@@ -16,7 +16,7 @@ class Screen():
             self.settings.screen_height
         )
         
-        img_file = self.settings.background_file
+        img_file = self.settings.background_image_file
         pygame_gui.elements.UIImage(
             relative_rect=background_rect,
             image_surface=pygame.image.load(img_file).convert(),

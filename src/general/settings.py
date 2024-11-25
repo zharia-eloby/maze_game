@@ -41,12 +41,12 @@ class Settings:
         self.audio_file_path = "src/themes/{theme}/audio/{audio}"
         self.button_pressed_sound_effect_file_path = "src/themes/{theme}/audio/{sound_fx}"
         self.victory_sound_effect_file_path = "src/themes/{theme}/audio/{sound_fx}"
-        self.background_file_path = "src/themes/{theme}/images/background/{background}"
+        self.background_image_file_path = "src/themes/{theme}/images/background/{background}"
         self.theme_file = None
         self.audio_file = None
         self.button_pressed_sound_effect_file = None
         self.victory_sound_effect_file = None
-        self.background_file = None
+        self.background_image_file = None
         self.user_settings = None
 
     def load_settings(self):
@@ -70,8 +70,8 @@ class Settings:
             theme=current_theme,
             sound_fx=self.user_settings['themes'][current_theme]['victory_sound_effect']
         ))
-        self.background_file = os.path.realpath(str.format(
-            self.background_file_path, 
+        self.background_image_file = os.path.realpath(str.format(
+            self.background_image_file_path, 
             theme=current_theme, 
             background=self.user_settings['themes'][current_theme]['background']
         ))
