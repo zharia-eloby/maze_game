@@ -53,7 +53,7 @@ class GameWindow:
         self.loaded_percent = 0.77
 
     def resize_image(self, image_id, width, height, normal=True, hovered=True, disabled=False):
-        file = open(self.settings.theme_file, "r")
+        file = open(self.settings.theme.theme_file, "r")
         contents = json.loads(file.read())
         file.close()
         images_folder = os.path.realpath("src/themes/")

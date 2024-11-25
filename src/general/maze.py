@@ -185,8 +185,8 @@ class MazeUI(Maze):
         self.wall_thickness = None
         self.maze_area_rect = pygame.Rect()
         self.player = None
-        self.maze_background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
-        self.maze_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
+        self.maze_background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme.theme_file)
+        self.maze_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme.theme_file)
 
     """
     sets the measurements for the maze's ui elements (wall size, maze width/height, cell width/height)
@@ -382,7 +382,7 @@ class MazeUI(Maze):
 class LineSolutionUI():
     def __init__(self, maze_ui):
         self.maze_ui = maze_ui
-        self.solution_manager = pygame_gui.UIManager((self.maze_ui.settings.screen_width, self.maze_ui.settings.screen_height), self.maze_ui.settings.theme_file)
+        self.solution_manager = pygame_gui.UIManager((self.maze_ui.settings.screen_width, self.maze_ui.settings.screen_height), self.maze_ui.settings.theme.theme_file)
         self.increment = 1
         self.index = 0
         self.current_line = None

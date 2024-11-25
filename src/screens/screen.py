@@ -5,8 +5,8 @@ class Screen():
         self.audio = audio
         self.settings = game_window.settings
         self.game_window = game_window
-        self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
-        self.background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme_file)
+        self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme.theme_file)
+        self.background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme.theme_file)
     
     def set_background(self):
         background_rect = pygame.Rect(
@@ -16,7 +16,7 @@ class Screen():
             self.settings.screen_height
         )
         
-        img_file = self.settings.background_image_file
+        img_file = self.settings.theme.background_image_file
         pygame_gui.elements.UIImage(
             relative_rect=background_rect,
             image_surface=pygame.image.load(img_file).convert(),

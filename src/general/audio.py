@@ -5,14 +5,14 @@ class Audio():
     def __init__(self, settings):
         self.background_volume = settings.user_settings["background_audio"]['volume']
         self.background_audio_on = settings.user_settings["background_audio"]['on']
-        self.background_audio_file = settings.background_audio_file
+        self.background_audio_file = settings.theme.background_audio_file
         self.background_music_channel = pygame.mixer.Channel(0)
-        self.background_music = pygame.mixer.Sound(self.background_audio_file)
+        self.background_music = pygame.mixer.Sound(settings.theme.background_audio_file)
 
         self.sound_fx_volume = settings.user_settings["sound_fx"]['volume']
         self.sound_fx_channel = pygame.mixer.Channel(1)
-        self.button_pressed_sound_effect = pygame.mixer.Sound(settings.button_pressed_sound_effect_file)
-        self.victory_sound_effect = pygame.mixer.Sound(settings.victory_sound_effect_file)
+        self.button_pressed_sound_effect = pygame.mixer.Sound(settings.theme.button_pressed_sound_effect_file)
+        self.victory_sound_effect = pygame.mixer.Sound(settings.theme.victory_sound_effect_file)
     
     def initialize(self):
         pygame.mixer.init()
