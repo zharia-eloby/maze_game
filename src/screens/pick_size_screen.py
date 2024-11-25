@@ -101,6 +101,7 @@ class PickSizeScreen(Screen):
                     pygame.display.update()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    self.audio.play_sound_effect()
                     if event.ui_object_id == "#easy-button":
                         done = True
                         rows = 10

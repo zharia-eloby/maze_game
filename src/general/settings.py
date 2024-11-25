@@ -39,9 +39,13 @@ class Settings:
 
         self.theme_file_path = "src/themes/{theme}/theme.json"
         self.audio_file_path = "src/themes/{theme}/audio/{audio}"
+        self.button_pressed_sound_effect_file_path = "src/themes/{theme}/audio/{sound_fx}"
+        self.victory_sound_effect_file_path = "src/themes/{theme}/audio/{sound_fx}"
         self.background_file_path = "src/themes/{theme}/images/background/{background}"
         self.theme_file = None
         self.audio_file = None
+        self.button_pressed_sound_effect_file = None
+        self.victory_sound_effect_file = None
         self.background_file = None
         self.user_settings = None
 
@@ -55,6 +59,16 @@ class Settings:
             self.audio_file_path, 
             theme=current_theme, 
             audio=self.user_settings['themes'][current_theme]['audio']
+        ))
+        self.button_pressed_sound_effect_file = os.path.realpath(str.format(
+            self.button_pressed_sound_effect_file_path, 
+            theme=current_theme, 
+            sound_fx=self.user_settings['themes'][current_theme]['button_pressed_sound_effect']
+        ))
+        self.victory_sound_effect_file = os.path.realpath(str.format(
+            self.victory_sound_effect_file_path, 
+            theme=current_theme,
+            sound_fx=self.user_settings['themes'][current_theme]['victory_sound_effect']
         ))
         self.background_file = os.path.realpath(str.format(
             self.background_file_path, 

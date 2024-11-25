@@ -79,6 +79,7 @@ class FinishedModal(Modal):
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    self.audio.play_sound_effect()
                     if event.ui_object_id == "#exit-button":
                         done = True
                     elif event.ui_object_id == "#play-again":

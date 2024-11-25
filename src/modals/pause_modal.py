@@ -79,6 +79,7 @@ class PauseModal(Modal):
                     sys.exit()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
+                    self.audio.play_sound_effect()
                     if event.ui_object_id == "#exit-button":
                         paused = False
                         resume = False

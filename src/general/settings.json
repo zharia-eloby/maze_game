@@ -3,6 +3,8 @@
     "themes": {
         "blue": {
             "audio": "Lost in the Dessert.wav",
+            "button_pressed_sound_effect": "Modern15.wav",
+            "victory_sound_effect": "Retro Event Acute 08.wav",
             "background": "pixelart_starfield.png"
         }
     },

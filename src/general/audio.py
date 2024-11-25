@@ -8,6 +8,9 @@ class Audio():
         self.audio_file = settings.audio_file
         self.background_music_channel = pygame.mixer.Channel(0)
         self.background_music = pygame.mixer.Sound(self.audio_file)
+        self.sound_fx_channel = pygame.mixer.Channel(1)
+        self.button_pressed_sound_effect = pygame.mixer.Sound(settings.button_pressed_sound_effect_file)
+        self.victory_sound_effect = pygame.mixer.Sound(settings.victory_sound_effect_file)
     
     def initialize(self):
         pygame.mixer.init()
@@ -31,6 +34,10 @@ class Audio():
 
     def turn_off_audio(self):
         self.background_music_channel.fadeout(250)
+
+    def play_sound_effect(self, effect="button_pressed"):
+        if effect == "button_pressed": self.sound_fx_channel.play(self.button_pressed_sound_effect)
+        elif effect == "victory": self.sound_fx_channel.play(self.victory_sound_effect)
 
 class AudioDisplay(Audio):
     def __init__(self, parent, settings):

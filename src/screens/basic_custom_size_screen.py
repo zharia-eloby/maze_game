@@ -140,6 +140,7 @@ class BasicCustomSizeScreen(Screen):
                         maze.draw_maze()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    if "#sliding_button" not in event.ui_object_id: self.audio.play_sound_effect()
                     if event.ui_object_id == "#back-button":
                         done = True
                         next_page = self.game_window.pick_size_screen

@@ -63,6 +63,7 @@ class TitleScreen(Screen):
                     done = True
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    self.audio.play_sound_effect()
                     if event.ui_object_id == "#play-button":
                         done = True
                         next_page = self.game_window.pick_size_screen

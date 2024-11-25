@@ -35,13 +35,13 @@ class PlayScreen(Screen):
         self.set_background()
         self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
-        self.pause_modal = PauseModal(self.settings)
+        self.pause_modal = PauseModal(self.settings, self.audio)
         self.pause_modal.setup()
 
-        self.finished_modal = FinishedModal(self.settings)
+        self.finished_modal = FinishedModal(self.settings, self.audio)
         self.finished_modal.setup()
 
-        self.show_solution_modal = ShowSolutionModal(self.settings)
+        self.show_solution_modal = ShowSolutionModal(self.settings, self.audio)
         self.show_solution_modal.setup()
         
         pause_button_rect = pygame.Rect(
@@ -116,6 +116,7 @@ class PlayScreen(Screen):
                     pygame.display.update()
 
                 elif (event.type == pygame_gui.UI_BUTTON_PRESSED) and (len(event.__dict__) > 0):
+                    self.audio.play_sound_effect()
                     if event.ui_object_id == "#pause-button":
                         if solving: 
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
@@ -173,6 +174,7 @@ class PlayScreen(Screen):
                         self.maze.move_player("right")
                     
                     if self.maze.player_position == self.maze.endpoint:
+                        self.audio.play_sound_effect(effect="victory")
                         end_reached = True
                         done = True
                         if solving:
