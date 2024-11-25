@@ -3,8 +3,8 @@ from pygame_gui.core import ObjectID
 
 class Audio():
     def __init__(self, settings):
-        self.volume = settings.user_settings['audio']['volume']
-        self.audio_on = settings.user_settings['audio']['on']
+        self.volume = settings.user_settings["background_audio"]['volume']
+        self.audio_on = settings.user_settings["background_audio"]['on']
         self.audio_file = settings.audio_file
         self.background_music_channel = pygame.mixer.Channel(0)
         self.background_music = pygame.mixer.Sound(self.audio_file)

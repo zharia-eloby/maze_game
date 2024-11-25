@@ -2,14 +2,14 @@
     "current_theme": "blue",
     "themes": {
         "blue": {
-            "audio": "Lost in the Dessert.wav",
+            "background_audio": "Lost in the Dessert.wav",
             "button_pressed_sound_effect": "Modern15.wav",
             "victory_sound_effect": "Retro Event Acute 08.wav",
             "background": "pixelart_starfield.png"
         }
     },
-    "audio": {
-        "on": true,
+    "background_audio": {
+        "on": false,
         "volume": 1.0
     }
 }

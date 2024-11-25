@@ -47,6 +47,7 @@ class Settings:
         self.button_pressed_sound_effect_file = None
         self.victory_sound_effect_file = None
         self.background_image_file = None
+        
         self.user_settings = None
 
     def load_settings(self):
@@ -58,7 +59,7 @@ class Settings:
         self.audio_file = os.path.realpath(str.format(
             self.audio_file_path, 
             theme=current_theme, 
-            audio=self.user_settings['themes'][current_theme]['audio']
+            audio=self.user_settings['themes'][current_theme]["background_audio"]
         ))
         self.button_pressed_sound_effect_file = os.path.realpath(str.format(
             self.button_pressed_sound_effect_file_path, 
