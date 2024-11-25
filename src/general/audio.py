@@ -27,12 +27,12 @@ class Audio():
         else:
             self.background_music_channel.fadeout(250)
 
-    def turn_on_audio(self):
+    def turn_on_background_audio(self):
         if self.background_music_channel.get_volume() == 0:
             self.background_music_channel.set_volume(1)
         self.background_music_channel.play(self.background_music, loops=-1)
 
-    def turn_off_audio(self):
+    def turn_off_background_audio(self):
         self.background_music_channel.fadeout(250)
 
     def play_sound_effect(self, effect="button_pressed"):
@@ -65,8 +65,8 @@ class AudioUI(Audio):
             manager=ui_manager,
             object_id=ObjectID(object_id="#no-audio-button")
         )
-        self.audio_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.turn_off_audio)
-        self.no_audio_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.turn_on_audio)
+        self.audio_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.turn_off_background_audio)
+        self.no_audio_button.bind(pygame_gui.UI_BUTTON_PRESSED, self.turn_on_background_audio)
 
     def set_audio_display(self):
         if self.background_music_channel.get_busy():
@@ -76,13 +76,13 @@ class AudioUI(Audio):
             self.no_audio_button.show()
             self.audio_button.hide()
 
-    def turn_on_audio(self):
-        super().turn_on_audio()
+    def turn_on_background_audio(self):
+        super().turn_on_background_audio()
         self.no_audio_button.hide()
         self.audio_button.show()
 
-    def turn_off_audio(self):
-        super().turn_off_audio()
+    def turn_off_background_audio(self):
+        super().turn_off_background_audio()
         self.audio_button.hide()
         self.no_audio_button.show()
 
