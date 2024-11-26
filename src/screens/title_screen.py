@@ -9,10 +9,9 @@ class TitleScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
         settings_button_rect = pygame.Rect(
-            self.settings.drawable_area.left,
+            self.settings.drawable_area.right - self.settings.small_sq_button_width,
             self.settings.drawable_area.top,
             self.settings.small_sq_button_width,
             self.settings.small_sq_button_height
@@ -51,7 +50,6 @@ class TitleScreen(Screen):
         )
 
     def show(self):
-        self.audio.set_audio_display()
         self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
