@@ -19,6 +19,11 @@ class CreditsScreen(Screen):
                 "attribution": "Space Spheremaps",
                 "link": "https://space-spheremaps.itch.io/pixelart-starfields",
             },
+            "ui-buttons-credits": {
+                "text": "UI Buttons",
+                "attribution": "Prinbles",
+                "link": "https://prinbles.itch.io/candy-buttons-pack-i",
+            },
             "audio-credits": {
                 "text": "Background Music",
                 "attribution": "jhaeka",
