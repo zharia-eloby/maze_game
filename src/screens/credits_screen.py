@@ -43,7 +43,6 @@ class CreditsScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
         back_button_rect = pygame.Rect(
             self.settings.drawable_area.left,
@@ -106,12 +105,10 @@ class CreditsScreen(Screen):
         )
 
     def show(self):
-        self.audio.set_audio_display()
         self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
         done = False
-        next_page = None
         while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -121,7 +118,6 @@ class CreditsScreen(Screen):
                     self.audio.play_sound_effect()
                     if event.ui_object_id == "#back-button":
                         done = True
-                        next_page = self.game_window.settings_screen
                         break
                 elif event.type == pygame_gui.UI_TEXT_BOX_LINK_CLICKED:
                     webbrowser.open(event.link_target)
@@ -133,4 +129,4 @@ class CreditsScreen(Screen):
 
             time_delta = math.ceil(time.time()) - time_delta
             self.redraw_elements(self.managers, time_delta)
-        return next_page
+        

@@ -69,14 +69,16 @@ class TitleScreen(Screen):
                         next_page = self.game_window.pick_size_screen
 
                     elif event.ui_object_id == "#settings-cog-button":
-                        done = True
-                        next_page = self.game_window.settings_screen
+                        next_action = self.game_window.settings_screen.show()
+                        if next_action == "exit_game":
+                            done = True
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
                 self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements(self.managers, time_delta)
+            if not done:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements(self.managers, time_delta)
         return next_page

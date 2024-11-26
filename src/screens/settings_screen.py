@@ -198,11 +198,12 @@ class SettingsScreen(Screen):
 
         time_delta = math.ceil(time.time())
         done = False
-        next_page = None
+        action = "back"
         while not done:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
+                    action = "exit_game"
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
@@ -211,16 +212,14 @@ class SettingsScreen(Screen):
                     if "#sliding_button" not in event.ui_object_id: self.audio.play_sound_effect()
                     if event.ui_object_id == "#back-button":
                         done = True
-                        next_page = self.game_window.title_screen
                         break
 
                     elif event.ui_object_id == "#credits-button":
-                        done = True
-                        next_page = self.game_window.credits_screen
-                        break
+                        self.game_window.credits_screen.show()
                     
                     elif event.ui_object_id == "#exit-button":
                         done = True
+                        action = "exit_game"
                         break
 
                     elif event.ui_object_id == "#feedback-button":
@@ -237,4 +236,4 @@ class SettingsScreen(Screen):
 
             time_delta = math.ceil(time.time()) - time_delta
             self.redraw_elements(self.managers, time_delta)
-        return next_page
+        return action
