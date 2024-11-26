@@ -33,19 +33,18 @@ class PlayScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager, self.settings)
 
-        self.pause_modal = PauseModal(self.settings, self.audio)
+        self.pause_modal = PauseModal(self.settings, self.game_window, self.audio)
         self.pause_modal.setup()
 
-        self.finished_modal = FinishedModal(self.settings, self.audio)
+        self.finished_modal = FinishedModal(self.settings, self.game_window, self.audio)
         self.finished_modal.setup()
 
-        self.show_solution_modal = ShowSolutionModal(self.settings, self.audio)
+        self.show_solution_modal = ShowSolutionModal(self.settings, self.game_window, self.audio)
         self.show_solution_modal.setup()
         
         pause_button_rect = pygame.Rect(
-            self.audio.get_audio_button_rect().left - self.settings.small_sq_button_width - 20,
+            self.settings.drawable_area.right - self.settings.small_sq_button_width,
             self.settings.drawable_area.top,
             self.settings.small_sq_button_width,
             self.settings.small_sq_button_height
@@ -58,7 +57,7 @@ class PlayScreen(Screen):
         )
         
         reset_button_rect = pygame.Rect(
-            pause_button_rect.left - self.settings.small_sq_button_width - 20,
+            pause_button_rect.left - self.settings.small_sq_button_width - self.settings.line_spacing,
             self.settings.drawable_area.top,
             self.settings.small_sq_button_width,
             self.settings.small_sq_button_height
@@ -92,12 +91,16 @@ class PlayScreen(Screen):
 
     def show_modal(self, modal):
         pygame.event.clear()
-        result = modal.show()
+
+        if modal == self.pause_modal:
+            result = modal.show(self.managers)
+        else:
+            result = modal.show()
+
         pygame.event.clear()
         return result
 
     def show(self):
-        self.audio.set_audio_display()
         SHOW_SOLUTION = pygame.USEREVENT + 1
 
         solution_speed = 10
@@ -120,11 +123,14 @@ class PlayScreen(Screen):
                     if event.ui_object_id == "#pause-button":
                         if solving: 
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
-                        resume = self.show_modal(self.pause_modal)
-                        if not resume:
+                        next_action = self.show_modal(self.pause_modal)
+                        if next_action == "home":
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
+                            break
+                        elif next_action == "exit_game":
+                            done = True
                             break
                         elif solving:
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
@@ -184,8 +190,9 @@ class PlayScreen(Screen):
 
                 self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements(self.managers, time_delta)
+            if not done:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements(self.managers, time_delta)
             
         if end_reached:
             restart = self.show_modal(self.finished_modal)

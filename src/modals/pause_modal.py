@@ -28,30 +28,43 @@ class PauseModal(Modal):
             object_id=ObjectID(object_id="#modal-background")
         )
 
-        exit_button_rect = pygame.Rect(
-            background_rect.centerx - self.settings.modal_wide_button_width/2,
-            background_rect.bottom - self.settings.modal_margin - self.settings.modal_wide_button_height,
-            self.settings.modal_wide_button_width,
-            self.settings.modal_wide_button_height
-        )
-        pygame_gui.elements.UIButton(
-            relative_rect=exit_button_rect,
-            text="Back To Home",
-            manager=self.ui_manager,
-            object_id=ObjectID(object_id="#exit-button", class_id="@modal-wide-button")
-        )
-        
         resume_button_rect = pygame.Rect(
-            background_rect.centerx - self.settings.modal_wide_button_width/2,
-            exit_button_rect.top - self.settings.line_spacing - self.settings.modal_wide_button_height,
-            self.settings.modal_wide_button_width,
-            self.settings.modal_wide_button_height
+            background_rect.centerx - self.settings.small_sq_button_width/2,
+            background_rect.bottom - self.settings.modal_margin - self.settings.small_sq_button_height,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
         )
         pygame_gui.elements.UIButton(
             relative_rect=resume_button_rect,
-            text="Resume",
+            text="",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#resume-button", class_id="@modal-wide-button")
+            object_id=ObjectID(object_id="#play-square-button")
+        )
+
+        exit_button_rect = pygame.Rect(
+            resume_button_rect.left - self.settings.line_spacing - self.settings.small_sq_button_height,
+            background_rect.bottom - self.settings.modal_margin - self.settings.small_sq_button_height,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=exit_button_rect,
+            text="",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#home-button")
+        )
+
+        settings_button_rect = pygame.Rect(
+            resume_button_rect.right + self.settings.line_spacing,
+            background_rect.bottom - self.settings.modal_margin - self.settings.small_sq_button_height,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=settings_button_rect,
+            text="",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#settings-cog-button")
         )
 
         paused_text_rect = pygame.Rect(
@@ -67,9 +80,9 @@ class PauseModal(Modal):
             object_id=ObjectID(class_id="@medium-text")
         )
 
-    def show(self):
+    def show(self, parent_managers):
         paused = True
-        resume = True
+        next_action = "resume"
         time_delta = math.ceil(time.time())
         self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
         while paused:
@@ -80,15 +93,24 @@ class PauseModal(Modal):
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
                     self.audio.play_sound_effect()
-                    if event.ui_object_id == "#exit-button":
+                    if event.ui_object_id == "#home-button":
                         paused = False
-                        resume = False
+                        next_action = "home"
 
-                    elif event.ui_object_id == "#resume-button":
+                    elif event.ui_object_id == "#play-square-button":
                         paused = False
+
+                    elif event.ui_object_id == "#settings-cog-button":
+                        settings_next_action = self.game_window.settings_screen.show()
+                        if settings_next_action == "exit_game": 
+                            paused = False
+                            next_action = "exit_game"
+                        else:
+                            self.redraw_elements(parent_managers + [self.overlay_manager], time_delta)
 
                 self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
-        return resume
+            if paused:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
+        return next_action
