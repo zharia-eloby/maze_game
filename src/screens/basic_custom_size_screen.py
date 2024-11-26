@@ -13,7 +13,8 @@ class BasicCustomSizeScreen(Screen):
         self.col_max = 35
         self.default_rows = int((self.row_max-self.row_min)/2) + self.row_min
         self.default_columns = self.default_rows
-        self.dimensions = None
+        self.preview_text_str = "Preview ({rows} x {columns})"
+        self.preview_text = None
         self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
@@ -92,9 +93,9 @@ class BasicCustomSizeScreen(Screen):
             self.settings.drawable_area.width,
             self.settings.small_text_height
         )
-        pygame_gui.elements.UILabel(
+        self.preview_text = pygame_gui.elements.UILabel(
             relative_rect=preview_text_label_rect,
-            text="Preview",
+            text=self.preview_text_str.format(rows=self.default_rows, columns=self.default_columns),
             manager=self.ui_manager,
             object_id=ObjectID(class_id="@small-text")
         )
@@ -144,6 +145,7 @@ class BasicCustomSizeScreen(Screen):
 
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if maze.dimensions[0] != new_rows:
+                        self.preview_text.set_text(self.preview_text_str.format(rows=new_rows, columns=new_rows))
                         maze.reset()
                         maze.update_maze_size((new_rows, new_rows))
                         maze.create_maze()
@@ -179,4 +181,5 @@ class BasicCustomSizeScreen(Screen):
         
         del maze
         self.managers = [self.background_manager, self.ui_manager]
+        self.preview_text.set_text(self.preview_text_str.format(rows=self.default_rows, columns=self.default_columns))
         return next_page
