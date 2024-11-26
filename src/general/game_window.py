@@ -29,7 +29,7 @@ class GameWindow:
         pygame.init()
         pygame.font.init()
         pygame.display.set_mode([self.settings.screen_width, self.settings.screen_height])
-        if self.resize: self.resize_images(self.settings)
+        if self.resize: self.resize_images()
         pygame.display.set_caption('Maze')
 
     def initialize_screens(self, audio):
@@ -73,14 +73,14 @@ class GameWindow:
             img.thumbnail((width, height))
             img.save(os.path.join(images_folder, image_file))
 
-    def resize_images(self):
+    def resize_images(self, all_images=False):
         # background image
-        img_file = self.settings.background_image_file
+        img_file = self.settings.theme.background_image_file
         img = Image.open(img_file)
         img = img.resize((self.settings.screen_width, self.settings.screen_height))
         img.save(img_file)
 
-        # all other images
+        # all images
         images = [
             {
                 'id': '#settings-cog-button', 
@@ -88,7 +88,8 @@ class GameWindow:
                 'height': self.settings.small_sq_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '#audio-button', 
@@ -96,7 +97,8 @@ class GameWindow:
                 'height': self.settings.small_sq_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '#no-audio-button', 
@@ -104,7 +106,8 @@ class GameWindow:
                 'height': self.settings.small_sq_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '#play-button', 
@@ -112,7 +115,8 @@ class GameWindow:
                 'height': self.settings.large_rect_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '#back-button', 
@@ -120,7 +124,8 @@ class GameWindow:
                 'height': self.settings.small_sq_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '@thick-wide-button',
@@ -128,7 +133,8 @@ class GameWindow:
                 'height': self.settings.thick_wide_button_height,
                 'normal': True,
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '@thin-wide-button',
@@ -136,7 +142,8 @@ class GameWindow:
                 'height': self.settings.thin_wide_button_height,
                 'normal': True,
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '#show-solution-button',
@@ -144,7 +151,8 @@ class GameWindow:
                 'height': self.settings.small_rect_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': True
+                'disabled': True,
+                'must_resize': False
             },
             {
                 'id': '#reset-button', 
@@ -152,7 +160,8 @@ class GameWindow:
                 'height': self.settings.small_sq_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '#pause-button', 
@@ -160,7 +169,8 @@ class GameWindow:
                 'height': self.settings.small_sq_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
             },
             {
                 'id': '@modal-wide-button',
@@ -168,8 +178,28 @@ class GameWindow:
                 'height': self.settings.modal_wide_button_height,
                 'normal': True, 
                 'hovered': True,
-                'disabled': False
+                'disabled': False,
+                'must_resize': False
+            },
+            {
+                'id': '#home-button', 
+                'width': self.settings.small_sq_button_width,
+                'height': self.settings.small_sq_button_height,
+                'normal': True, 
+                'hovered': True,
+                'disabled': False,
+                'must_resize': False
+            },
+            {
+                'id': '#play-square-button', 
+                'width': self.settings.small_sq_button_width,
+                'height': self.settings.small_sq_button_height,
+                'normal': True, 
+                'hovered': True,
+                'disabled': False,
+                'must_resize': False
             }
         ]
         for i in images:
-            self.resize_image(i['id'], i['width'], i['height'], i['normal'], i['hovered'], i['disabled'])
+            if all_images or i['must_resize']:
+                self.resize_image(i['id'], i['width'], i['height'], i['normal'], i['hovered'], i['disabled'])

@@ -327,6 +327,60 @@
             }
         }
     },
+    "#play-square-button": 
+    {
+        "prototype": "#ui-image-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/play/Play-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/play/Play-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/play/Play-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/play/Play-Idle@4x.png"
+            }
+        }
+    },
+    "#home-button": 
+    {
+        "prototype": "#ui-image-button",
+        "images": 
+        {
+            "normal_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/home/Home-Idle@4x.png"
+            },
+            "hovered_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/home/Home-Hover@4x.png"
+            },
+            "selected_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/home/Home-Hover@4x.png"
+            },
+            "disabled_image": 
+            {
+                "package": "themes",
+                "resource": "blue/images/home/Home-Idle@4x.png"
+            }
+        }
+    },
     "#settings-cog-button": 
     {
         "prototype": "#ui-image-button",
