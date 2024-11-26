@@ -9,7 +9,19 @@ class PickSizeScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager, self.settings)
+
+        settings_button_rect = pygame.Rect(
+            self.settings.drawable_area.right - self.settings.small_sq_button_width,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=settings_button_rect, 
+            text="",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#settings-cog-button")
+        )
 
         back_button_rect = pygame.Rect(
             self.settings.drawable_area.left,
@@ -86,7 +98,6 @@ class PickSizeScreen(Screen):
         )
 
     def show(self):
-        self.audio.set_audio_display()
         self.redraw_elements(self.managers, 0)
 
         next_page = None
@@ -131,12 +142,18 @@ class PickSizeScreen(Screen):
                         done = True
                         next_page = self.game_window.title_screen
 
+                    elif event.ui_object_id == "#settings-cog-button":
+                        next_action = self.game_window.settings_screen.show()
+                        if next_action == "exit_game":
+                            done = True
+
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
                 self.ui_manager.process_events(event)
             
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements(self.managers, time_delta)
+            if not done:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements(self.managers, time_delta)
 
         return next_page

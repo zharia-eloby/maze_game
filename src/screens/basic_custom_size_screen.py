@@ -18,7 +18,19 @@ class BasicCustomSizeScreen(Screen):
 
     def setup(self):
         self.set_background()
-        self.audio.create_audio_buttons(self.ui_manager, self.settings)
+
+        settings_button_rect = pygame.Rect(
+            self.settings.drawable_area.right - self.settings.small_sq_button_width,
+            self.settings.drawable_area.top,
+            self.settings.small_sq_button_width,
+            self.settings.small_sq_button_height
+        )
+        pygame_gui.elements.UIButton(
+            relative_rect=settings_button_rect, 
+            text="",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#settings-cog-button")
+        )
         
         back_button_rect = pygame.Rect(
             self.settings.drawable_area.left,
@@ -108,7 +120,6 @@ class BasicCustomSizeScreen(Screen):
         )
 
     def show(self):
-        self.audio.set_audio_display()
         self.dimensions_slider.set_current_value(0.5)
 
         maze = MazeUI((self.default_rows, self.default_columns), self.settings)
@@ -151,6 +162,11 @@ class BasicCustomSizeScreen(Screen):
                         self.game_window.play_screen.set_maze(maze.dimensions)
                         next_page = self.game_window.play_screen
                         break
+
+                    elif event.ui_object_id == "#settings-cog-button":
+                        next_action = self.game_window.settings_screen.show()
+                        if next_action == "exit_game":
+                            done = True
                 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                     new_rows = self.row_min + int((self.row_max - self.row_min) * self.dimensions_slider.get_current_value())
