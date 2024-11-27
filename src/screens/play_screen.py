@@ -187,6 +187,8 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                             solving = False
                             self.show_solution_button.enable()
+                        time_delta = math.ceil(time.time()) - time_delta
+                        self.redraw_elements(self.managers, time_delta)
 
                 self.ui_manager.process_events(event)
 
