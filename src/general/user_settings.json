@@ -1,6 +1,5 @@
 {
     "background_audio": {
-        "on": true,
         "volume": 1.0
     },
     "sound_fx": {

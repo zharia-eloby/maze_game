@@ -3,7 +3,6 @@ import pygame
 class Audio():
     def __init__(self, settings):
         self.background_volume = settings.user_settings["background_audio"]['volume']
-        self.background_audio_on = settings.user_settings["background_audio"]['on']
         self.background_audio_file = settings.theme.background_audio_file
         self.background_music_channel = pygame.mixer.Channel(0)
         self.background_music = pygame.mixer.Sound(settings.theme.background_audio_file)
@@ -17,17 +16,16 @@ class Audio():
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_audio_file)
         self.background_music_channel.set_volume(self.background_volume)
-        if self.background_audio_on:
+        if self.background_volume > 0:
             self.background_music_channel.play(self.background_music, loops=-1)
         self.sound_fx_channel.set_volume(self.sound_fx_volume)
 
     def set_background_volume(self, new_volume):
         self.background_music_channel.set_volume(new_volume)
-        if new_volume > 0:
-            if not self.background_music_channel.get_busy():
-                self.background_music_channel.play(self.background_music, loops=-1)
-        else:
-            self.background_music_channel.fadeout(250)
+        if new_volume == 0:
+            self.background_music_channel.stop()
+        elif new_volume > 0 and not self.background_music_channel.get_busy():
+            self.background_music_channel.play(self.background_music, loops=-1)
 
     def set_sound_fx_volume(self, new_volume):
         self.sound_fx_channel.set_volume(new_volume)
