@@ -92,24 +92,6 @@ class GameWindow:
                 'must_resize': False
             },
             {
-                'id': '#audio-button', 
-                'width': self.settings.small_sq_button_width,
-                'height': self.settings.small_sq_button_height,
-                'normal': True, 
-                'hovered': True,
-                'disabled': False,
-                'must_resize': False
-            },
-            {
-                'id': '#no-audio-button', 
-                'width': self.settings.small_sq_button_width,
-                'height': self.settings.small_sq_button_height,
-                'normal': True, 
-                'hovered': True,
-                'disabled': False,
-                'must_resize': False
-            },
-            {
                 'id': '#play-button', 
                 'width': self.settings.large_rect_button_width,
                 'height': self.settings.large_rect_button_height,

@@ -435,60 +435,6 @@
             }
         }
     },
-    "#audio-button": 
-    {
-        "prototype": "#ui-image-button",
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-On-Idle@4x.png"
-            },
-            "hovered_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-On-Hover@4x.png"
-            },
-            "selected_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-On-Hover@4x.png"
-            },
-            "disabled_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-On-Idle@4x.png"
-            }
-        }
-    },
-    "#no-audio-button": 
-    {
-        "prototype": "#ui-image-button",
-        "images": 
-        {
-            "normal_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-Off-Idle@4x.png"
-            },
-            "hovered_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-Off-Hover@4x.png"
-            },
-            "selected_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-Off-Hover@4x.png"
-            },
-            "disabled_image": 
-            {
-                "package": "themes",
-                "resource": "blue/images/audio/Music-Off-Idle@4x.png"
-            }
-        }
-    },
     "#pause-button": 
     {
         "prototype": "#ui-image-button",
