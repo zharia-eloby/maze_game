@@ -7,11 +7,7 @@ class BasicCustomSizeScreen(Screen):
     def __init__(self, game_window, audio):
         super().__init__(game_window, audio)
         self.maze_area_rect = None
-        self.row_min = 5
-        self.row_max = 35
-        self.col_min = 5
-        self.col_max = 35
-        self.default_rows = int((self.row_max-self.row_min)/2) + self.row_min
+        self.default_rows = int((self.settings.maximum_dimensions[0]-self.settings.minimum_dimensions[0])/2) + self.settings.minimum_dimensions[0]
         self.default_columns = self.default_rows
         self.preview_text_str = "Preview ({rows} x {columns})"
         self.preview_text = None
@@ -171,7 +167,7 @@ class BasicCustomSizeScreen(Screen):
                             done = True
                 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
-                    new_rows = self.row_min + int((self.row_max - self.row_min) * self.dimensions_slider.get_current_value())
+                    new_rows = self.settings.minimum_dimensions[0] + int((self.settings.maximum_dimensions[0] - self.settings.minimum_dimensions[0]) * self.dimensions_slider.get_current_value())
                 
                 self.ui_manager.process_events(event)
 

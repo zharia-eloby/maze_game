@@ -20,6 +20,12 @@ class Settings:
             self.screen_height - margin*2
         )
 
+        self.minimum_dimensions = (5, 5)
+        self.maximum_dimensions = (35, 35)
+        self.easy_mode_dimensions = (10, 10)
+        self.medium_mode_dimensions = (20, 20)
+        self.hard_mode_dimensions = (30, 30)
+
         self.modal_width = round(self.drawable_area.width * 0.7)
         self.modal_height = round(self.drawable_area.height * 0.5)
         self.modal_margin = round(self.modal_width * 0.1)
