@@ -5,7 +5,6 @@ from screens.pick_size_screen import PickSizeScreen
 from screens.basic_custom_size_screen import BasicCustomSizeScreen
 from screens.play_screen import PlayScreen
 from screens.settings_screen import SettingsScreen
-from general.audio import Audio
 from PIL import Image
 
 class GameWindow:
