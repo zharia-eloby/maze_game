@@ -3,6 +3,7 @@ from src.general.themes import BlueTheme
 
 class Settings:
     def __init__(self):
+        self.log_filename = "application.log"
         self.user_settings_file = os.path.realpath("src/general/user_settings.json")
         self.user_settings = None
         self.theme = BlueTheme()
