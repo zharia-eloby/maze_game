@@ -127,7 +127,7 @@ class GameWindow:
                 'must_resize': False
             },
             {
-                'id': '"@small-rectangle-button"',
+                'id': '@small-rectangle-button',
                 'width': self.settings.small_rect_button_width,
                 'height': self.settings.small_rect_button_height,
                 'normal': True, 
