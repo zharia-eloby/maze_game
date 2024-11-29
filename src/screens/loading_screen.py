@@ -10,6 +10,8 @@ class LoadingScreen(Screen):
         self.managers = [self.ui_manager]
 
     def setup(self):
+        self.log_setup_start()
+
         self.background_rect = pygame.Rect(0, 0, self.settings.screen_width, self.settings.screen_height)
         pygame_gui.elements.UIPanel(
             relative_rect=self.background_rect,
@@ -35,7 +37,11 @@ class LoadingScreen(Screen):
             manager=self.ui_manager
         )
 
+        self.log_setup_success()
+
     def show(self):
+        self.log_display_screen()
+
         POLL = pygame.USEREVENT + 1
         ANIMATE = pygame.USEREVENT + 2
         
@@ -57,6 +63,7 @@ class LoadingScreen(Screen):
                         done = True
                         pygame.time.set_timer(POLL, 0)
                         pygame.time.set_timer(ANIMATE, 0)
+                        self.log_exit_screen()
                         return
                     
                 elif event.type == ANIMATE:

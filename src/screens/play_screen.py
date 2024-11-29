@@ -32,6 +32,8 @@ class PlayScreen(Screen):
         self.managers.clear()
 
     def setup(self):
+        self.log_setup_start()
+
         self.set_background()
 
         self.pause_modal = PauseModal(self.settings, self.game_window, self.audio)
@@ -89,6 +91,8 @@ class PlayScreen(Screen):
             self.settings.drawable_area.height - show_solution_rect.height - self.settings.line_spacing
         )
 
+        self.log_setup_success()
+
     def show_modal(self, modal):
         pygame.event.clear()
 
@@ -101,6 +105,8 @@ class PlayScreen(Screen):
         return result
 
     def show(self):
+        self.log_display_screen()
+
         SHOW_SOLUTION = pygame.USEREVENT + 1
 
         solution_speed = 10
@@ -205,4 +211,6 @@ class PlayScreen(Screen):
             else:
                 self.reset()
                 next_page = self.game_window.title_screen
+
+        self.log_exit_screen()
         return next_page

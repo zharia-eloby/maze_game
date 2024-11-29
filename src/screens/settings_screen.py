@@ -9,6 +9,8 @@ class SettingsScreen(Screen):
         self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
+        self.log_setup_start()
+
         self.set_background()
         back_button_rect = pygame.Rect(
             self.settings.drawable_area.left,
@@ -184,6 +186,8 @@ class SettingsScreen(Screen):
             object_id=ObjectID(object_id="#exit-button", class_id="#ui-button")
         )
 
+        self.log_setup_success()
+
     def set_slider_values(self):
         if self.audio.background_music_channel.get_busy():
             self.volume_slider.set_current_value(self.audio.background_music_channel.get_volume())
@@ -193,6 +197,8 @@ class SettingsScreen(Screen):
         self.sound_fx_slider.set_current_value(self.audio.sound_fx_channel.get_volume())
 
     def show(self):
+        self.log_display_screen()
+
         self.set_slider_values()
         self.redraw_elements(self.managers, 0)
 
@@ -236,4 +242,6 @@ class SettingsScreen(Screen):
 
             time_delta = math.ceil(time.time()) - time_delta
             self.redraw_elements(self.managers, time_delta)
+        
+        self.log_exit_screen()
         return action

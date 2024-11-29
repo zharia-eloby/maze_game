@@ -1,18 +1,8 @@
-import os, traceback
+import logging
 
 class ErrorHandler:
-    def handle_error(error, debug_mode, error_screen):
-        if debug_mode: print(traceback.format_exc())
-
-        # write the error to the erorr log file
-        folder_path = os.path.realpath("./logs")
-        file_path = os.path.join(folder_path, "error_log.txt")
-
-        if not os.path.exists(folder_path): 
-            os.mkdir(folder_path)
-
-        with open(file_path, 'w') as f: 
-            traceback.print_exc(file=f)
+    def handle_error(error, error_screen):
+        logging.exception("{error_class}:".format(error_class=error.__class__.__name__))
 
         # set error text for error screen
         if (type(error) == FileNotFoundError):

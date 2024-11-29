@@ -4,6 +4,7 @@ from modals.modal import Modal
 
 class PauseModal(Modal):
     def setup(self):
+        self.log_setup_start()
         overlay_rect = pygame.Rect(
             0,
             0,
@@ -79,8 +80,11 @@ class PauseModal(Modal):
             manager=self.background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
+        self.log_setup_success()
 
     def show(self, parent_managers):
+        self.log_display_screen()
+
         paused = True
         next_action = "resume"
         time_delta = math.ceil(time.time())
@@ -113,4 +117,6 @@ class PauseModal(Modal):
             if paused:
                 time_delta = math.ceil(time.time()) - time_delta
                 self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
+
+        self.log_exit_screen()
         return next_action

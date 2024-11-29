@@ -8,6 +8,8 @@ class TitleScreen(Screen):
         self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
+        self.log_setup_start()
+
         self.set_background()
 
         settings_button_rect = pygame.Rect(
@@ -49,7 +51,10 @@ class TitleScreen(Screen):
             object_id=ObjectID(object_id="#title")
         )
 
+        self.log_setup_success()
+
     def show(self):
+        self.log_display_screen()
         self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
@@ -79,4 +84,6 @@ class TitleScreen(Screen):
             if not done:
                 time_delta = math.ceil(time.time()) - time_delta
                 self.redraw_elements(self.managers, time_delta)
+        
+        self.log_exit_screen()
         return next_page

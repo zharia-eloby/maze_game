@@ -5,6 +5,7 @@ from pygame_gui.core import ObjectID
 class ErrorScreen(Screen):
     def __init__(self, game_window):
         super().__init__(game_window, None)
+        self.log_filename = "application.log"
         theme_file = os.path.realpath("src/themes/error/theme.json")
         self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
@@ -13,6 +14,8 @@ class ErrorScreen(Screen):
         self.error_text_box = None
 
     def setup(self):
+        self.log_setup_start()
+
         self.background_rect = pygame.Rect(0, 0, self.settings.screen_width, self.settings.screen_height)
         pygame_gui.elements.UIPanel(
             relative_rect=self.background_rect,
@@ -71,15 +74,19 @@ class ErrorScreen(Screen):
             object_id=ObjectID(object_id="#error-text", class_id="@small-text")
         )
 
+        self.log_setup_success()
+
     def set_error_text(self, error_text):
         if (os.name == "nt"): # for windows devices
             help_text = "<a href=''>See full error log</a>"
         else:
-            help_text = "See error log at '{file_path}'".format(file_path=os.path.realpath("./logs/error_log.txt"))
+            help_text = "See error log at '{file_path}'".format(file_path=os.path.realpath(self.log_filename))
         html_text = "<p>Error > {error_text}</p><p>{help_text}</p>".format(error_text=error_text, help_text=help_text)
         self.error_text_box.set_text(html_text)
 
     def show(self):
+        self.log_display_screen()
+
         pygame.mixer.music.stop()
         time_delta = math.ceil(time.time())
         self.redraw_elements(self.managers, 0)
@@ -89,13 +96,14 @@ class ErrorScreen(Screen):
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
+                    self.log_exit_screen()
                     return
 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
 
                 elif event.type == pygame_gui.UI_TEXT_BOX_LINK_CLICKED:
-                    os.startfile(os.path.realpath("./logs/error_log.txt"))
+                    os.startfile(os.path.realpath(self.log_filename))
                 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#report-button":

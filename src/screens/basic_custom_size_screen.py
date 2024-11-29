@@ -14,6 +14,8 @@ class BasicCustomSizeScreen(Screen):
         self.managers = [self.background_manager, self.ui_manager]
 
     def setup(self):
+        self.log_setup_start()
+
         self.set_background()
 
         settings_button_rect = pygame.Rect(
@@ -116,7 +118,11 @@ class BasicCustomSizeScreen(Screen):
             play_button_rect.top - preview_text_label_rect.bottom - self.settings.line_spacing*2
         )
 
+        self.log_setup_success()
+
     def show(self):
+        self.log_display_screen()
+
         self.dimensions_slider.set_current_value(0.5)
 
         maze = MazeUI((self.default_rows, self.default_columns), self.settings)
@@ -178,4 +184,5 @@ class BasicCustomSizeScreen(Screen):
         del maze
         self.managers = [self.background_manager, self.ui_manager]
         self.preview_text.set_text(self.preview_text_str.format(rows=self.default_rows, columns=self.default_columns))
+        self.log_exit_screen()
         return next_page

@@ -4,6 +4,7 @@ from modals.modal import Modal
 
 class ShowSolutionModal(Modal):
     def setup(self):
+        self.log_setup_start()
         overlay_rect = pygame.Rect(
             0,
             0,
@@ -66,8 +67,10 @@ class ShowSolutionModal(Modal):
             manager=self.background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
+        self.log_setup_success()
 
     def show(self):
+        self.log_display_screen()
         give_up = None
         time_delta = math.ceil(time.time())
         self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
@@ -89,4 +92,6 @@ class ShowSolutionModal(Modal):
 
             time_delta = math.ceil(time.time()) - time_delta
             self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
+
+        self.log_exit_screen()
         return give_up

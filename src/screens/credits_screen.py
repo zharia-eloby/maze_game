@@ -42,6 +42,8 @@ class CreditsScreen(Screen):
         }
 
     def setup(self):
+        self.log_setup_start()
+
         self.set_background()
 
         back_button_rect = pygame.Rect(
@@ -104,7 +106,10 @@ class CreditsScreen(Screen):
             object_id=ObjectID(class_id="@small-text", object_id="#credits-text")
         )
 
+        self.log_setup_success()
+
     def show(self):
+        self.log_display_screen()
         self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
@@ -129,4 +134,5 @@ class CreditsScreen(Screen):
 
             time_delta = math.ceil(time.time()) - time_delta
             self.redraw_elements(self.managers, time_delta)
+        self.log_exit_screen()
         

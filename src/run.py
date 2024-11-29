@@ -1,4 +1,4 @@
-import pygame, sys, threading
+import pygame, sys, threading, logging
 from general.settings import Settings
 from general.game_window import GameWindow
 from screens.loading_screen import LoadingScreen
@@ -15,20 +15,31 @@ def load_content(game_window, settings, error_screen):
         audio.initialize()
         game_window.loaded_percent = 1
         game_window.finished_loading = True
+        
+        logging.info("Successfully loaded content")
     except Exception as e:
         game_window.error = True
-        ErrorHandler.handle_error(e, settings.debug_mode, error_screen)
+        ErrorHandler.handle_error(e, error_screen)
 
-def show_loading_screen(game_window, settings, error_screen):
+def show_loading_screen(game_window, error_screen):
     try:
         loading_screen = LoadingScreen(game_window)
         loading_screen.setup()
         loading_screen.show()
     except Exception as e:
         game_window.error = True
-        ErrorHandler.handle_error(e, settings.debug_mode, error_screen)
+        ErrorHandler.handle_error(e, error_screen)
 
 def run():
+    logging.basicConfig(
+        level=logging.DEBUG, 
+        datefmt="%B %d, %Y %H:%M:%S", 
+        format="%(levelname)s | %(asctime)s | %(filename)s:%(lineno)s | %(message)s",
+        filemode='w',
+        filename="application.log"
+    )
+    logging.info("----- APPLICATION START")
+
     settings = Settings()
     settings.load_settings()
 
@@ -39,7 +50,7 @@ def run():
     error_screen.setup()
 
     load_content_thread = threading.Thread(target=load_content, args=(gw,settings,error_screen))
-    loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,settings,error_screen))
+    loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,error_screen))
     load_content_thread.start()
     loading_screen_thread.start()
     load_content_thread.join()
@@ -64,9 +75,11 @@ def run():
             settings.save_settings()
         except Exception as e:
             gw.error = True
-            ErrorHandler.handle_error(e, True, error_screen=error_screen)
+            ErrorHandler.handle_error(e, error_screen=error_screen)
             pygame.event.clear()
             error_screen.show()
+
+    logging.info("----- APPLICATION END")
 
     pygame.quit()
     sys.exit()

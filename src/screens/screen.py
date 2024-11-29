@@ -1,4 +1,4 @@
-import pygame, pygame_gui
+import pygame, pygame_gui, logging
 
 class Screen():
     def __init__(self, game_window, audio):
@@ -22,6 +22,18 @@ class Screen():
             image_surface=pygame.image.load(img_file).convert(),
             manager=self.background_manager
         )
+
+    def log_setup_start(self):
+        logging.info("Setting up {class_name}".format(class_name=self.__class__.__name__))
+
+    def log_setup_success(self):
+        logging.info("Successfully set up {class_name}".format(class_name=self.__class__.__name__))
+
+    def log_display_screen(self):
+        logging.info("Navigated to {screen_name}".format(screen_name=self.__class__.__name__))
+
+    def log_exit_screen(self):
+        logging.info("Exiting {class_name}".format(class_name=self.__class__.__name__))
 
     def redraw_elements(self, managers, time_delta):
         for m in managers:
