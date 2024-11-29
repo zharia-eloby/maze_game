@@ -91,9 +91,9 @@ class GameWindow:
                 'must_resize': False
             },
             {
-                'id': '#play-button', 
-                'width': self.settings.large_rect_button_width,
-                'height': self.settings.large_rect_button_height,
+                'id': '#large-play-button', 
+                'width': self.settings.large_sq_button_width,
+                'height': self.settings.large_sq_button_height,
                 'normal': True, 
                 'hovered': True,
                 'disabled': False,

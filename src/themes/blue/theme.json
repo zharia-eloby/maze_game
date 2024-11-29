@@ -300,7 +300,7 @@
             "border_width": "5"
         }
     },
-    "#play-button": 
+    "#large-play-button": 
     {
         "prototype": "#ui-image-button",
         "images": 
@@ -308,22 +308,22 @@
             "normal_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/play/Play-Blue-Idle@4x.png"
+                "resource": "blue/images/play/Large-Play-Idle@4x.png"
             },
             "hovered_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/play/Play-Blue-Hover@4x.png"
+                "resource": "blue/images/play/Large-Play-Hover@4x.png"
             },
             "selected_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/play/Play-Blue-Hover@4x.png"
+                "resource": "blue/images/play/Large-Play-Hover@4x.png"
             },
             "disabled_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/play/Play-Blue-Idle@4x.png"
+                "resource": "blue/images/play/Large-Play-Idle@4x.png"
             }
         }
     },

@@ -44,8 +44,8 @@ class Settings:
         self.small_sq_button_height = self.small_sq_button_width
         self.small_rect_button_height = self.small_sq_button_height
         self.small_rect_button_width = round(self.small_rect_button_height * 2)
-        self.large_rect_button_width = round(self.drawable_area.width * 0.35)
-        self.large_rect_button_height = round(self.large_rect_button_width * 0.5)
+        self.large_sq_button_width = round(self.drawable_area.width * 0.15)
+        self.large_sq_button_height = self.large_sq_button_width
         self.wide_button_width = round(self.drawable_area.width * 0.75)
         self.thick_wide_button_height = round(self.wide_button_width * 0.25)
         self.thin_wide_button_height = round(self.wide_button_width * 0.15)

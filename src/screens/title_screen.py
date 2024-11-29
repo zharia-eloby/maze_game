@@ -25,24 +25,24 @@ class TitleScreen(Screen):
             object_id=ObjectID(object_id="#settings-cog-button")
         )
 
-        play_rect = pygame.Rect(
-            self.settings.drawable_area.centerx - self.settings.large_rect_button_width/2,
+        play_button_rect = pygame.Rect(
+            self.settings.drawable_area.centerx - self.settings.large_sq_button_width/2,
             self.settings.drawable_area.centery + self.settings.line_spacing/2,
-            self.settings.large_rect_button_width,
-            self.settings.large_rect_button_height
+            self.settings.large_sq_button_width,
+            self.settings.large_sq_button_height
         )
         pygame_gui.elements.UIButton(
-            relative_rect=play_rect, 
+            relative_rect=play_button_rect, 
             text="",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#play-button")
+            object_id=ObjectID(object_id="#large-play-button")
         )
         
         title_rect = pygame.Rect(
             self.settings.drawable_area.left, 
             self.settings.drawable_area.top,
             self.settings.drawable_area.width, 
-            play_rect.top - self.settings.line_spacing - self.settings.drawable_area.top
+            play_button_rect.top - self.settings.line_spacing - self.settings.drawable_area.top
         )
         pygame_gui.elements.UILabel(
             relative_rect=title_rect, 
@@ -67,7 +67,7 @@ class TitleScreen(Screen):
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     self.audio.play_sound_effect()
-                    if event.ui_object_id == "#play-button":
+                    if event.ui_object_id == "#large-play-button":
                         done = True
                         next_page = self.game_window.pick_size_screen
 
