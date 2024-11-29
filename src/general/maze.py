@@ -500,10 +500,19 @@ class LineSolutionUI():
         # check that we haven't already reached the end. faster solution speeds may call the method when the solution has already finished drawing, resulting in an IndexError
         if self.index > len(self.maze_ui.solution) - 2: return
 
-        next_index = self.index + 1
-        while next_index != self.index:
-            self.animate()
-        self.index = next_index
+        if self.current_line:
+            if self.current_direction == "right" or self.current_direction == "down":
+                self.current_line.set_dimensions((self.current_line_target_width, self.current_line_target_height))
+            elif self.current_direction == "left":
+                previous_width = self.current_line.get_relative_rect().width
+                self.current_line.set_dimensions((self.current_line_target_width, self.current_line_target_height))
+                self.current_line.set_relative_position((self.current_line.relative_rect.left - (self.current_line.relative_rect.width - previous_width), self.current_line.relative_rect.top))
+            elif self.current_direction == "up":
+                previous_height = self.current_line.get_relative_rect().height
+                self.current_line.set_dimensions((self.current_line_target_width, self.current_line_target_height))
+                self.current_line.set_relative_position((self.current_line.relative_rect.left, self.current_line.relative_rect.top - (self.current_line.relative_rect.height - previous_height)))
+            
+        self.index += 1
             
         for i in range(self.index, len(self.maze_ui.solution)-1):
             current_cell = self.maze_ui.solution[i]
