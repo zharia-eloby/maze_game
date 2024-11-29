@@ -178,7 +178,7 @@ class PlayScreen(Screen):
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
                         solving = False
                         self.skip_solution_animation_button.disable()
-                        self.solution_ui.draw()
+                        self.solution_ui.draw_complete_path()
 
                 elif event.type == SHOW_SOLUTION:
                     complete = self.solution_ui.animate()

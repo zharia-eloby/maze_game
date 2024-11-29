@@ -392,6 +392,70 @@ class LineSolutionUI():
         if self.line_width_thickness < 2: self.line_width_thickness = 2
         if self.line_height_thickness < 2: self.line_height_thickness = 2
 
+    def draw_next_segment(self, draw_full, current_cell, next_cell):
+        self.current_direction = self.maze_ui.get_direction_from_cell_to_neighbor(current_cell, next_cell)
+        if self.current_direction == "down":
+            line_rect = pygame.Rect()
+            line_rect.left = current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2
+            line_rect.top = current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2
+            line_rect.width = self.line_width_thickness
+
+            if draw_full:
+                line_rect.height = self.maze_ui.cell_height + self.line_height_thickness
+            else:
+                line_rect.height = self.line_height_thickness
+                self.current_line_target_width = self.line_width_thickness
+                self.current_line_target_height = self.maze_ui.cell_height + self.line_height_thickness
+        
+        elif self.current_direction == "up":
+            line_rect = pygame.Rect()
+            line_rect.width = self.line_width_thickness
+
+            if draw_full:
+                line_rect.left = next_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2
+                line_rect.top = next_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2
+                line_rect.height = self.maze_ui.cell_height + self.line_height_thickness
+            else:
+                line_rect.left = current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2
+                line_rect.top = current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2
+                line_rect.height = self.line_height_thickness
+                self.current_line_target_width = self.line_width_thickness
+                self.current_line_target_height = self.maze_ui.cell_height + self.line_height_thickness
+        
+        elif self.current_direction == "left":
+            line_rect = pygame.Rect()
+            line_rect.height = self.line_height_thickness
+            
+            if draw_full:
+                line_rect.left = next_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2
+                line_rect.top = next_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2
+                line_rect.width = self.maze_ui.cell_width + self.line_width_thickness
+            else:
+                line_rect.left = current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2
+                line_rect.top = current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2
+                line_rect.width = self.line_width_thickness
+                self.current_line_target_width = self.maze_ui.cell_width + self.line_width_thickness
+                self.current_line_target_height = self.line_height_thickness
+        
+        elif self.current_direction == "right":
+            line_rect = pygame.Rect()
+            line_rect.left = current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2
+            line_rect.top = current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2
+            line_rect.height = self.line_height_thickness
+
+            if draw_full:
+                line_rect.width = self.maze_ui.cell_width + self.line_width_thickness
+            else:
+                line_rect.width = self.line_width_thickness
+                self.current_line_target_width = self.maze_ui.cell_width + self.line_width_thickness
+                self.current_line_target_height = self.line_height_thickness
+
+        self.current_line = pygame_gui.elements.UIPanel(
+            relative_rect=line_rect,
+            manager=self.solution_manager,
+            object_id=ObjectID(object_id="#solution-path")
+        )
+
     """
     draw the solution path segment by segment
     returns True when the entire solution path has been drawn
@@ -403,50 +467,7 @@ class LineSolutionUI():
             
             current_cell = self.maze_ui.solution[self.index]
             next_cell = self.maze_ui.solution[self.index + 1]
-            self.current_direction = self.maze_ui.get_direction_from_cell_to_neighbor(current_cell, next_cell)
-
-            if self.current_direction == "down":
-                line_rect = pygame.Rect(
-                    current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.line_width_thickness,
-                    self.line_height_thickness
-                )
-                self.current_line_target_width = self.line_width_thickness
-                self.current_line_target_height = self.maze_ui.cell_height + self.line_height_thickness
-            elif self.current_direction == "up":
-                line_rect = pygame.Rect(
-                    current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.line_width_thickness,
-                    self.line_height_thickness
-                )
-                self.current_line_target_width = self.line_width_thickness
-                self.current_line_target_height = self.maze_ui.cell_height + self.line_height_thickness
-            elif self.current_direction == "left":
-                line_rect = pygame.Rect(
-                    current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.line_width_thickness,
-                    self.line_height_thickness
-                )
-                self.current_line_target_width = self.maze_ui.cell_width + self.line_width_thickness
-                self.current_line_target_height = self.line_height_thickness
-            elif self.current_direction == "right":
-                line_rect = pygame.Rect(
-                    current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.line_width_thickness,
-                    self.line_height_thickness
-                )
-                self.current_line_target_width = self.maze_ui.cell_width + self.line_width_thickness
-                self.current_line_target_height = self.line_height_thickness
-
-            self.current_line = pygame_gui.elements.UIPanel(
-                relative_rect=line_rect,
-                manager=self.solution_manager,
-                object_id=ObjectID(object_id="#solution-path")
-            )
+            self.draw_next_segment(False, current_cell, next_cell)
             return False
         
         # increment current line dimensions
@@ -475,7 +496,7 @@ class LineSolutionUI():
     """
     draw the solution path entirely
     """  
-    def draw(self):
+    def draw_complete_path(self):
         # check that we haven't already reached the end. faster solution speeds may call the method when the solution has already finished drawing, resulting in an IndexError
         if self.index > len(self.maze_ui.solution) - 2: return
 
@@ -487,42 +508,7 @@ class LineSolutionUI():
         for i in range(self.index, len(self.maze_ui.solution)-1):
             current_cell = self.maze_ui.solution[i]
             next_cell = self.maze_ui.solution[i + 1]
-            self.current_direction = self.maze_ui.get_direction_from_cell_to_neighbor(current_cell, next_cell)
-
-            if self.current_direction == "down":
-                line_rect = pygame.Rect(
-                    current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.line_width_thickness,
-                    self.maze_ui.cell_height + self.line_height_thickness
-                )
-            elif self.current_direction == "up":
-                line_rect = pygame.Rect(
-                    next_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    next_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.line_width_thickness,
-                    self.maze_ui.cell_height + self.line_height_thickness
-                )
-            elif self.current_direction == "left":
-                line_rect = pygame.Rect(
-                    next_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    next_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.maze_ui.cell_width + self.line_width_thickness,
-                    self.line_height_thickness
-                )
-            elif self.current_direction == "right":
-                line_rect = pygame.Rect(
-                    current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2,
-                    current_cell.rect.centery + self.maze_ui.wall_thickness/2 - self.line_height_thickness/2,
-                    self.maze_ui.cell_width + self.line_width_thickness,
-                    self.line_height_thickness
-                )
-
-            self.current_line = pygame_gui.elements.UIPanel(
-                relative_rect=line_rect,
-                manager=self.solution_manager,
-                object_id=ObjectID(object_id="#solution-path")
-            )
+            self.draw_next_segment(True, current_cell, next_cell)
     
     def reset(self):
         self.solution_manager.clear_and_reset()
