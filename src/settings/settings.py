@@ -11,9 +11,17 @@ class Settings:
             filemode='w',
             filename=self.log_filename
         )
-        self.version_info = "vx.x.x Released <month> <year>"
+        self.version_info = "v2.0.0 Released November 2024"
         
         self.user_settings_file = os.path.realpath("src/settings/user_settings.json")
+        self.default_user_settings = {
+            "background_audio": {
+                "volume": 1.0
+            },
+            "sound_fx": {
+                "volume": 1.0
+            }
+        }
         self.user_settings = None
         self.theme = BlueTheme()
 
@@ -56,13 +64,17 @@ class Settings:
         self.slider_height = 30
 
     def load_settings(self):
-        file = open(self.user_settings_file, "r")
-        self.user_settings = json.loads(file.read())
-        file.close()
+        if os.path.exists(self.user_settings_file):
+            file = open(self.user_settings_file, 'r')
+            self.user_settings = json.loads(file.read())
+            file.close()
+        else:
+            with open(self.user_settings_file, 'w') as file:
+                self.user_settings = self.default_user_settings
+                json.dump(self.default_user_settings, file, indent=4)
+                file.close()
 
     def save_settings(self):
-        file = open(self.user_settings_file, "r+")
-        file.seek(0)
-        json.dump(self.user_settings, file, indent=4)
-        file.truncate()
-        file.close()
+        with open(self.user_settings_file, 'w') as file:
+            json.dump(self.user_settings, file, indent=4)
+            file.close()
