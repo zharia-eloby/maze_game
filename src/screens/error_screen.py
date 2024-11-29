@@ -1,5 +1,5 @@
 import pygame, pygame_gui, os, math, time, webbrowser
-from screens.screen import Screen
+from src.screens.screen import Screen
 from pygame_gui.core import ObjectID
 
 class ErrorScreen(Screen):

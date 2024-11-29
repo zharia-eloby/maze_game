@@ -13,7 +13,7 @@ class Settings:
         )
         self.version_info = "vx.x.x Released <month> <year>"
         
-        self.user_settings_file = os.path.realpath("src/general/user_settings.json")
+        self.user_settings_file = os.path.realpath("src/settings/user_settings.json")
         self.user_settings = None
         self.theme = BlueTheme()
 

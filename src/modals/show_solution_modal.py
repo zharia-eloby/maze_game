@@ -1,6 +1,6 @@
 import pygame, pygame_gui, math, time, sys
 from pygame_gui.core import ObjectID
-from modals.modal import Modal
+from src.modals.modal import Modal
 
 class ShowSolutionModal(Modal):
     def setup(self):

@@ -1,7 +1,7 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
-from screens.screen import Screen
-from general.maze import MazeUI
+from src.screens.screen import Screen
+from src.general.maze import MazeUI
 
 class BasicCustomSizeScreen(Screen):
     def __init__(self, game_window, audio):

@@ -1,10 +1,10 @@
 import pygame, sys, threading, logging
-from general.settings import Settings
-from general.game_window import GameWindow
-from screens.loading_screen import LoadingScreen
-from screens.error_screen import ErrorScreen
-from general.audio import Audio
-from general.error_handler import ErrorHandler
+from src.settings.settings import Settings
+from src.general.game_window import GameWindow
+from src.screens.loading_screen import LoadingScreen
+from src.screens.error_screen import ErrorScreen
+from src.general.audio import Audio
+from src.general.error_handler import ErrorHandler
 
 def load_content(game_window, settings, error_screen):
     try:

@@ -1,10 +1,10 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
-from screens.screen import Screen
-from general.maze import MazeUI, LineSolutionUI
-from modals.pause_modal import PauseModal
-from modals.finished_modal import FinishedModal
-from modals.show_solution_modal import ShowSolutionModal
+from src.screens.screen import Screen
+from src.general.maze import MazeUI, LineSolutionUI
+from src.modals.pause_modal import PauseModal
+from src.modals.finished_modal import FinishedModal
+from src.modals.show_solution_modal import ShowSolutionModal
 
 class PlayScreen(Screen):
     def __init__(self, game_window, audio):

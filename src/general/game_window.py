@@ -1,10 +1,10 @@
 import pygame, os, json
-from screens.title_screen import TitleScreen
-from screens.credits_screen import CreditsScreen
-from screens.pick_size_screen import PickSizeScreen
-from screens.basic_custom_size_screen import BasicCustomSizeScreen
-from screens.play_screen import PlayScreen
-from screens.settings_screen import SettingsScreen
+from src.screens.title_screen import TitleScreen
+from src.screens.credits_screen import CreditsScreen
+from src.screens.pick_size_screen import PickSizeScreen
+from src.screens.basic_custom_size_screen import BasicCustomSizeScreen
+from src.screens.play_screen import PlayScreen
+from src.screens.settings_screen import SettingsScreen
 from PIL import Image
 
 class GameWindow:
