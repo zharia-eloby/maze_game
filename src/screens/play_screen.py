@@ -119,13 +119,29 @@ class PlayScreen(Screen):
 
         pygame.event.clear()
         return result
+    
+    """
+    set the solution speed based on the area of the maze
+    """
+    def get_solution_speed(self):
+        min_speed = self.settings.solution_speed_range[0]
+        max_speed = self.settings.solution_speed_range[1]
+
+        min_area = self.settings.minimum_dimensions[0] * self.settings.minimum_dimensions[1]
+        max_area = self.settings.maximum_dimensions[0] * self.settings.maximum_dimensions[1]
+        area = self.maze.dimensions[0] * self.maze.dimensions[1]
+
+        percent_area = (area - min_area)/(max_area - min_area)
+
+        solution_speed = round((max_speed - min_speed) * percent_area + min_speed)
+        return solution_speed
 
     def show(self):
         self.log_display_screen()
 
         SHOW_SOLUTION = pygame.USEREVENT + 1
 
-        solution_speed = 10
+        solution_speed = self.get_solution_speed()
         done = False
         next_page = None
         solving = False

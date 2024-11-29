@@ -34,6 +34,8 @@ class Settings:
         self.medium_mode_dimensions = (20, 20)
         self.hard_mode_dimensions = (30, 30)
 
+        self.solution_speed_range = (2, 15)
+
         self.modal_width = round(self.drawable_area.width * 0.7)
         self.modal_height = round(self.drawable_area.height * 0.5)
         self.modal_margin = round(self.modal_width * 0.1)
