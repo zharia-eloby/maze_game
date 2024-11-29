@@ -525,7 +525,7 @@
             "text_vert_alignment": "center"
         }
     },
-    "#show-solution-button": 
+    "@small-rectangle-button": 
     {
         "font": 
         {
@@ -538,22 +538,22 @@
             "normal_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/solution/Show-Solution-Idle@4x.png"
+                "resource": "blue/images/general/Small-Rect-Idle@4x.png"
             },
             "hovered_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/solution/Show-Solution-Hover@4x.png"
+                "resource": "blue/images/general/Small-Rect-Hover@4x.png"
             },
             "selected_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/solution/Show-Solution-Hover@4x.png"
+                "resource": "blue/images/general/Small-Rect-Hover@4x.png"
             },
             "disabled_image": 
             {
                 "package": "themes",
-                "resource": "blue/images/solution/Show-Solution-Disabled@4x.png"
+                "resource": "blue/images/general/Small-Rect-Disabled@4x.png"
             }
         }
     },

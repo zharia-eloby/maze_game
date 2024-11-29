@@ -29,6 +29,8 @@ class PlayScreen(Screen):
         self.maze.reset()
         self.solution_ui.reset()
         self.show_solution_button.enable()
+        self.skip_solution_animation_button.enable()
+        self.skip_solution_animation_button.hide()
         self.managers.clear()
 
     def setup(self):
@@ -81,8 +83,22 @@ class PlayScreen(Screen):
             relative_rect=show_solution_rect,
             text="Give Up",
             manager=self.ui_manager,
-            object_id=ObjectID(object_id="#show-solution-button")
+            object_id=ObjectID(object_id="#show-solution-button", class_id="@small-rectangle-button")
         )
+
+        skip_solution_animation_rect = pygame.Rect(
+            show_solution_rect.right + self.settings.line_spacing,
+            show_solution_rect.top,
+            self.settings.small_rect_button_width,
+            self.settings.small_rect_button_height
+        )
+        self.skip_solution_animation_button = pygame_gui.elements.UIButton(
+            relative_rect=skip_solution_animation_rect,
+            text="Skip",
+            manager=self.ui_manager,
+            object_id=ObjectID(object_id="#skip-solution-animation-button", class_id="@small-rectangle-button")
+        )
+        self.skip_solution_animation_button.hide()
 
         self.maze_area_rect = pygame.Rect(
             self.settings.drawable_area.left,
@@ -142,6 +158,9 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif event.ui_object_id == "#reset-button":
+                        if solving:
+                            solving = False
+                            pygame.time.set_timer(SHOW_SOLUTION, 0)
                         self.reset()
                         self.set_maze(self.maze.dimensions)
 
@@ -153,12 +172,20 @@ class PlayScreen(Screen):
                             solving = True
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                             self.show_solution_button.disable()
+                            self.skip_solution_animation_button.show()
+
+                    elif event.ui_object_id == "#skip-solution-animation-button":
+                        pygame.time.set_timer(SHOW_SOLUTION, 0)
+                        solving = False
+                        self.skip_solution_animation_button.disable()
+                        self.solution_ui.draw()
 
                 elif event.type == SHOW_SOLUTION:
                     complete = self.solution_ui.animate()
                     if complete:
                         solving = False
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
+                        self.skip_solution_animation_button.disable()
                         break
 
                 elif event.type == pygame.KEYDOWN:
