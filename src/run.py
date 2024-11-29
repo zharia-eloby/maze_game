@@ -31,16 +31,10 @@ def show_loading_screen(game_window, error_screen):
         ErrorHandler.handle_error(e, error_screen)
 
 def run():
-    logging.basicConfig(
-        level=logging.DEBUG, 
-        datefmt="%B %d, %Y %H:%M:%S", 
-        format="%(levelname)s | %(asctime)s | %(filename)s:%(lineno)s | %(message)s",
-        filemode='w',
-        filename="application.log"
-    )
-    logging.info("----- APPLICATION START")
-
     settings = Settings()
+
+    logging.info("APPLICATION START ({version})".format(version = settings.version_info))
+
     settings.load_settings()
 
     gw = GameWindow(settings)
@@ -79,7 +73,7 @@ def run():
             pygame.event.clear()
             error_screen.show()
 
-    logging.info("----- APPLICATION END")
+    logging.info("APPLICATION END")
 
     pygame.quit()
     sys.exit()

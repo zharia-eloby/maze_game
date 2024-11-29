@@ -1,8 +1,16 @@
-import pygame, os, json
+import pygame, os, json, logging
 from src.general.themes import BlueTheme
 
 class Settings:
     def __init__(self):
+        logging.basicConfig(
+            level=logging.DEBUG, 
+            datefmt="%B %d, %Y %H:%M:%S", 
+            format="%(levelname)s | %(asctime)s | %(filename)s:%(lineno)s | %(message)s",
+            filemode='w',
+            filename="application.log"
+        )
+        self.version_info = "vx.x.x Released <month> <year>"
         self.log_filename = "application.log"
         self.user_settings_file = os.path.realpath("src/general/user_settings.json")
         self.user_settings = None

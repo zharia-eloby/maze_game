@@ -34,6 +34,19 @@ class SettingsScreen(Screen):
 
         settings_title_rect = pygame.Rect(
             content_area_rect.left, 
+            content_area_rect.bottom - self.settings.small_text_height,
+            content_area_rect.width, 
+            self.settings.small_text_height
+        )
+        pygame_gui.elements.UILabel(
+            relative_rect=settings_title_rect, 
+            text=self.settings.version_info,
+            manager=self.ui_manager,
+            object_id=ObjectID(class_id="@small-text")
+        )
+
+        settings_title_rect = pygame.Rect(
+            content_area_rect.left, 
             content_area_rect.top,
             content_area_rect.width, 
             self.settings.medium_text_height
