@@ -351,15 +351,6 @@ class MazeUI(Maze):
         )
 
     def move_player(self, direction):
-        if direction == "reset":
-            self.player.relative_rect.center = (
-                self.startpoint.rect.centerx + self.wall_thickness/2,
-                self.startpoint.rect.centery + self.wall_thickness/2
-            )
-            self.player.set_relative_position(self.player.relative_rect.topleft)
-            self.player_position = self.startpoint
-            return
-        
         if not self.player_position.walls[direction]: # if cell does not have a wall in the desired direction
             neighbor_cell = self.get_neighbor_cell(self.player_position, direction)
             self.player.relative_rect.center = (

@@ -142,7 +142,8 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
                     elif event.ui_object_id == "#reset-button":
-                        self.maze.move_player("reset")
+                        self.reset()
+                        self.set_maze(self.maze.dimensions)
 
                     elif event.ui_object_id == "#show-solution-button":
                         give_up = self.show_solution_modal.show()
