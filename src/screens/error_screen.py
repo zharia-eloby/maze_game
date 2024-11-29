@@ -80,7 +80,7 @@ class ErrorScreen(Screen):
             help_text = "<a href=''>See full error log</a>"
         else:
             help_text = "See error log at '{file_path}'".format(file_path=os.path.realpath(self.settings.log_filename))
-        html_text = "<p>Error > {error_text}</p><p>{help_text}</p>".format(error_text=error_text, help_text=help_text)
+        html_text = "<p>Error ({error_text})</p><p>{help_text}</p>".format(error_text=error_text, help_text=help_text)
         self.error_text_box.set_text(html_text)
 
     def show(self):
