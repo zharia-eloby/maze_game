@@ -1,18 +1,20 @@
 # A Maze Game<br>developed by Zharia Eloby
 
-## Overview:
-This program takes in user input to dynamically generate and includes the capability to solve a maze.<br>
-The player can choose their difficulty by picking predetermined sizes or doing a custom size.
+## General Overview:
+This program takes in user input to dynamically generate a maze and includes the capability of solving a maze. The player can choose their difficulty by picking predetermined sizes or doing a custom size.
 
 <br>
 
-## How to run the application:
-1. Download this repo
-2. Open the downloaded folder in your File Explorer
-3. Open the 'build' folder
-4. Pick a version and there will be a file named 'maze.exe'. Click on it to start playing!
+## How to Run:
+### From Executable:
+1. Go to the [Releases page](https://github.com/zharia-eloby/maze_game/releases)
+2. Select the latest release
+3. Select a folder from the `Assets` section to download the executable
+4. Open the downloaded folder in your File Explorer
+5. Open the `build` folder
+6. Pick a version and there will be a file named `maze_game_app.exe`. Click on it to start playing!
 
-## How to run from source:
+### From Source:
 Prerequisite:
 * Have Python 3.x installed
 
