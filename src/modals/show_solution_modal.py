@@ -74,31 +74,30 @@ class ShowSolutionModal(Modal):
     def show(self):
         self.log_display_screen()
 
-        give_up = None
+        next_action = None
         time_delta = math.ceil(time.time())
         self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
-        while give_up is None:
+        while next_action == None:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    next_action = "exit_game"
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
                     self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
 
                     if event.ui_object_id == "#yes-button":
-                        give_up = True
+                        next_action = "give_up"
 
                     elif event.ui_object_id == "#no-button":
-                        give_up = False
+                        next_action = "dont_give_up"
 
                 self.ui_manager.process_events(event)
 
-            if not give_up:
+            if next_action == None:
                 time_delta = math.ceil(time.time()) - time_delta
                 self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
 
         self.log_exit_screen()
         
-        return give_up
+        return next_action

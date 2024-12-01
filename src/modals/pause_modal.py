@@ -87,40 +87,38 @@ class PauseModal(Modal):
     def show(self, parent_managers):
         self.log_display_screen()
 
-        paused = True
-        next_action = "resume"
+        next_action = None
         time_delta = math.ceil(time.time())
         self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
-        while paused:
+        while next_action == None:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    next_action = "exit_game"
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
                     self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
                     
                     if event.ui_object_id == "#home-button":
-                        paused = False
                         next_action = "home"
 
                     elif event.ui_object_id == "#play-square-button":
-                        paused = False
+                        next_action = "resume"
 
                     elif event.ui_object_id == "#settings-cog-button":
                         settings_next_action = self.game_window.settings_screen.show()
-                        if settings_next_action == "exit_game": 
-                            paused = False
+                        if settings_next_action == "exit_game":
                             next_action = "exit_game"
                         else:
                             self.redraw_elements(parent_managers + [self.overlay_manager], time_delta)
 
                 self.ui_manager.process_events(event)
 
-            if paused:
+            if next_action == None:
                 time_delta = math.ceil(time.time()) - time_delta
                 self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
 
         self.log_exit_screen()
+
         return next_action
+    

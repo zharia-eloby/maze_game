@@ -76,31 +76,30 @@ class FinishedModal(Modal):
 
         self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
     
-        done = False
-        restart = False
+        next_action = None
         time_delta = math.ceil(time.time())
-        while not done:
+        while next_action == None:
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    next_action = "exit_game"
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
 
                     if event.ui_object_id == "#exit-button":
-                        done = True
+                        next_action = "return_home"
 
                     elif event.ui_object_id == "#play-again":
-                        done = True
-                        restart = True
+                        next_action = "restart"
 
                 self.ui_manager.process_events(event)
             
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
+            if next_action == None:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
             
         self.log_exit_screen()
 
-        return restart
+        return next_action
+    

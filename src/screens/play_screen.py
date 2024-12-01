@@ -186,8 +186,8 @@ class PlayScreen(Screen):
                         self.set_maze(self.maze.dimensions)
 
                     elif event.ui_object_id == "#show-solution-button":
-                        give_up = self.show_solution_modal.show()
-                        if give_up:
+                        next_action = self.show_solution_modal.show()
+                        if next_action == "give_up":
                             if len(self.maze.solution) == 0:
                                 self.maze.solve_maze()
 
@@ -195,6 +195,9 @@ class PlayScreen(Screen):
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                             self.show_solution_button.disable()
                             self.skip_solution_animation_button.show()
+
+                        elif next_action == "exit_game":
+                            done = True
 
                     elif event.ui_object_id == "#skip-solution-animation-button":
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
@@ -256,15 +259,16 @@ class PlayScreen(Screen):
                 self.redraw_elements(self.managers, time_delta)
             
         if end_reached:
-            restart = self.show_modal(self.finished_modal)
+            next_action = self.show_modal(self.finished_modal)
 
-            if restart:
+            if next_action == "restart":
                 self.reset()
                 self.set_maze(self.maze.dimensions)
                 next_page = self
-            else:
+            elif next_action == "return_home":
                 self.reset()
                 next_page = self.game_window.title_screen
 
         self.log_exit_screen()
+
         return next_page
