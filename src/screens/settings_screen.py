@@ -202,8 +202,8 @@ class SettingsScreen(Screen):
         self.log_setup_success()
 
     def set_slider_values(self):
-        if self.audio.background_music_channel.get_busy():
-            self.volume_slider.set_current_value(self.audio.background_music_channel.get_volume())
+        if self.audio.background_audio_channel.get_busy():
+            self.volume_slider.set_current_value(self.audio.background_audio_channel.get_volume())
         else:
             self.volume_slider.set_current_value(0)
 
