@@ -5,6 +5,7 @@ from src.modals.modal import Modal
 class FinishedModal(Modal):
     def setup(self):
         self.log_setup_start()
+
         overlay_rect = pygame.Rect(
             0,
             0,
@@ -67,10 +68,12 @@ class FinishedModal(Modal):
             manager=self.background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
+
         self.log_setup_success()
 
     def show(self):
         self.log_display_screen()
+
         self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
     
         done = False
@@ -81,17 +84,23 @@ class FinishedModal(Modal):
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame_gui.UI_BUTTON_PRESSED:
+
+                elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#exit-button":
                         done = True
+
                     elif event.ui_object_id == "#play-again":
                         done = True
                         restart = True
+
                 self.ui_manager.process_events(event)
             
             time_delta = math.ceil(time.time()) - time_delta
             self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
             
         self.log_exit_screen()
+
         return restart

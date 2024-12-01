@@ -140,7 +140,6 @@ class BasicCustomSizeScreen(Screen):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
-                    break
                 
                 elif event.type == pygame.WINDOWRESTORED:
                     pygame.display.update()
@@ -155,17 +154,18 @@ class BasicCustomSizeScreen(Screen):
                         maze.draw_maze()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
-                    if "#sliding_button" not in event.ui_object_id: self.audio.play_sound_effect()
+                    if "#sliding_button" not in event.ui_object_id: 
+                        self.log_button_press(event.ui_object_id)
+                        self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#back-button":
                         done = True
                         next_page = self.game_window.pick_size_screen
-                        break
 
                     elif event.ui_object_id == "#start-button":
                         done = True
                         self.game_window.play_screen.set_maze(maze.dimensions)
                         next_page = self.game_window.play_screen
-                        break
 
                     elif event.ui_object_id == "#settings-cog-button":
                         next_action = self.game_window.settings_screen.show()
@@ -185,4 +185,6 @@ class BasicCustomSizeScreen(Screen):
         self.managers = [self.background_manager, self.ui_manager]
         self.preview_text.set_text(self.preview_text_str.format(rows=self.default_rows, columns=self.default_columns))
         self.log_exit_screen()
+        
         return next_page
+    

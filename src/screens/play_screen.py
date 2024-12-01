@@ -157,19 +157,23 @@ class PlayScreen(Screen):
                     pygame.display.update()
 
                 elif (event.type == pygame_gui.UI_BUTTON_PRESSED) and (len(event.__dict__) > 0):
+                    self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#pause-button":
                         if solving: 
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
+
                         next_action = self.show_modal(self.pause_modal)
+
                         if next_action == "home":
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
-                            break
+
                         elif next_action == "exit_game":
                             done = True
-                            break
+
                         elif solving:
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
@@ -177,6 +181,7 @@ class PlayScreen(Screen):
                         if solving:
                             solving = False
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
+
                         self.reset()
                         self.set_maze(self.maze.dimensions)
 
@@ -185,6 +190,7 @@ class PlayScreen(Screen):
                         if give_up:
                             if len(self.maze.solution) == 0:
                                 self.maze.solve_maze()
+
                             solving = True
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
                             self.show_solution_button.disable()
@@ -202,18 +208,19 @@ class PlayScreen(Screen):
                         solving = False
                         pygame.time.set_timer(SHOW_SOLUTION, 0)
                         self.skip_solution_animation_button.disable()
-                        break
 
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         if solving: 
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
+
                         resume = self.show_modal(self.pause_modal)
+
                         if not resume:
                             self.reset()
                             done = True
                             next_page = self.game_window.title_screen
-                            break
+
                         elif solving:
                             pygame.time.set_timer(SHOW_SOLUTION, solution_speed)
 
@@ -233,10 +240,12 @@ class PlayScreen(Screen):
                         self.audio.play_sound_effect(effect="victory")
                         end_reached = True
                         done = True
+
                         if solving:
                             pygame.time.set_timer(SHOW_SOLUTION, 0)
                             solving = False
                             self.show_solution_button.enable()
+
                         time_delta = math.ceil(time.time()) - time_delta
                         self.redraw_elements(self.managers, time_delta)
 
@@ -248,6 +257,7 @@ class PlayScreen(Screen):
             
         if end_reached:
             restart = self.show_modal(self.finished_modal)
+
             if restart:
                 self.reset()
                 self.set_maze(self.maze.dimensions)

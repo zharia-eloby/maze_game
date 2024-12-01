@@ -5,6 +5,7 @@ from src.modals.modal import Modal
 class PauseModal(Modal):
     def setup(self):
         self.log_setup_start()
+
         overlay_rect = pygame.Rect(
             0,
             0,
@@ -80,6 +81,7 @@ class PauseModal(Modal):
             manager=self.background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
+
         self.log_setup_success()
 
     def show(self, parent_managers):
@@ -96,7 +98,9 @@ class PauseModal(Modal):
                     sys.exit()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
+                    self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
+                    
                     if event.ui_object_id == "#home-button":
                         paused = False
                         next_action = "home"

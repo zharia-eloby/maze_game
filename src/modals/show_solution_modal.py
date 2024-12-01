@@ -5,6 +5,7 @@ from src.modals.modal import Modal
 class ShowSolutionModal(Modal):
     def setup(self):
         self.log_setup_start()
+
         overlay_rect = pygame.Rect(
             0,
             0,
@@ -67,10 +68,12 @@ class ShowSolutionModal(Modal):
             manager=self.background_manager,
             object_id=ObjectID(class_id="@medium-text")
         )
+
         self.log_setup_success()
 
     def show(self):
         self.log_display_screen()
+
         give_up = None
         time_delta = math.ceil(time.time())
         self.redraw_elements([self.overlay_manager, self.background_manager, self.ui_manager], 0)
@@ -81,7 +84,9 @@ class ShowSolutionModal(Modal):
                     sys.exit()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED and len(event.__dict__) > 0:
+                    self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#yes-button":
                         give_up = True
 
@@ -90,8 +95,10 @@ class ShowSolutionModal(Modal):
 
                 self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
+            if not give_up:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements([self.background_manager, self.ui_manager], time_delta)
 
         self.log_exit_screen()
+        
         return give_up

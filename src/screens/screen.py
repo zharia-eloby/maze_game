@@ -35,6 +35,9 @@ class Screen():
     def log_exit_screen(self):
         logging.info("Exiting {class_name}".format(class_name=self.__class__.__name__))
 
+    def log_button_press(self, button_name):
+        logging.info("{screen_name}: {button_name} button pressed".format(screen_name=self.__class__.__name__, button_name=button_name))
+
     def redraw_elements(self, managers, time_delta):
         for m in managers:
             m.update(time_delta)

@@ -1,4 +1,4 @@
-import pygame, pygame_gui, os, math, time
+import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from src.screens.screen import Screen
 from src.general.file_path_helper import get_file_path
@@ -58,16 +58,13 @@ class LoadingScreen(Screen):
             for event in [pygame.event.wait()]+pygame.event.get():
                 if event.type == pygame.QUIT:
                     done = True
-                    return
                 
                 elif event.type == POLL:
                     if (self.game_window.finished_loading and self.loading_progress_bar.percent_full == 1) or (self.game_window.error):
                         done = True
                         pygame.time.set_timer(POLL, 0)
                         pygame.time.set_timer(ANIMATE, 0)
-                        self.log_exit_screen()
-                        return
-                    
+                        
                 elif event.type == ANIMATE:
                     updated_percent = self.loading_progress_bar.percent_full + 0.05
                     if updated_percent > self.game_window.loaded_percent:
@@ -79,5 +76,9 @@ class LoadingScreen(Screen):
 
                 self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements(self.managers, time_delta)
+            if not done:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements(self.managers, time_delta)
+
+        self.log_exit_screen()
+        

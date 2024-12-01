@@ -110,6 +110,7 @@ class CreditsScreen(Screen):
 
     def show(self):
         self.log_display_screen()
+        
         self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
@@ -120,10 +121,12 @@ class CreditsScreen(Screen):
                     done = True
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#back-button":
                         done = True
-                        break
+
                 elif event.type == pygame_gui.UI_TEXT_BOX_LINK_CLICKED:
                     webbrowser.open(event.link_target)
 
@@ -132,7 +135,9 @@ class CreditsScreen(Screen):
 
                 self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements(self.managers, time_delta)
+            if not done:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements(self.managers, time_delta)
+        
         self.log_exit_screen()
         

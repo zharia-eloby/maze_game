@@ -55,6 +55,7 @@ class TitleScreen(Screen):
 
     def show(self):
         self.log_display_screen()
+
         self.redraw_elements(self.managers, 0)
 
         time_delta = math.ceil(time.time())
@@ -66,7 +67,9 @@ class TitleScreen(Screen):
                     done = True
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#large-play-button":
                         done = True
                         next_page = self.game_window.pick_size_screen
@@ -86,4 +89,6 @@ class TitleScreen(Screen):
                 self.redraw_elements(self.managers, time_delta)
         
         self.log_exit_screen()
+
         return next_page
+    

@@ -118,7 +118,9 @@ class PickSizeScreen(Screen):
                     pygame.display.update()
 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+                    self.log_button_press(event.ui_object_id)
                     self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#easy-button":
                         done = True
                         self.game_window.play_screen.set_maze(self.settings.easy_mode_dimensions)
@@ -157,4 +159,5 @@ class PickSizeScreen(Screen):
                 self.redraw_elements(self.managers, time_delta)
 
         self.log_exit_screen()
+        
         return next_page

@@ -228,10 +228,12 @@ class SettingsScreen(Screen):
                     pygame.display.update()
                     
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
-                    if "#sliding_button" not in event.ui_object_id: self.audio.play_sound_effect()
+                    if "#sliding_button" not in event.ui_object_id: 
+                        self.log_button_press(event.ui_object_id)
+                        self.audio.play_sound_effect()
+
                     if event.ui_object_id == "#back-button":
                         done = True
-                        break
 
                     elif event.ui_object_id == "#credits-button":
                         self.game_window.credits_screen.show()
@@ -239,22 +241,24 @@ class SettingsScreen(Screen):
                     elif event.ui_object_id == "#exit-button":
                         done = True
                         action = "exit_game"
-                        break
 
                     elif event.ui_object_id == "#feedback-button":
                         webbrowser.open(self.settings.feedback_link)
-                        break
 
                 elif event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
                     if event.ui_object_id == "#volume-slider":
                         self.audio.set_background_volume(self.volume_slider.get_current_value())
+
                     elif event.ui_object_id == "#sound-fx-slider":
                         self.audio.set_sound_fx_volume(self.sound_fx_slider.get_current_value())
 
                 self.ui_manager.process_events(event)
 
-            time_delta = math.ceil(time.time()) - time_delta
-            self.redraw_elements(self.managers, time_delta)
+            if not done:
+                time_delta = math.ceil(time.time()) - time_delta
+                self.redraw_elements(self.managers, time_delta)
         
         self.log_exit_screen()
+        
         return action
+    
