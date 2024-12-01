@@ -13,7 +13,8 @@ units of each other)
 1. Download the folder from the 'main' branch in this github repo
 2. Open the downloaded folder in your File Explorer
 3. Open the 'build' folder
-4. In this folder there will be a file named 'maze.exe'. Click on it to start playing!
+4. Open the zip file for the latest build version
+5. In this folder there will be a file named 'maze.exe'. Click on it to start playing!
 
 <br>
 
