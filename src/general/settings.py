@@ -14,7 +14,7 @@ class Settings:
         )
         self.version_info = "v2.0.0 Released December 2024"
 
-        self.survey_link = "https://docs.google.com/forms/d/e/1FAIpQLSchHIjMhzE13S0FutPxqLsUEoATb8NTOlnoPVz7oxOZajTKPA/viewform?usp=sf_link"
+        self.feedback_link = "https://docs.google.com/forms/d/e/1FAIpQLSchHIjMhzE13S0FutPxqLsUEoATb8NTOlnoPVz7oxOZajTKPA/viewform?usp=sf_link"
         
         self.user_settings_file = get_file_path("user/user_settings.json", False)
         self.default_user_settings = {
