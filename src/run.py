@@ -6,9 +6,8 @@ from src.screens.error_screen import ErrorScreen
 from src.general.audio import Audio
 from src.general.error_handler import ErrorHandler
 
-def load_content(game_window, settings, error_screen):
+def load_content(game_window, audio, error_screen):
     try:
-        audio = Audio(settings)
         game_window.loaded_percent = 0.11
         game_window.initialize_screens(audio)
         game_window.loaded_percent = 0.88
@@ -43,7 +42,9 @@ def run():
     error_screen = ErrorScreen(gw)
     error_screen.setup()
 
-    load_content_thread = threading.Thread(target=load_content, args=(gw,settings,error_screen))
+    audio = Audio(settings)
+
+    load_content_thread = threading.Thread(target=load_content, args=(gw,settings,audio,error_screen))
     loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,error_screen))
     load_content_thread.start()
     loading_screen_thread.start()
@@ -64,8 +65,7 @@ def run():
                     done = True
                 pygame.event.clear()
 
-            settings.user_settings["background_audio"]['volume'] = pygame.mixer.Channel(0).get_volume()
-            settings.user_settings["sound_fx"]['volume'] = pygame.mixer.Channel(1).get_volume()
+            audio.update_audio_settings()
             settings.save_settings()
         except Exception as e:
             gw.error = True
