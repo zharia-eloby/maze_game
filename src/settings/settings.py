@@ -12,7 +12,7 @@ class Settings:
             filemode='w',
             filename=self.log_filename
         )
-        self.version_info = "v2.0.0 Released November 2024"
+        self.version_info = "v2.0.0 Released December 2024"
         
         self.user_settings_file = get_file_path("src/settings/user_settings.json", False)
         self.default_user_settings = {
@@ -64,18 +64,44 @@ class Settings:
         self.medium_text_height = 36
         self.slider_height = 30
 
+    def has_required_data(self, expected, other):
+        if type(expected) != dict: return True
+
+        for key in expected.keys():
+            if key not in other:
+                return False
+            if type(expected[key]) != type(other[key]): 
+                return False
+            result = self.has_required_data(expected[key], other[key])
+            if not result: return result
+
+        return True # this will be reached only if the object is empty
+
+    def is_valid_user_settings(self, loaded_settings):
+        if not type(loaded_settings) == dict: return False
+        return self.has_required_data(self.default_user_settings, loaded_settings)
+    
     def load_settings(self):
         if os.path.exists(self.user_settings_file):
-            file = open(self.user_settings_file, 'r')
-            self.user_settings = json.loads(file.read())
-            file.close()
-        else:
-            with open(self.user_settings_file, 'w') as file:
-                self.user_settings = self.default_user_settings
-                json.dump(self.default_user_settings, file, indent=4)
-                file.close()
+            logging.info("Existing user settings file found")
+            with open(self.user_settings_file, 'r') as file:
+                try:
+                    loaded_settings = json.loads(file.read())
+                    if self.is_valid_user_settings(loaded_settings):
+                        self.user_settings = loaded_settings
+                        logging.info("Loaded user settings from existing file")
+                        return
+                    else: 
+                        logging.info("Existing file does not have required info")
+                except json.decoder.JSONDecodeError:
+                    logging.info("Error parsing user settings json")
+                
+        logging.info("Loading default settings")
+        with open(self.user_settings_file, 'w') as file:
+            json.dump(self.default_user_settings, file, indent=4)
+            self.user_settings = self.default_user_settings
+        logging.info("Loaded default settings successfully")
 
     def save_settings(self):
         with open(self.user_settings_file, 'w') as file:
             json.dump(self.user_settings, file, indent=4)
-            file.close()
