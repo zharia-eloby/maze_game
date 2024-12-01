@@ -4,7 +4,7 @@ from src.general.file_path_helper import get_file_path
 
 class Settings:
     def __init__(self):
-        self.log_filename = "maze_game_app.log"
+        self.log_filename = get_file_path("user/maze_game_app.log", False)
         logging.basicConfig(
             level=logging.DEBUG, 
             datefmt="%B %d, %Y %H:%M:%S", 
@@ -14,7 +14,7 @@ class Settings:
         )
         self.version_info = "v2.0.0 Released December 2024"
         
-        self.user_settings_file = get_file_path("src/settings/user_settings.json", False)
+        self.user_settings_file = get_file_path("user/user_settings.json", False)
         self.default_user_settings = {
             "background_audio": {
                 "volume": 1.0
