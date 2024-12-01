@@ -215,6 +215,9 @@ class SettingsScreen(Screen):
         self.set_slider_values()
         self.redraw_elements(self.managers, 0)
 
+        previous_background_volume = self.volume_slider.get_current_value()
+        previous_sound_fx_volume = self.sound_fx_slider.get_current_value()
+
         time_delta = math.ceil(time.time())
         done = False
         action = "back"
@@ -251,6 +254,15 @@ class SettingsScreen(Screen):
 
                     elif event.ui_object_id == "#sound-fx-slider":
                         self.audio.set_sound_fx_volume(self.sound_fx_slider.get_current_value())
+
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    if self.volume_slider.get_current_value() != previous_background_volume:
+                        self.log_general_event("Updated background volume to {volume}".format(volume=self.volume_slider.get_current_value()))
+                        previous_background_volume = self.volume_slider.get_current_value()
+                    
+                    if self.sound_fx_slider.get_current_value() != previous_sound_fx_volume:
+                        self.log_general_event("Updated sound fx volume to {volume}".format(volume=self.sound_fx_slider.get_current_value()))
+                        previous_sound_fx_volume = self.sound_fx_slider.get_current_value()
 
                 self.ui_manager.process_events(event)
 
