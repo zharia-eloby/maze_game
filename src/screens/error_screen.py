@@ -1,15 +1,16 @@
 import pygame, pygame_gui, os, math, time, webbrowser
 from src.screens.screen import Screen
+from src.general.file_path_helper import get_file_path
 from pygame_gui.core import ObjectID
 
 class ErrorScreen(Screen):
     def __init__(self, game_window):
-        super().__init__(game_window, None)
-        theme_file = os.path.realpath("src/themes/error/theme.json")
+        self.settings = game_window.settings
+        self.game_window = game_window
+        theme_file = get_file_path("src/themes/error/theme.json")
         self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.managers = [self.background_manager, self.ui_manager]
-
         self.error_text_box = None
 
     def setup(self):

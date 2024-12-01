@@ -1,5 +1,6 @@
 import pygame, os, json, logging
 from src.general.themes import BlueTheme
+from src.general.file_path_helper import get_file_path
 
 class Settings:
     def __init__(self):
@@ -13,7 +14,7 @@ class Settings:
         )
         self.version_info = "v2.0.0 Released November 2024"
         
-        self.user_settings_file = os.path.realpath("src/settings/user_settings.json")
+        self.user_settings_file = get_file_path("src/settings/user_settings.json", False)
         self.default_user_settings = {
             "background_audio": {
                 "volume": 1.0
