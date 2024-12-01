@@ -107,7 +107,7 @@ class ErrorScreen(Screen):
                 
                 elif event.type == pygame_gui.UI_BUTTON_PRESSED:
                     if event.ui_object_id == "#report-button":
-                        webbrowser.open("https://docs.google.com/forms/d/e/1FAIpQLSchHIjMhzE13S0FutPxqLsUEoATb8NTOlnoPVz7oxOZajTKPA/viewform?usp=sf_link")
+                        webbrowser.open(self.settings.feedback_link)
                     elif event.ui_object_id == "#exit-button":
                         done = True
 

@@ -1,5 +1,5 @@
 import pygame, sys, threading, logging
-from src.settings.settings import Settings
+from src.general.settings import Settings
 from src.general.game_window import GameWindow
 from src.screens.loading_screen import LoadingScreen
 from src.screens.error_screen import ErrorScreen
