@@ -32,17 +32,22 @@ def show_loading_screen(game_window, error_screen):
 def run():
     settings = Settings()
 
-    logging.info("APPLICATION START ({version})".format(version = settings.version_info))
+    logging.info("APPLICATION START ({version})".format(version=settings.version_info))
 
-    settings.load_settings()
+    try:
+        settings.load_settings()
 
-    gw = GameWindow(settings)
-    gw.initialize()
+        gw = GameWindow(settings)
+        gw.initialize()
 
-    error_screen = ErrorScreen(gw)
-    error_screen.setup()
+        error_screen = ErrorScreen(gw)
+        error_screen.setup()
 
-    audio = Audio(settings)
+        audio = Audio(settings)
+    except Exception as e:
+        logging.exception("Error while performing inital setup ({error_class})".format(error_class=e.__class__.__name__))
+        pygame.quit()
+        sys.exit()
 
     load_content_thread = threading.Thread(target=load_content, args=(gw,audio,error_screen))
     loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,error_screen))
