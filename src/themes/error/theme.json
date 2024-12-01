@@ -75,7 +75,9 @@
         "colours":
         {
             "dark_bg":"#000000",
-            "link_text": "#ffffff"
+            "link_text": "#77bdfc",
+            "link_hover": "#ffffff",
+            "link_selected": "#ffffff"
         },
         "misc":
         {
