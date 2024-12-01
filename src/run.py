@@ -44,7 +44,7 @@ def run():
 
     audio = Audio(settings)
 
-    load_content_thread = threading.Thread(target=load_content, args=(gw,settings,audio,error_screen))
+    load_content_thread = threading.Thread(target=load_content, args=(gw,audio,error_screen))
     loading_screen_thread = threading.Thread(target=show_loading_screen, args=(gw,error_screen))
     load_content_thread.start()
     loading_screen_thread.start()
