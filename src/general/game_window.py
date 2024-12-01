@@ -56,7 +56,7 @@ class GameWindow:
         with open(self.settings.theme.theme_file, "r") as file:
             contents = json.loads(file.read())
 
-        images_folder = get_file_path("src/themes/")
+        images_folder = get_file_path("src/assets/")
         if normal:
             image_file = contents[image_id]['images']['normal_image']['resource']
             img = Image.open(os.path.join(images_folder, image_file))

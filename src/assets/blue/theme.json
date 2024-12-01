@@ -11,7 +11,7 @@
             "size": "1",
             "regular_resource": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/font/DaysOne-Regular.ttf"
             }
         }
@@ -225,22 +225,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thick-Wide-Rect-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thick-Wide-Rect-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thick-Wide-Rect-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thick-Wide-Rect-Idle@4x.png"
             }
         },
@@ -261,22 +261,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thin-Wide-Rect-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thin-Wide-Rect-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thin-Wide-Rect-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Thin-Wide-Rect-Idle@4x.png"
             }
         },
@@ -307,22 +307,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Large-Play-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Large-Play-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Large-Play-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Large-Play-Idle@4x.png"
             }
         }
@@ -334,22 +334,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Play-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Play-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Play-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/play/Play-Idle@4x.png"
             }
         }
@@ -361,22 +361,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/home/Home-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/home/Home-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/home/Home-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/home/Home-Idle@4x.png"
             }
         }
@@ -388,22 +388,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/settings/Gear-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/settings/Gear-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/settings/Gear-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/settings/Gear-Idle@4x.png"
             }
         }
@@ -415,22 +415,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/navigation/MediumArrow-Left-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/navigation/MediumArrow-Left-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/navigation/MediumArrow-Left-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/navigation/MediumArrow-Left-Idle@4x.png"
             }
         }
@@ -442,22 +442,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/pause/Pause-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/pause/Pause-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/pause/Pause-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/pause/Pause-Idle@4x.png"
             }
         }
@@ -469,22 +469,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/reset/Repeat-Right-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/reset/Repeat-Right-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/reset/Repeat-Right-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/reset/Repeat-Right-Idle@4x.png"
             }
         }
@@ -501,22 +501,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/modal/Modal-Wide-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/modal/Modal-Wide-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/modal/Modal-Wide-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/modal/Modal-Wide-Idle@4x.png"
             }
         },
@@ -537,22 +537,22 @@
         {
             "normal_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Small-Rect-Idle@4x.png"
             },
             "hovered_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Small-Rect-Hover@4x.png"
             },
             "selected_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Small-Rect-Hover@4x.png"
             },
             "disabled_image": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "blue/images/general/Small-Rect-Disabled@4x.png"
             }
         }

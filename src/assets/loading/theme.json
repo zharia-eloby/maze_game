@@ -11,7 +11,7 @@
             "size": "1",
             "regular_resource": 
             {
-                "package": "src.themes",
+                "package": "src.assets",
                 "resource": "loading/font/Roboto-Regular.ttf"
             }
         }
