@@ -7,7 +7,7 @@ class LoadingScreen(Screen):
     def __init__(self, game_window):
         self.settings = game_window.settings
         self.game_window = game_window
-        theme_file = get_file_path("src/assets/loading/theme.json")
+        theme_file = get_file_path("app/src/assets/loading/theme.json")
         self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.managers = [self.ui_manager]
 

@@ -3,11 +3,11 @@ from src.general.file_path_helper import get_file_path
 
 class Theme():
     def __init__(self):
-        self.theme_file_path = "src/assets/themes/{theme}/theme.json"
-        self.background_audio_file_path = "src/assets/themes/{theme}/audio/{audio}"
-        self.button_pressed_sound_effect_file_path = "src/assets/themes/{theme}/audio/{sound_fx}"
-        self.victory_sound_effect_file_path = "src/assets/themes/{theme}/audio/{sound_fx}"
-        self.background_image_file_path = "src/assets/themes/{theme}/images/background/{background}"
+        self.theme_file_path = "app/src/assets/themes/{theme}/theme.json"
+        self.background_audio_file_path = "app/src/assets/themes/{theme}/audio/{audio}"
+        self.button_pressed_sound_effect_file_path = "app/src/assets/themes/{theme}/audio/{sound_fx}"
+        self.victory_sound_effect_file_path = "app/src/assets/themes/{theme}/audio/{sound_fx}"
+        self.background_image_file_path = "app/src/assets/themes/{theme}/images/background/{background}"
 
 
 class BlueTheme(Theme):

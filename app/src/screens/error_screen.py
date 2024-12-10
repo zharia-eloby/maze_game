@@ -7,7 +7,7 @@ class ErrorScreen(Screen):
     def __init__(self, game_window):
         self.settings = game_window.settings
         self.game_window = game_window
-        theme_file = get_file_path("src/assets/error/theme.json")
+        theme_file = get_file_path("app/src/assets/error/theme.json")
         self.ui_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), theme_file)
         self.managers = [self.background_manager, self.ui_manager]
