@@ -20,7 +20,7 @@ Prerequisite:
 Steps:
 1. Download or clone this repo
 2. Open a terminal and navigate to this repo
-3. (optional) Start a virtual environment by running `python -m venv .`, then run `Scripts\activate`
-    a. See these [docs](https://docs.python.org/3/library/venv.html) for more info on virtual environments
-4. Run `pip install -r requirements.txt`
-5. Run `python src/run.py`
+3. (optional, but recommended) Start a virtual environment by running `python -m venv .`, then run `Scripts\activate`
+    * See these [docs](https://docs.python.org/3/library/venv.html) for more info on virtual environments
+4. Run `pip install -r requirements.txt` to install all dependencies
+5. Run `python app/run.py`
