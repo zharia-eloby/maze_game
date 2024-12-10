@@ -1,5 +1,5 @@
 import os
-from src.general.file_path_helper import get_file_path
+from src.general.helpers import get_file_path
 
 class Theme():
     def __init__(self):

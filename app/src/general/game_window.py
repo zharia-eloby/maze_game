@@ -5,7 +5,7 @@ from src.screens.pick_size_screen import PickSizeScreen
 from src.screens.basic_custom_size_screen import BasicCustomSizeScreen
 from src.screens.play_screen import PlayScreen
 from src.screens.settings_screen import SettingsScreen
-from src.general.file_path_helper import get_file_path
+from src.general.helpers import get_file_path
 from PIL import Image
 
 class GameWindow:

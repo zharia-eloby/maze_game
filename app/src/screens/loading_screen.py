@@ -1,7 +1,7 @@
 import pygame, pygame_gui, math, time
 from pygame_gui.core import ObjectID
 from src.screens.screen import Screen
-from src.general.file_path_helper import get_file_path
+from src.general.helpers import get_file_path
 
 class LoadingScreen(Screen):
     def __init__(self, game_window):

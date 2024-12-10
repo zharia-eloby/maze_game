@@ -1,6 +1,6 @@
 import pygame, pygame_gui, os, math, time, webbrowser
 from src.screens.screen import Screen
-from src.general.file_path_helper import get_file_path
+from src.general.helpers import get_file_path
 from pygame_gui.core import ObjectID
 
 class ErrorScreen(Screen):
