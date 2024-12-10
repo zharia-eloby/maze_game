@@ -1,10 +1,10 @@
 import os, sys
 from pathlib import Path
 
-def get_file_path(relative_path, temp=True):
+def get_file_path(relative_path, temp_file=True):
     # if running executable
     if hasattr(sys, "_MEIPASS"): 
-        if temp:
+        if temp_file:
             base_path = sys._MEIPASS
         else: 
             os.makedirs(os.path.dirname(relative_path), exist_ok=True)
