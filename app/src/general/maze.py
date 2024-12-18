@@ -1,5 +1,6 @@
 import random, pygame, pygame_gui
 from pygame_gui.core import ObjectID
+from src.general.helpers import get_opposite_direction
 
 class Cell:
     def __init__(self, row_index, col_index):
@@ -8,20 +9,6 @@ class Cell:
         self.walls = { "left": True, "right": True, "up": True, "down": True }
         self.visited = False
         self.rect = None
-
-    """
-    for debugging purposes
-    prints the cell as a box, i.e. |_|
-    """
-    def __str__(self):
-        cell_str = ""
-        if self.walls["left"]: cell_str += '|'
-        else: cell_str += ' '
-        if self.walls["down"]: cell_str += '_' 
-        else: cell_str += ' '
-        if self.walls["right"]: cell_str += '|'
-        else: cell_str += ' '
-        return cell_str
 
     """
     return walls where key value is True
@@ -40,6 +27,16 @@ class Cell:
         for i in list(self.walls):
             if not self.walls[i]: open_walls += [i]
         return open_walls
+    
+    def get_direction_to_neighbor(self, neighbor):
+        if self.row_index == neighbor.row_index:
+            if self.col_index > neighbor.col_index: 
+                return "left"
+            return "right"
+
+        if self.row_index > neighbor.row_index: 
+            return "up"
+        return "down"
         
 class Maze:
     def __init__(self, dimensions):
@@ -49,38 +46,9 @@ class Maze:
         self.endpoint = None
         self.solution = []
 
-    def __str__(self, pretty_print):
-        if pretty_print:
-            row_str = ""
-            for row in self.maze:
-                for cell in row:
-                    row_str += cell.__str__()
-                print(row_str)
-                row_str = ""
-        else:
-            for row in self.maze:
-                print("[")
-                for cell in row:
-                    print(cell.walls)
-                print("]")
-
     def update_maze_size(self, new_dimensions):
         self.dimensions = new_dimensions
         self.maze = [ [ Cell(j, i) for i in range(self.dimensions[1]) ] for j in range(self.dimensions[0]) ]
-
-    def get_direction_from_cell_to_neighbor(self, from_cell, to_cell):
-        if from_cell.row_index == to_cell.row_index:
-            if from_cell.col_index > to_cell.col_index: return "left"
-            else: return "right"
-
-        if from_cell.row_index > to_cell.row_index: return "up"
-        else: return "down"
-
-    def get_opposite_direction(self, direction):
-        if direction == "left": return "right"
-        elif direction == "right": return "left"
-        elif direction == "up": return "down"
-        elif direction == "down": return "up"
         
     def get_neighbor_cell(self, cell, direction):
         if direction == "left":
@@ -123,10 +91,10 @@ class Maze:
                 cell.visited = False
 
     def remove_wall_between_cells(self, cell, neighbor):
-        direction_to_neighbor = self.get_direction_from_cell_to_neighbor(cell, neighbor)
+        direction_to_neighbor = cell.get_direction_to_neighbor(neighbor)
         cell.walls[direction_to_neighbor] = False
 
-        direction_to_cell = self.get_opposite_direction(direction_to_neighbor)
+        direction_to_cell = get_opposite_direction(direction_to_neighbor)
         neighbor.walls[direction_to_cell] = False
 
     def create_maze(self):
@@ -393,7 +361,7 @@ class LineSolutionUI():
         if self.line_height_thickness < 2: self.line_height_thickness = 2
 
     def draw_next_segment(self, draw_full, current_cell, next_cell):
-        self.current_direction = self.maze_ui.get_direction_from_cell_to_neighbor(current_cell, next_cell)
+        self.current_direction = current_cell.get_direction_to_neighbor(next_cell)
         if self.current_direction == "down":
             line_rect = pygame.Rect()
             line_rect.left = current_cell.rect.centerx + self.maze_ui.wall_thickness/2 - self.line_width_thickness/2

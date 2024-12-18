@@ -17,3 +17,8 @@ def get_file_path(relative_path, temp_file=True):
     os.makedirs(os.path.dirname(relative_path), exist_ok=True)
     return os.path.join(os.path.realpath(base_path), os.path.realpath(relative_path))
     
+def get_opposite_direction(direction):
+    if direction == "left": return "right"
+    elif direction == "right": return "left"
+    elif direction == "up": return "down"
+    elif direction == "down": return "up"
