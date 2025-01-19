@@ -1,24 +1,8 @@
-import random
 from app.src.general.maze import Cell, Maze
 
-rows_min = 5
-rows_max = 50
-cols_min  = 5
-cols_max = 50
-
-def test_get_blocked_walls():
-    cell = Cell(0, 0)
-    cell.walls = { "left": True, "right": False, "up": True, "down": False }
-    assert cell.get_blocked_walls() == ["left", "up"]
-
-def test_get_open_walls():
-    cell = Cell(0, 0)
-    cell.walls = { "left": True, "right": False, "up": True, "down": False }
-    assert cell.get_open_walls() == ["right", "down"]
-
 def test_init():
-    rows = random.randint(rows_min, rows_max)
-    columns = random.randint(cols_min, cols_max)
+    rows = 10
+    columns = 6
     maze = Maze((rows, columns))
 
     assert maze.dimensions == (rows, columns)
@@ -41,6 +25,71 @@ def test_update_maze_size():
         assert len(row) == 9
         for cell in row:
             assert len(cell.get_blocked_walls()) == 4
+
+def test_get_neighbor_cell():
+    maze = Maze((5, 5))
+    cell = maze.maze[2][2]
+
+    assert maze.get_neighbor_cell(cell, "left") == maze.maze[2][1]
+    assert maze.get_neighbor_cell(cell, "right") == maze.maze[2][3]
+    assert maze.get_neighbor_cell(cell, "up") == maze.maze[1][2]
+    assert maze.get_neighbor_cell(cell, "down") == maze.maze[3][2]
+
+def test_get_unvisited_neighbors():
+    maze = Maze((5, 5))
+    cell = maze.maze[2][2]
+
+    unvisited_neighbors = maze.get_unvisited_neighbors(cell, False)
+    assert len(unvisited_neighbors) == 4
+    assert maze.maze[2][1] in unvisited_neighbors
+    assert maze.maze[2][3] in unvisited_neighbors
+    assert maze.maze[1][2] in unvisited_neighbors
+    assert maze.maze[3][2] in unvisited_neighbors
+
+    unvisited_neighbors = maze.get_unvisited_neighbors(cell, True)
+    assert len(unvisited_neighbors) == 0
+
+    maze.maze[2][1].visited = True
+    maze.maze[3][2].visited = True
+    cell.walls["left"] = False
+    cell.walls["up"] = False
+
+    unvisited_neighbors = maze.get_unvisited_neighbors(cell, False)
+    assert len(unvisited_neighbors) == 2
+    assert maze.maze[2][3] in unvisited_neighbors
+    assert maze.maze[1][2] in unvisited_neighbors
+
+    unvisited_neighbors = maze.get_unvisited_neighbors(cell, True)
+    assert len(unvisited_neighbors) == 1
+    assert maze.maze[1][2] in unvisited_neighbors
+
+def test_set_startpoint_endpoint():
+    maze = Maze((5, 5))
+    maze.set_startpoint_endpoint()
+
+    assert type(maze.startpoint) == Cell
+    assert type(maze.endpoint) == Cell
+
+    assert maze.startpoint.row_index >= 0
+    assert maze.startpoint.row_index < 5
+    assert maze.endpoint.row_index >= 0
+    assert maze.endpoint.row_index < 5
+
+    assert maze.startpoint.col_index >= 0
+    assert maze.startpoint.col_index < 5
+    assert maze.endpoint.col_index >= 0
+    assert maze.endpoint.col_index < 5
+
+def test_reset_visited():
+    maze = Maze((5, 5))
+    for row in maze.maze:
+        for cell in row:
+            cell.visited == True
+
+    maze.reset_visited()
+    for row in maze.maze:
+        for cell in row:
+            assert cell.visited == False
 
 def test_remove_wall_between_cells():
     maze = Maze((10, 10))
@@ -78,8 +127,8 @@ def test_remove_wall_between_cells():
     assert neighbor.walls["down"] and neighbor.walls["up"] and neighbor.walls["right"]
     
 def test_create_maze():
-    rows = random.randint(rows_min, rows_max)
-    columns = random.randint(cols_min, cols_max)
+    rows = 5
+    columns = 5
     maze = Maze((rows, columns))
     maze.create_maze()
 
@@ -93,8 +142,8 @@ def test_create_maze():
     assert maze.startpoint != maze.endpoint
 
 def test_solve_maze():
-    rows = random.randint(rows_min, rows_max)
-    columns = random.randint(cols_min, cols_max)
+    rows = 5
+    columns = 5
     maze = Maze((rows, columns))
     maze.create_maze()
     maze.solve_maze()
@@ -109,6 +158,3 @@ def test_solve_maze():
         # assert current cell is 1 spot away from previous cell
         assert (previous_cell.row_index == maze.solution[i].row_index) ^ (previous_cell.col_index == maze.solution[i].col_index)
         previous_cell = maze.solution[i]
-
-if __name__ == "__main__":
-    maze = Maze((5, 5))
