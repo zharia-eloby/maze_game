@@ -1,10 +1,20 @@
 import random
-from src.general.maze import Cell, Maze
+from app.src.general.maze import Cell, Maze
 
 rows_min = 5
 rows_max = 50
 cols_min  = 5
 cols_max = 50
+
+def test_get_blocked_walls():
+    cell = Cell(0, 0)
+    cell.walls = { "left": True, "right": False, "up": True, "down": False }
+    assert cell.get_blocked_walls() == ["left", "up"]
+
+def test_get_open_walls():
+    cell = Cell(0, 0)
+    cell.walls = { "left": True, "right": False, "up": True, "down": False }
+    assert cell.get_open_walls() == ["right", "down"]
 
 def test_init():
     rows = random.randint(rows_min, rows_max)
@@ -99,3 +109,6 @@ def test_solve_maze():
         # assert current cell is 1 spot away from previous cell
         assert (previous_cell.row_index == maze.solution[i].row_index) ^ (previous_cell.col_index == maze.solution[i].col_index)
         previous_cell = maze.solution[i]
+
+if __name__ == "__main__":
+    maze = Maze((5, 5))

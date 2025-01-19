@@ -1,4 +1,4 @@
-from src.general.maze import Cell
+from app.src.general.maze import Cell
 
 def test_get_blocked_walls():
     cell = Cell(0, 0)
