@@ -1,5 +1,14 @@
 from app.src.general.maze import Cell
 
+def test_cell_init():
+    cell = Cell(2, 5)
+    
+    assert cell.row_index == 2
+    assert cell.col_index == 5
+    assert cell.walls == { "left": True, "right": True, "up": True, "down": True }
+    assert cell.visited == False
+    assert cell.rect == None
+
 def test_get_blocked_walls():
     cell = Cell(0, 0)
 

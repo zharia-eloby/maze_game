@@ -1,6 +1,6 @@
 from app.src.general.maze import Cell, Maze
 
-def test_init():
+def test_maze_init():
     rows = 10
     columns = 6
     maze = Maze((rows, columns))
