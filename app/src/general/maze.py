@@ -1,6 +1,6 @@
 import random, pygame, pygame_gui
 from pygame_gui.core import ObjectID
-from src.general.helpers import get_opposite_direction
+from app.src.general.helpers import get_opposite_direction
 
 class Cell:
     def __init__(self, row_index, col_index):

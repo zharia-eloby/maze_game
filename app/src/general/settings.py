@@ -1,6 +1,6 @@
 import pygame, os, json, logging
-from src.general.themes import BlueTheme
-from src.general.helpers import get_file_path
+from app.src.general.themes import BlueTheme
+from app.src.general.helpers import get_file_path
 
 class Settings:
     def __init__(self):
