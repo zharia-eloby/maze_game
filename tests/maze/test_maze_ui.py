@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import pygame, pytest
 from app.src.general.maze import MazeUI
 from app.src.general.settings import Settings
@@ -36,4 +35,19 @@ def test_set_ui_element_sizes(settings):
     assert maze_ui.maze_area_rect.width == 404
     assert maze_ui.maze_area_rect.height == 404
     assert maze_ui.maze_area_rect.bottom == 450
-    assert maze_ui.maze_area_rect.left == 4
+    assert maze_ui.maze_area_rect.left == 48
+
+def test_move_player(settings):
+    maze_ui = MazeUI((5, 10), settings, True)
+    maze_ui.set_maze_ui(maze_ui.settings.drawable_area)
+    maze_ui.startpoint.walls = { "left": True, "right": False, "up": True, "down": True }
+    original_player_position = maze_ui.player_position
+    original_player_coor = maze_ui.player.get_relative_rect().center
+
+    maze_ui.move_player("left")
+    assert maze_ui.player_position == original_player_position
+    assert maze_ui.player.get_relative_rect().center == original_player_coor
+
+    maze_ui.move_player("right")
+    assert maze_ui.player_position == maze_ui.maze[original_player_position.row_index][original_player_position.col_index+1]
+    assert maze_ui.player.get_relative_rect().center != original_player_coor

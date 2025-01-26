@@ -146,7 +146,7 @@ class Maze:
             current_cell.visited = True
 
 class MazeUI(Maze):
-    def __init__(self, dimensions, settings, testing = False):
+    def __init__(self, dimensions, settings, test_mode = False):
         super().__init__(dimensions)
         self.settings = settings
         self.cell_width = None
@@ -163,12 +163,12 @@ class MazeUI(Maze):
         self.maze_background_manager = pygame_gui.UIManager(
             (self.settings.screen_width, self.settings.screen_height), 
             self.settings.theme.theme_file,
-            resource_loader = ThreadedLoader() if testing else None
+            resource_loader = ThreadedLoader() if test_mode else None
         )
         self.maze_manager = pygame_gui.UIManager(
             (self.settings.screen_width, self.settings.screen_height), 
             self.settings.theme.theme_file,
-            resource_loader = ThreadedLoader() if testing else None
+            resource_loader = ThreadedLoader() if test_mode else None
         )
 
     """
