@@ -1,4 +1,10 @@
+import pytest
 from app.src.general.maze import Cell, Maze
+from helpers.mock_maze import get_example_maze
+
+@pytest.fixture
+def mock_maze():
+    return get_example_maze()
 
 def test_maze_init():
     rows = 10
@@ -15,25 +21,22 @@ def test_maze_init():
         for cell in row:
             assert len(cell.get_blocked_walls()) == 4
 
-def test_update_maze_size():
-    maze = Maze((5, 5))
-
-    maze.update_maze_size((7, 9))
-    assert maze.dimensions == (7, 9)
-    assert len(maze.maze) == 7
-    for row in maze.maze:
+def test_update_maze_size(mock_maze):
+    mock_maze.update_maze_size((7, 9))
+    assert mock_maze.dimensions == (7, 9)
+    assert len(mock_maze.maze) == 7
+    for row in mock_maze.maze:
         assert len(row) == 9
         for cell in row:
             assert len(cell.get_blocked_walls()) == 4
 
-def test_get_neighbor_cell():
-    maze = Maze((5, 5))
-    cell = maze.maze[2][2]
+def test_get_neighbor_cell(mock_maze):
+    cell = mock_maze.maze[2][2]
 
-    assert maze.get_neighbor_cell(cell, "left") == maze.maze[2][1]
-    assert maze.get_neighbor_cell(cell, "right") == maze.maze[2][3]
-    assert maze.get_neighbor_cell(cell, "up") == maze.maze[1][2]
-    assert maze.get_neighbor_cell(cell, "down") == maze.maze[3][2]
+    assert mock_maze.get_neighbor_cell(cell, "left") == mock_maze.maze[2][1]
+    assert mock_maze.get_neighbor_cell(cell, "right") == mock_maze.maze[2][3]
+    assert mock_maze.get_neighbor_cell(cell, "up") == mock_maze.maze[1][2]
+    assert mock_maze.get_neighbor_cell(cell, "down") == mock_maze.maze[3][2]
 
 def test_get_unvisited_neighbors():
     maze = Maze((5, 5))
@@ -141,20 +144,13 @@ def test_create_maze():
     assert maze.endpoint != None
     assert maze.startpoint != maze.endpoint
 
-def test_solve_maze():
-    rows = 5
-    columns = 5
-    maze = Maze((rows, columns))
-    maze.create_maze()
+def test_solve_maze(mock_maze):
+    expected_solution = mock_maze.solution
+
+    maze = Maze((5, 5))
+    maze.maze = mock_maze.maze
+    maze.startpoint = mock_maze.startpoint
+    maze.endpoint = mock_maze.endpoint
     maze.solve_maze()
 
-    # assert maze solution array contains correct content
-    assert len(maze.solution) > 0
-    assert maze.startpoint == maze.solution[0]
-    assert maze.endpoint == maze.solution[-1]
-
-    previous_cell = maze.startpoint
-    for i in range(1, len(maze.solution)):
-        # assert current cell is 1 spot away from previous cell
-        assert (previous_cell.row_index == maze.solution[i].row_index) ^ (previous_cell.col_index == maze.solution[i].col_index)
-        previous_cell = maze.solution[i]
+    assert maze.solution == expected_solution
