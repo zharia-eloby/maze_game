@@ -9,17 +9,8 @@ def mock_settings():
     class MockSettings(Settings):
         def __init__(self):
             super().__init__()
-            self.user_settings = {
-                "background_audio": {
-                    "volume": 1.0
-                },
-                "sound_fx": {
-                    "volume": 1.0
-                }
-            }
             self.screen_width = 500
             self.screen_height = 500
-            self.line_spacing = 10
             margin = 50
             self.drawable_area = pygame.Rect(
                 margin,
