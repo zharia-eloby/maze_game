@@ -34,7 +34,7 @@ def mock_maze_ui(mock_settings):
     class MockMazeUI(MazeUI):
         def __init__(self):
             super().__init__((5, 5), mock_settings, True)
-            self.maze = get_example_maze()
+            self.maze = get_example_maze().maze
             self.cell_width = 80
             self.cell_height = 80
             self.wall_thickness = 8
@@ -76,18 +76,18 @@ def test_set_ui_element_sizes(mock_settings):
     assert maze_ui.maze_area_rect.left == 48
 
 def test_move_player_right(mock_maze_ui):
-    maze_ui = mock_maze_ui
-    maze_ui.move_player("right")
+    mock_maze_ui.player_position.walls = {'left': False, 'right': True, 'up': True, 'down': False}
+    mock_maze_ui.move_player("right")
 
-    assert maze_ui.player_position == maze_ui.maze[1][2]
-    assert maze_ui.player.get_relative_rect().topleft == (0, 0)
+    assert mock_maze_ui.player_position == mock_maze_ui.maze[1][2]
+    assert mock_maze_ui.player.get_relative_rect().topleft == (0, 0)
 
 def test_move_player_up(mock_maze_ui):
-    maze_ui = mock_maze_ui
-    maze_ui.move_player("up")
+    mock_maze_ui.player_position.walls = {'left': False, 'right': True, 'up': True, 'down': False}
+    mock_maze_ui.move_player("up")
 
-    assert maze_ui.player_position == maze_ui.maze[1][2]
-    assert maze_ui.player.get_relative_rect().topleft == (0, 0)
+    assert mock_maze_ui.player_position == mock_maze_ui.maze[1][2]
+    assert mock_maze_ui.player.get_relative_rect().topleft == (0, 0)
 
 def test_move_player_left(mock_maze_ui):
     with patch('app.src.general.maze.MazeUI.get_neighbor_cell') as mock_get_neighbor_cell:
@@ -95,6 +95,7 @@ def test_move_player_left(mock_maze_ui):
         cell.rect = pygame.Rect(0, 0, 50, 50)
         mock_get_neighbor_cell.return_value = cell
 
+        mock_maze_ui.player_position.walls = {'left': False, 'right': True, 'up': True, 'down': False}
         mock_maze_ui.move_player("left")
 
         assert mock_maze_ui.player_position == mock_maze_ui.maze[1][1]
@@ -106,6 +107,7 @@ def test_move_player_down(mock_maze_ui):
         cell.rect = pygame.Rect(0, 0, 50, 50)
         mock_get_neighbor_cell.return_value = cell
 
+        mock_maze_ui.player_position.walls = {'left': False, 'right': True, 'up': True, 'down': False}
         mock_maze_ui.move_player("down")
 
         assert mock_maze_ui.player_position == mock_maze_ui.maze[2][2]
