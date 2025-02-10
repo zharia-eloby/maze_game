@@ -1,3 +1,4 @@
+import pytest
 from app.src.general.maze import Cell
 
 def test_cell_init():
@@ -27,13 +28,27 @@ def test_get_open_walls():
     cell.walls = { "left": True, "right": True, "up": True, "down": True }
     assert cell.get_open_walls() == []
 
-def test_get_direction_to_neighbor():
-    cell = Cell(1, 1)
-    neighbor = Cell(1, 2)
-    assert cell.get_direction_to_neighbor(neighbor) == "right"
-    assert neighbor.get_direction_to_neighbor(cell) == "left"
-
-    cell = Cell(2, 1)
-    neighbor = Cell(1, 1)
-    assert cell.get_direction_to_neighbor(neighbor) == "up"
-    assert neighbor.get_direction_to_neighbor(cell) == "down"
+@pytest.mark.parametrize("cell, neighbor, expected_direction_to_neighbor", [
+    pytest.param(
+        Cell(1, 1),
+        Cell(1, 2),
+        "right"
+    ),
+    pytest.param(
+        Cell(1, 1),
+        Cell(1, 0),
+        "left"
+    ),
+    pytest.param(
+        Cell(1, 1),
+        Cell(0, 1),
+        "up"
+    ),
+    pytest.param(
+        Cell(1, 1),
+        Cell(2, 1),
+        "down"
+    )
+])
+def test_get_direction_to_neighbor(cell, neighbor, expected_direction_to_neighbor):
+    assert cell.get_direction_to_neighbor(neighbor) == expected_direction_to_neighbor
