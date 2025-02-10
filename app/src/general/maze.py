@@ -357,9 +357,8 @@ class MazeUI(Maze):
         self.maze_manager.clear_and_reset()
 
 class LineSolutionUI():
-    def __init__(self, maze_ui):
+    def __init__(self, maze_ui, test_mode=False):
         self.maze_ui = maze_ui
-        self.solution_manager = pygame_gui.UIManager((self.maze_ui.settings.screen_width, self.maze_ui.settings.screen_height), self.maze_ui.settings.theme.theme_file)
         self.increment = 1
         self.index = 0
         self.current_line = None
@@ -374,6 +373,17 @@ class LineSolutionUI():
         self.line_height_thickness -= self.line_height_thickness%2
         if self.line_width_thickness < 2: self.line_width_thickness = 2
         if self.line_height_thickness < 2: self.line_height_thickness = 2
+
+        """
+        when running the unit tests with pytest, tests hang when creating the UIManager.
+        Current workaround: specify the `ThreadedLoader` resource loader instead of the
+        default `BlockingThreadedResourceLoader` resource loader
+        """
+        self.solution_manager = pygame_gui.UIManager(
+            (self.maze_ui.settings.screen_width, self.maze_ui.settings.screen_height), 
+            self.maze_ui.settings.theme.theme_file,
+            resource_loader = ThreadedLoader() if test_mode else None
+        )
 
     def draw_next_segment(self, draw_full, current_cell, next_cell):
         self.current_direction = current_cell.get_direction_to_neighbor(next_cell)
