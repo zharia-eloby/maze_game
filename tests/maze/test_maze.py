@@ -30,13 +30,33 @@ def test_update_maze_size(mock_maze):
         for cell in row:
             assert len(cell.get_blocked_walls()) == 4
 
-def test_get_neighbor_cell(mock_maze):
+@pytest.mark.parametrize("direction, expected_row_col", [
+    pytest.param(
+        "left",
+        (2, 1),
+        id="when neighbor is left of the current cell"
+    ),
+    pytest.param(
+        "right",
+        (2, 3),
+        id="when neighbor is right of the current cell"
+    ),
+    pytest.param(
+        "up",
+        (1, 2),
+        id="when neighbor is above the current cell"
+    ),
+    pytest.param(
+        "down",
+        (3, 2),
+        id="when neighbor is below the current cell"
+    )
+])
+def test_get_neighbor_cell(mock_maze, direction, expected_row_col):
     cell = mock_maze.maze[2][2]
-
-    assert mock_maze.get_neighbor_cell(cell, "left") == mock_maze.maze[2][1]
-    assert mock_maze.get_neighbor_cell(cell, "right") == mock_maze.maze[2][3]
-    assert mock_maze.get_neighbor_cell(cell, "up") == mock_maze.maze[1][2]
-    assert mock_maze.get_neighbor_cell(cell, "down") == mock_maze.maze[3][2]
+    row = expected_row_col[0]
+    col = expected_row_col[1]
+    assert mock_maze.get_neighbor_cell(cell, direction) == mock_maze.maze[row][col]
 
 def test_get_unvisited_neighbors():
     maze = Maze((5, 5))
@@ -94,40 +114,77 @@ def test_reset_visited():
         for cell in row:
             assert cell.visited == False
 
-def test_remove_wall_between_cells():
+@pytest.mark.parametrize("cell, neighbor, expected_cell_walls, expected_neighbor_walls", [
+    pytest.param(
+        Cell(4, 5),
+        Cell(5, 5),
+        {
+            'left': True,
+            'right': True,
+            'up': True,
+            'down': False
+        },
+        {
+            'left': True,
+            'right': True,
+            'up': False,
+            'down': True
+        }
+    ),
+    pytest.param(
+        Cell(4, 5),
+        Cell(3, 5),
+        {
+            'left': True,
+            'right': True,
+            'up': False,
+            'down': True
+        },
+        {
+            'left': True,
+            'right': True,
+            'up': True,
+            'down': False
+        }
+    ),
+    pytest.param(
+        Cell(4, 5),
+        Cell(4, 4),
+        {
+            'left': False,
+            'right': True,
+            'up': True,
+            'down': True
+        },
+        {
+            'left': True,
+            'right': False,
+            'up': True,
+            'down': True
+        }
+    ),
+    pytest.param(
+        Cell(4, 5),
+        Cell(4, 6),
+        {
+            'left': True,
+            'right': False,
+            'up': True,
+            'down': True
+        },
+        {
+            'left': False,
+            'right': True,
+            'up': True,
+            'down': True
+        }
+    )
+])
+def test_remove_wall_between_cells(cell, neighbor, expected_cell_walls, expected_neighbor_walls):
     maze = Maze((10, 10))
-
-    cell = Cell(4, 5)
-    neighbor = Cell(5, 5)
     maze.remove_wall_between_cells(cell, neighbor)
-    assert cell.walls["down"] == False
-    assert neighbor.walls["up"] == False
-    assert cell.walls["up"] and cell.walls["left"] and cell.walls["right"]
-    assert neighbor.walls["down"] and neighbor.walls["left"] and neighbor.walls["right"]
-
-    cell = Cell(4, 5)
-    neighbor = Cell(3, 5)
-    maze.remove_wall_between_cells(cell, neighbor)
-    assert cell.walls["up"] == False
-    assert neighbor.walls["down"] == False
-    assert cell.walls["down"] and cell.walls["left"] and cell.walls["right"]
-    assert neighbor.walls["up"] and neighbor.walls["left"] and neighbor.walls["right"]
-
-    cell = Cell(6, 3)
-    neighbor = Cell(6, 2)
-    maze.remove_wall_between_cells(cell, neighbor)
-    assert cell.walls["left"] == False
-    assert neighbor.walls["right"] == False
-    assert cell.walls["up"] and cell.walls["down"] and cell.walls["right"]
-    assert neighbor.walls["down"] and neighbor.walls["up"] and neighbor.walls["left"]
-
-    cell = Cell(9, 7)
-    neighbor = Cell(9, 8)
-    maze.remove_wall_between_cells(cell, neighbor)
-    assert cell.walls["right"] == False
-    assert neighbor.walls["left"] == False
-    assert cell.walls["up"] and cell.walls["down"] and cell.walls["left"]
-    assert neighbor.walls["down"] and neighbor.walls["up"] and neighbor.walls["right"]
+    assert cell.walls == expected_cell_walls
+    assert neighbor.walls == expected_neighbor_walls
     
 def test_create_maze():
     rows = 5
