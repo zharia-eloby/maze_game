@@ -32,22 +32,26 @@ def test_get_open_walls():
     pytest.param(
         Cell(1, 1),
         Cell(1, 2),
-        "right"
+        "right",
+        id="when neighbor is right of cell"
     ),
     pytest.param(
         Cell(1, 1),
         Cell(1, 0),
-        "left"
+        "left",
+        id="when neighbor is left of cell"
     ),
     pytest.param(
         Cell(1, 1),
         Cell(0, 1),
-        "up"
+        "up",
+        id="when neighbor is above cell"
     ),
     pytest.param(
         Cell(1, 1),
         Cell(2, 1),
-        "down"
+        "down",
+        id="when neighbor is below cell"
     )
 ])
 def test_get_direction_to_neighbor(cell, neighbor, expected_direction_to_neighbor):

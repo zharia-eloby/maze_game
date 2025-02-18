@@ -68,15 +68,18 @@ def test_set_ui_element_sizes(mock_settings):
 @pytest.mark.parametrize("cell_coordinates, expected_call_count", [
     pytest.param(
         (0, 0),
-        3
+        3,
+        id="when cell is in the first row and first column"
     ),
     pytest.param(
-        (1, 4),
-        2
+        (2, 4),
+        2,
+        id="when only the 'right' and 'down' walls should be drawn"
     ),
     pytest.param(
         (1, 3),
-        0
+        0,
+        id="when cell has no walls"
     )
 ])
 def test_draw_walls(mocker, mock_maze_ui, cell_coordinates, expected_call_count):
@@ -117,12 +120,14 @@ def test_set_maze_ui(mocker, mock_settings):
     pytest.param(
         "right",
         (1, 2),
-        (100, 50)
+        (100, 50),
+        id="when player cannot move in the specified direction"
     ),
     pytest.param(
         "down",
         (2, 2),
-        (104, 104)
+        (104, 104),
+        id="when player can move in the specified direction"
     )
 ])
 def test_move_player(mock_maze_ui, direction, expected_player_coordinates, expected_rect_topleft):

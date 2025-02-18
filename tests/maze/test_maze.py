@@ -129,7 +129,8 @@ def test_reset_visited():
             'right': True,
             'up': False,
             'down': True
-        }
+        },
+        id="when removing the wall between the 'down' neighbor"
     ),
     pytest.param(
         Cell(4, 5),
@@ -145,7 +146,8 @@ def test_reset_visited():
             'right': True,
             'up': True,
             'down': False
-        }
+        },
+        id="when removing the wall between the 'up' neighbor"
     ),
     pytest.param(
         Cell(4, 5),
@@ -161,7 +163,8 @@ def test_reset_visited():
             'right': False,
             'up': True,
             'down': True
-        }
+        },
+        id="when removing the wall between the 'left' neighbor"
     ),
     pytest.param(
         Cell(4, 5),
@@ -177,7 +180,8 @@ def test_reset_visited():
             'right': True,
             'up': True,
             'down': True
-        }
+        },
+        id="when removing the wall between the 'right' neighbor"
     )
 ])
 def test_remove_wall_between_cells(cell, neighbor, expected_cell_walls, expected_neighbor_walls):
