@@ -10,23 +10,41 @@ def test_cell_init():
     assert cell.visited == False
     assert cell.rect == None
 
-def test_get_blocked_walls():
+@pytest.mark.parametrize("walls, expected_blocked_walls", [
+    pytest.param(
+        { "left": True, "right": False, "up": True, "down": False },
+        ["left", "up"],
+        id="when cell has blocked walls"
+    ),
+    pytest.param(
+        { "left": False, "right": False, "up": False, "down": False },
+        [],
+        id="when cell does not have blocked walls"
+    )
+])
+def test_get_blocked_walls(walls, expected_blocked_walls):
     cell = Cell(0, 0)
+    cell.walls = walls
 
-    cell.walls = { "left": True, "right": False, "up": True, "down": False }
-    assert cell.get_blocked_walls() == ["left", "up"]
+    assert cell.get_blocked_walls() == expected_blocked_walls
 
-    cell.walls = { "left": False, "right": False, "up": False, "down": False }
-    assert cell.get_blocked_walls() == []
-
-def test_get_open_walls():
+@pytest.mark.parametrize("walls, expected_open_walls", [
+    pytest.param(
+        { "left": True, "right": False, "up": True, "down": False },
+        ["right", "down"],
+        id="when cell has open walls"
+    ),
+    pytest.param(
+        { "left": True, "right": True, "up": True, "down": True },
+        [],
+        id="when cell does not have open walls"
+    )
+])
+def test_get_open_walls(walls, expected_open_walls):
     cell = Cell(0, 0)
+    cell.walls = walls
 
-    cell.walls = { "left": True, "right": False, "up": True, "down": False }
-    assert cell.get_open_walls() == ["right", "down"]
-
-    cell.walls = { "left": True, "right": True, "up": True, "down": True }
-    assert cell.get_open_walls() == []
+    assert cell.get_open_walls() == expected_open_walls
 
 @pytest.mark.parametrize("cell, neighbor, expected_direction_to_neighbor", [
     pytest.param(
