@@ -1,7 +1,7 @@
 import pytest, pygame, pygame_gui
 from app.src.general.settings import Settings
 from app.src.general.maze import MazeUI, LineSolutionUI
-from tests.maze.helpers.mock_maze import get_example_maze
+from tests.helpers.mock_maze import get_example_maze
 from unittest.mock import patch
 
 @pytest.fixture(autouse=True)

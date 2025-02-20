@@ -1,6 +1,6 @@
 import pytest
 from app.src.general.maze import Cell, Maze
-from helpers.mock_maze import get_example_maze
+from tests.helpers.mock_maze import get_example_maze
 
 @pytest.fixture
 def mock_maze():
