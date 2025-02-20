@@ -82,7 +82,7 @@ cell_rects = [
 """
 creates a 5x5 maze
 """
-def get_example_maze():
+def get_mock_maze():
     rows = len(cell_walls)
     columns = len(cell_walls[0])
     maze = Maze((rows, columns))
