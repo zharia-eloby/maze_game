@@ -146,7 +146,7 @@ class Maze:
             current_cell.visited = True
 
 class MazeUI(Maze):
-    def __init__(self, dimensions, settings, test_mode = False):
+    def __init__(self, dimensions, settings, test_mode=False):
         super().__init__(dimensions)
         self.settings = settings
         self.cell_width = None
