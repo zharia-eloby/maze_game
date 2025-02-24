@@ -31,7 +31,7 @@ def mock_settings():
 @pytest.fixture
 def mock_maze_ui(mock_settings):
     example_maze = get_mock_maze()
-    
+
     class MockMazeUI(MazeUI):
         def __init__(self):
             super().__init__((5, 5), mock_settings, True)
@@ -53,13 +53,13 @@ def mock_maze_ui(mock_settings):
             return self.maze[1][1]
 
         def get_neighbor(self, direction):
-            if direction == "left": 
+            if direction == "left":
                 return self.maze[1][0]
-            elif direction == "right": 
+            elif direction == "right":
                 return self.maze[1][2]
-            elif direction == "up": 
+            elif direction == "up":
                 return self.maze[0][1]
-            else: 
+            else:
                 return self.maze[2][1]
 
     return MockMazeUI()
@@ -69,7 +69,7 @@ def mock_line_solution_ui(mock_maze_ui):
     class MockLineSolutionUI(LineSolutionUI):
         def __init__(self):
             super().__init__(mock_maze_ui, True)
-        
+
         def populate(self):
             self.index = 5
             self.current_line = pygame_gui.elements.UIPanel(
@@ -158,7 +158,7 @@ def test_draw_next_segment(mock_maze_ui, mock_line_solution_ui, should_draw_full
         mock_current_direction.return_value = direction
 
         mock_line_solution_ui.draw_next_segment(should_draw_full_line, mock_maze_ui.get_cell(), mock_maze_ui.get_neighbor(direction))
-        assert type(mock_line_solution_ui.current_line) == pygame_gui.elements.UIPanel 
+        assert type(mock_line_solution_ui.current_line) == pygame_gui.elements.UIPanel
         assert mock_line_solution_ui.current_line.relative_rect.topleft == expected_topleft
         assert mock_line_solution_ui.current_line.relative_rect.size == expected_size
 
@@ -211,12 +211,14 @@ def test_animate_new_line(mocker, mock_line_solution_ui):
     with patch('app.src.general.maze.LineSolutionUI.draw_next_segment') as mock_draw_next_segment:
         mock_draw_next_segment.return_value = None
         spy = mocker.spy(LineSolutionUI, "draw_next_segment")
+        solution = mock_line_solution_ui.maze_ui.solution
 
         animate_return_value = mock_line_solution_ui.animate()
-        assert spy.call_count == 1
+        spy.assert_called_once_with(False, solution[0], solution[1])
         assert animate_return_value == False
 
-def test_animate_finish_line(mock_line_solution_ui):
+def test_animate_finish_line(mocker, mock_line_solution_ui):
+    spy = mocker.spy(LineSolutionUI, "draw_next_segment")
     mock_line_solution_ui.current_line = pygame_gui.elements.UIPanel(
         relative_rect=pygame.Rect(0, 0, 4, 10)
     )
@@ -230,8 +232,10 @@ def test_animate_finish_line(mock_line_solution_ui):
     assert mock_line_solution_ui.current_line is None
     assert mock_line_solution_ui.index == 1
     assert animate_return_value == False
+    assert spy.call_count == 0
 
-def test_animate_completed_solution(mock_line_solution_ui):
+def test_animate_completed_solution(mocker, mock_line_solution_ui):
+    spy = mocker.spy(LineSolutionUI, "draw_next_segment")
     mock_line_solution_ui.index = 9
     mock_line_solution_ui.current_line = pygame_gui.elements.UIPanel(
         relative_rect=pygame.Rect(0, 0, 4, 10)
@@ -246,6 +250,7 @@ def test_animate_completed_solution(mock_line_solution_ui):
     assert mock_line_solution_ui.current_line is None
     assert mock_line_solution_ui.index == 10
     assert animate_return_value == True
+    assert spy.call_count == 0
 
 def test_draw_complete_path(mocker, mock_line_solution_ui):
     with patch('app.src.general.maze.LineSolutionUI.draw_next_segment') as mock_draw_next_segment:
