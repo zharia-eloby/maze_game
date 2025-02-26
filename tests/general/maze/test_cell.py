@@ -3,7 +3,6 @@ from app.src.general.maze import Cell
 
 def test_cell_init():
     cell = Cell(2, 5)
-    
     assert cell.row_index == 2
     assert cell.col_index == 5
     assert cell.walls == { "left": True, "right": True, "up": True, "down": True }

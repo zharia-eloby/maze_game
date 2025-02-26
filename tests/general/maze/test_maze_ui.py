@@ -17,6 +17,7 @@ def mock_settings():
                 self.screen_width - margin*2,
                 self.screen_height - margin*2
             )
+
     return MockSettings()
 
 @pytest.fixture
@@ -44,6 +45,7 @@ def mock_maze_ui(mock_settings):
                 relative_rect=self.player_position.rect,
                 manager=self.maze_manager
             )
+
     return MockMazeUI()
 
 @pytest.fixture(autouse=True)
@@ -55,8 +57,8 @@ def setup_teardown():
 
 def test_set_ui_element_sizes(mock_settings):
     maze_ui = MazeUI((5, 10), mock_settings, True)
-    maze_ui.set_ui_element_sizes(maze_ui.settings.drawable_area)
 
+    maze_ui.set_ui_element_sizes(maze_ui.settings.drawable_area)
     assert maze_ui.cell_width == 40
     assert maze_ui.cell_height == 80
     assert maze_ui.wall_thickness == 4
@@ -85,33 +87,30 @@ def test_set_ui_element_sizes(mock_settings):
 def test_draw_walls(mocker, mock_maze_ui, cell_coordinates, expected_call_count):
     spy = mocker.spy(pygame_gui.elements, "UIPanel")
     cell = mock_maze_ui.maze[cell_coordinates[0]][cell_coordinates[1]]
-    mock_maze_ui.draw_walls(cell)
 
+    mock_maze_ui.draw_walls(cell)
     assert cell.rect is not None
     assert spy.call_count == expected_call_count
 
 def test_draw_maze(mocker, mock_maze_ui):
     spy = mocker.spy(MazeUI, "draw_walls")
-    mock_maze_ui.draw_maze()
 
+    mock_maze_ui.draw_maze()
     assert spy.call_count == 25
 
 def test_set_maze_ui(mocker, mock_settings):
     maze_ui = MazeUI((5, 5), mock_settings, True)
-
     spy_create_maze = mocker.spy(MazeUI, "create_maze")
     spy_set_ui_element_sizes = mocker.spy(MazeUI, "set_ui_element_sizes")
     spy_draw_maze = mocker.spy(MazeUI, "draw_maze")
 
     maze_ui.set_maze_ui(mock_settings.drawable_area)
-
     assert maze_ui.startpoint is not None
     assert spy_create_maze.call_count == 1
     assert spy_set_ui_element_sizes.call_count == 1
     assert spy_draw_maze.call_count == 1
 
     object_ids = list(map(lambda x: x.object_ids, maze_ui.maze_manager.ui_group))
-
     assert ["#player"] in object_ids
     assert ["#startpoint"] in object_ids
     assert ["#endpoint"] in object_ids
@@ -132,7 +131,6 @@ def test_set_maze_ui(mocker, mock_settings):
 ])
 def test_move_player(mock_maze_ui, direction, expected_player_coordinates, expected_rect_topleft):
     mock_maze_ui.move_player(direction)
-
     expected_row = expected_player_coordinates[0]
     expected_col = expected_player_coordinates[1]
     assert mock_maze_ui.player_position == mock_maze_ui.maze[expected_row][expected_col]
@@ -140,7 +138,6 @@ def test_move_player(mock_maze_ui, direction, expected_player_coordinates, expec
 
 def test_reset_maze(mock_maze_ui):
     mock_maze_ui.reset()
-
     assert mock_maze_ui.maze == []
     assert mock_maze_ui.cell_width == None
     assert mock_maze_ui.cell_height == None

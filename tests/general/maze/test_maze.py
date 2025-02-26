@@ -9,8 +9,8 @@ def mock_maze():
 def test_maze_init():
     rows = 10
     columns = 6
-    maze = Maze((rows, columns))
 
+    maze = Maze((rows, columns))
     assert maze.dimensions == (rows, columns)
     assert maze.startpoint == None
     assert maze.endpoint == None
@@ -56,6 +56,7 @@ def test_get_neighbor_cell(mock_maze, direction, expected_row_col):
     cell = mock_maze.maze[2][2]
     row = expected_row_col[0]
     col = expected_row_col[1]
+
     assert mock_maze.get_neighbor_cell(cell, direction) == mock_maze.maze[row][col]
 
 def test_get_unvisited_neighbors():
@@ -88,16 +89,14 @@ def test_get_unvisited_neighbors():
 
 def test_set_startpoint_endpoint():
     maze = Maze((5, 5))
-    maze.set_startpoint_endpoint()
 
+    maze.set_startpoint_endpoint()
     assert type(maze.startpoint) == Cell
     assert type(maze.endpoint) == Cell
-
     assert maze.startpoint.row_index >= 0
     assert maze.startpoint.row_index < 5
     assert maze.endpoint.row_index >= 0
     assert maze.endpoint.row_index < 5
-
     assert maze.startpoint.col_index >= 0
     assert maze.startpoint.col_index < 5
     assert maze.endpoint.col_index >= 0
@@ -186,6 +185,7 @@ def test_reset_visited():
 ])
 def test_remove_wall_between_cells(cell, neighbor, expected_cell_walls, expected_neighbor_walls):
     maze = Maze((10, 10))
+
     maze.remove_wall_between_cells(cell, neighbor)
     assert cell.walls == expected_cell_walls
     assert neighbor.walls == expected_neighbor_walls
@@ -194,24 +194,22 @@ def test_create_maze():
     rows = 5
     columns = 5
     maze = Maze((rows, columns))
-    maze.create_maze()
 
+    maze.create_maze()
+    assert maze.startpoint != None
+    assert maze.endpoint != None
+    assert maze.startpoint != maze.endpoint
     # assert all cells have at least one open path
     for row in maze.maze:
         for cell in row:
             assert len(cell.get_blocked_walls()) < 4
 
-    assert maze.startpoint != None
-    assert maze.endpoint != None
-    assert maze.startpoint != maze.endpoint
-
 def test_solve_maze(mock_maze):
     expected_solution = mock_maze.solution
-
     maze = Maze((5, 5))
     maze.maze = mock_maze.maze
     maze.startpoint = mock_maze.startpoint
     maze.endpoint = mock_maze.endpoint
-    maze.solve_maze()
 
+    maze.solve_maze()
     assert maze.solution == expected_solution
