@@ -1,6 +1,7 @@
 import random, pygame, pygame_gui
 from pygame_gui.core import ObjectID
-from src.general.helpers import get_opposite_direction
+from app.src.general.helpers import get_opposite_direction
+from pygame_gui.core.resource_loaders import ThreadedLoader
 
 class Cell:
     def __init__(self, row_index, col_index):
@@ -145,7 +146,7 @@ class Maze:
             current_cell.visited = True
 
 class MazeUI(Maze):
-    def __init__(self, dimensions, settings):
+    def __init__(self, dimensions, settings, test_mode=False):
         super().__init__(dimensions)
         self.settings = settings
         self.cell_width = None
@@ -153,8 +154,22 @@ class MazeUI(Maze):
         self.wall_thickness = None
         self.maze_area_rect = pygame.Rect()
         self.player = None
-        self.maze_background_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme.theme_file)
-        self.maze_manager = pygame_gui.UIManager((self.settings.screen_width, self.settings.screen_height), self.settings.theme.theme_file)
+        
+        """
+        when running the unit tests with pytest, tests hang when creating the UIManager.
+        Current workaround: specify the `ThreadedLoader` resource loader instead of the
+        default `BlockingThreadedResourceLoader` resource loader
+        """
+        self.maze_background_manager = pygame_gui.UIManager(
+            (self.settings.screen_width, self.settings.screen_height), 
+            self.settings.theme.theme_file,
+            resource_loader = ThreadedLoader() if test_mode else None
+        )
+        self.maze_manager = pygame_gui.UIManager(
+            (self.settings.screen_width, self.settings.screen_height), 
+            self.settings.theme.theme_file,
+            resource_loader = ThreadedLoader() if test_mode else None
+        )
 
     """
     sets the measurements for the maze's ui elements (wall size, maze width/height, cell width/height)
@@ -342,9 +357,8 @@ class MazeUI(Maze):
         self.maze_manager.clear_and_reset()
 
 class LineSolutionUI():
-    def __init__(self, maze_ui):
+    def __init__(self, maze_ui, test_mode=False):
         self.maze_ui = maze_ui
-        self.solution_manager = pygame_gui.UIManager((self.maze_ui.settings.screen_width, self.maze_ui.settings.screen_height), self.maze_ui.settings.theme.theme_file)
         self.increment = 1
         self.index = 0
         self.current_line = None
@@ -359,6 +373,17 @@ class LineSolutionUI():
         self.line_height_thickness -= self.line_height_thickness%2
         if self.line_width_thickness < 2: self.line_width_thickness = 2
         if self.line_height_thickness < 2: self.line_height_thickness = 2
+
+        """
+        when running the unit tests with pytest, tests hang when creating the UIManager.
+        Current workaround: specify the `ThreadedLoader` resource loader instead of the
+        default `BlockingThreadedResourceLoader` resource loader
+        """
+        self.solution_manager = pygame_gui.UIManager(
+            (self.maze_ui.settings.screen_width, self.maze_ui.settings.screen_height), 
+            self.maze_ui.settings.theme.theme_file,
+            resource_loader = ThreadedLoader() if test_mode else None
+        )
 
     def draw_next_segment(self, draw_full, current_cell, next_cell):
         self.current_direction = current_cell.get_direction_to_neighbor(next_cell)
