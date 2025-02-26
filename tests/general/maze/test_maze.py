@@ -196,8 +196,8 @@ def test_create_maze():
     maze = Maze((rows, columns))
 
     maze.create_maze()
-    assert maze.startpoint != None
-    assert maze.endpoint != None
+    assert type(maze.startpoint) == Cell
+    assert type(maze.endpoint) == Cell
     assert maze.startpoint != maze.endpoint
     # assert all cells have at least one open path
     for row in maze.maze:
