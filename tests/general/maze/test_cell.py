@@ -1,7 +1,7 @@
 import pytest
 from app.src.general.maze import Cell
 
-def test_cell_init():
+def test_init():
     cell = Cell(2, 5)
     assert cell.row_index == 2
     assert cell.col_index == 5

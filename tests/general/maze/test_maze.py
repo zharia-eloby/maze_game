@@ -6,7 +6,7 @@ from tests.helpers.mock_maze import get_mock_maze
 def mock_maze():
     return get_mock_maze()
 
-def test_maze_init():
+def test_init():
     rows = 10
     columns = 6
 
