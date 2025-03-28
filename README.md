@@ -3,7 +3,7 @@
 ## General Overview:
 This program takes in user input to dynamically generate a maze and includes the capability of solving a maze. The player can choose their difficulty by picking predetermined sizes or doing a custom size.
 
-See the [game_screenshots](https://github.com/zharia-eloby/maze_game/tree/main/game_screenshots) folder for previews!
+Check out the demo here: [YouTube](https://youtube.com/shorts/2NFnY2cN-uM?feature=share). You can also see the [game_screenshots](https://github.com/zharia-eloby/maze_game/tree/main/game_screenshots) folder for previews!
 
 ## How to Run:
 Prerequisite:
